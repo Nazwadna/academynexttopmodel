@@ -1,0 +1,146 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Open Sans", sans-serif;
+  background-color: #000;
+  color: white;
+}
+
+a {
+  text-decoration: none;
+  color: white;
+}
+
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 50px;
+  background-color: #000;
+}
+
+.logo img {
+  height: 60px;
+}
+
+nav ul {
+  display: flex;
+  list-style: none;
+  gap: 10px;
+  align-items: end;
+  margin-left: 100px;
+}
+
+nav ul li a {
+  padding: 6px 12px;
+  border-radius: 10px;
+  transition: background 0.3s;
+}
+
+nav ul li a:hover {
+  background: #fff;
+  color: #000;
+}
+
+.auth-buttons {
+  display: flex;
+  gap: 10px;
+}
+
+.signin,
+.register {
+  padding: 6px 14px;
+  border-radius: 6px;
+  font-size: 14px;
+}
+
+.signin {
+  background: #eee;
+  color: #000;
+}
+
+.register {
+  background: #333;
+  color: white;
+}
+
+.nav-divider {
+  border: none;
+  height: 2px;
+  background-color: white;
+  margin: 0 50px;
+  opacity: 0.4;
+}
+
+.main {
+  font-family: "Fondamento", cursive;
+  font-size: 75px;
+  padding: 20px 80px;
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
+}
+
+.hero-section {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 70px;
+  height: 60vh;
+}
+
+.hero-left {
+  flex: 1;
+}
+
+.hero-mid {
+  align-items: center;
+}
+
+.hero-mid img {
+  width: 380px;
+  max-width: 100%;
+  height: auto;
+}
+
+.left-text {
+  font-size: 24px;
+  line-height: 1.6;
+  margin-bottom: 30px;
+}
+
+.collab-button {
+  display: inline-flex;
+  align-items: center;
+  padding: 12px 20px;
+  background: white;
+  color: black;
+  font-weight: 600;
+  border-radius: 30px;
+  transition: background 0.3s;
+}
+
+.collab-button span {
+  margin-left: 10px;
+  font-size: 20px;
+}
+
+.collab-button:hover {
+  background: #ddd;
+}
+
+.hero-right {
+  flex: 1;
+  position: relative;
+  text-align: right;
+}
+
+.hero-right .right-text {
+  font-size: 20px;
+  color: #ccc;
+  margin-bottom: 30px;
+}
