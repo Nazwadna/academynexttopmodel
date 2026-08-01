@@ -1,0 +1,754 @@
+[
+  {
+    "tag": "A",
+    "query": "ada berapa model",
+    "intent": "model_count",
+    "source": "database_realtime",
+    "confidence": 0.95,
+    "reply": "Saat ini terdapat 22 model yang terdaftar di database Academy Next Top Model, dengan 22 model berstatus aktif/tersedia (available)."
+  },
+  {
+    "tag": "A",
+    "query": "ada berapa model remaja",
+    "intent": "model_count",
+    "source": "database_realtime",
+    "confidence": 0.95,
+    "reply": "Saat ini terdapat 13 model dengan filter kategori remaja/teens di database Academy Next Top Model, termasuk 13 berstatus aktif/tersedia."
+  },
+  {
+    "tag": "A",
+    "query": "ada berapa model anak",
+    "intent": "model_count",
+    "source": "database_realtime",
+    "confidence": 0.95,
+    "reply": "Saat ini terdapat 9 model dengan filter kategori anak/kids di database Academy Next Top Model, termasuk 9 berstatus aktif/tersedia."
+  },
+  {
+    "tag": "A",
+    "query": "berapa model aktif",
+    "intent": "model_count",
+    "source": "database_realtime",
+    "confidence": 0.95,
+    "reply": "Saat ini terdapat 22 model dengan filter status aktif/tersedia di database Academy Next Top Model."
+  },
+  {
+    "tag": "A",
+    "query": "model remaja",
+    "intent": "model_list",
+    "source": "database_realtime",
+    "confidence": 0.95,
+    "reply": "Ditemukan 13 model dengan filter kategori remaja/teens di database Academy Next Top Model:\n- Afia Khansa Rafani (kategori: Teens, kota: Bogor,  Jawa Barat, status: tersedia)\n- Camilla Aleecea (kategori: Teens, kota: Bekasi,  Jawa Barat, status: tersedia)\n- Nazwa Audina (kategori: Teens, kota: Jakarta Timur, Jakarta, status: tersedia)\n- Rara Dharmawan (kategori: Teens, kota: Depok, Jawa Barat, status: tersedia)\n- Kyna (kategori: Teens, kota: Depok, Jawa Barat, status: tersedia)\n- Putri Nailah Azzahra (kategori: Teens, kota: Bogor, Jawa Barat, status: tersedia)\n- Dini Aura (kategori: Teens, kota: Depok, Jawa Barat, status: tersedia)\n- Kirana Khanza Aurelia (kategori: Teens, kota: Bogor, Jawa Barat, status: tersedia)\n- Maya Amjad (kategori: Teens, kota: Depok, Jawa Barat, status: tersedia)\n- Najwa Madina Azzahra (kategori: Teens, kota: Bogor, Jawa Barat, status: tersedia)\n- Fathia Riyandita Anwari (kategori: Teens, kota: Bogor, Jawa Barat, status: tersedia)\n- Caren Magdalena Praselia (kategori: Teens, kota: Jakarta, DKI Jakarta, status: tersedia)\n...dan 1 model lainnya."
+  },
+  {
+    "tag": "A",
+    "query": "model anak",
+    "intent": "model_list",
+    "source": "database_realtime",
+    "confidence": 0.95,
+    "reply": "Ditemukan 9 model dengan filter kategori anak/kids di database Academy Next Top Model:\n- Violla Alexandria Kirana (kategori: Kids, kota: Jakarta, DKI Jakarta, status: tersedia)\n- Clarissa Cheryl Steyz (kategori: Kids, kota: Tangerang, Banten, status: tersedia)\n- Nathania Raynelle Wijaya (kategori: Kids, kota: Jakarta, DKI Jakarta, status: tersedia)\n- Nikita Wilmer Chung Steyz (kategori: Kids, kota: Tangerang, Banten, status: tersedia)\n- Michelle Fidellia Parinussa (kategori: Kids, kota: Bogor, Jawa Barat, status: tersedia)\n- Kalyca Lashira (kategori: Kids, kota: Tangerang, Banten, status: tersedia)\n- Chevazrilia Alfaruk (kategori: Kids, kota: Bekasi, Jawa Barat, status: tersedia)\n- Aleeya Shafiyah (kategori: Kids, kota: Jakarta, DKI Jakarta, status: tersedia)\n- Alisha Ahri (kategori: Kids, kota: Tangerang, Banten, status: tersedia)"
+  },
+  {
+    "tag": "A",
+    "query": "model dari bekasi",
+    "intent": "model_list",
+    "source": "database_realtime",
+    "confidence": 0.95,
+    "reply": "Ditemukan 2 model dengan filter kota Bekasi di database Academy Next Top Model:\n- Camilla Aleecea (kategori: Teens, kota: Bekasi,  Jawa Barat, status: tersedia)\n- Chevazrilia Alfaruk (kategori: Kids, kota: Bekasi, Jawa Barat, status: tersedia)"
+  },
+  {
+    "tag": "A",
+    "query": "model aktif bogor",
+    "intent": "model_list",
+    "source": "database_realtime",
+    "confidence": 0.95,
+    "reply": "Ditemukan 6 model dengan filter kota Bogor, status aktif/tersedia di database Academy Next Top Model:\n- Afia Khansa Rafani (kategori: Teens, kota: Bogor,  Jawa Barat, status: tersedia)\n- Michelle Fidellia Parinussa (kategori: Kids, kota: Bogor, Jawa Barat, status: tersedia)\n- Putri Nailah Azzahra (kategori: Teens, kota: Bogor, Jawa Barat, status: tersedia)\n- Kirana Khanza Aurelia (kategori: Teens, kota: Bogor, Jawa Barat, status: tersedia)\n- Najwa Madina Azzahra (kategori: Teens, kota: Bogor, Jawa Barat, status: tersedia)\n- Fathia Riyandita Anwari (kategori: Teens, kota: Bogor, Jawa Barat, status: tersedia)"
+  },
+  {
+    "tag": "A",
+    "query": "model remaja dari bekasi",
+    "intent": "model_list",
+    "source": "database_realtime",
+    "confidence": 0.95,
+    "reply": "Ditemukan 1 model dengan filter kategori remaja/teens, kota Bekasi di database Academy Next Top Model:\n- Camilla Aleecea (kategori: Teens, kota: Bekasi,  Jawa Barat, status: tersedia)"
+  },
+  {
+    "tag": "A",
+    "query": "siapa model bogor",
+    "intent": "model_list",
+    "source": "database_realtime",
+    "confidence": 0.95,
+    "reply": "Ditemukan 6 model dengan filter kota Bogor di database Academy Next Top Model:\n- Afia Khansa Rafani (kategori: Teens, kota: Bogor,  Jawa Barat, status: tersedia)\n- Michelle Fidellia Parinussa (kategori: Kids, kota: Bogor, Jawa Barat, status: tersedia)\n- Putri Nailah Azzahra (kategori: Teens, kota: Bogor, Jawa Barat, status: tersedia)\n- Kirana Khanza Aurelia (kategori: Teens, kota: Bogor, Jawa Barat, status: tersedia)\n- Najwa Madina Azzahra (kategori: Teens, kota: Bogor, Jawa Barat, status: tersedia)\n- Fathia Riyandita Anwari (kategori: Teens, kota: Bogor, Jawa Barat, status: tersedia)"
+  },
+  {
+    "tag": "A",
+    "query": "apakah ada model kids",
+    "intent": "model_list",
+    "source": "database_realtime",
+    "confidence": 0.95,
+    "reply": "Ditemukan 9 model dengan filter kategori anak/kids di database Academy Next Top Model:\n- Violla Alexandria Kirana (kategori: Kids, kota: Jakarta, DKI Jakarta, status: tersedia)\n- Clarissa Cheryl Steyz (kategori: Kids, kota: Tangerang, Banten, status: tersedia)\n- Nathania Raynelle Wijaya (kategori: Kids, kota: Jakarta, DKI Jakarta, status: tersedia)\n- Nikita Wilmer Chung Steyz (kategori: Kids, kota: Tangerang, Banten, status: tersedia)\n- Michelle Fidellia Parinussa (kategori: Kids, kota: Bogor, Jawa Barat, status: tersedia)\n- Kalyca Lashira (kategori: Kids, kota: Tangerang, Banten, status: tersedia)\n- Chevazrilia Alfaruk (kategori: Kids, kota: Bekasi, Jawa Barat, status: tersedia)\n- Aleeya Shafiyah (kategori: Kids, kota: Jakarta, DKI Jakarta, status: tersedia)\n- Alisha Ahri (kategori: Kids, kota: Tangerang, Banten, status: tersedia)"
+  },
+  {
+    "tag": "A",
+    "query": "saya butuh model remaja",
+    "intent": "model_recommendation",
+    "source": "database_realtime",
+    "confidence": 0.95,
+    "reply": "Untuk kategori remaja, berikut beberapa model Teens yang dapat dipertimbangkan. Contoh model: Afia Khansa Rafani, Camilla Aleecea, Nazwa Audina, Rara Dharmawan, Kyna. Pemilihan final tetap disesuaikan dengan konsep, tema, dan brief. Admin kami siap membantu rekomendasi final."
+  },
+  {
+    "tag": "A",
+    "query": "saya cari model anak",
+    "intent": "model_list",
+    "source": "database_realtime",
+    "confidence": 0.95,
+    "reply": "Ditemukan 9 model dengan filter kategori anak/kids di database Academy Next Top Model:\n- Violla Alexandria Kirana (kategori: Kids, kota: Jakarta, DKI Jakarta, status: tersedia)\n- Clarissa Cheryl Steyz (kategori: Kids, kota: Tangerang, Banten, status: tersedia)\n- Nathania Raynelle Wijaya (kategori: Kids, kota: Jakarta, DKI Jakarta, status: tersedia)\n- Nikita Wilmer Chung Steyz (kategori: Kids, kota: Tangerang, Banten, status: tersedia)\n- Michelle Fidellia Parinussa (kategori: Kids, kota: Bogor, Jawa Barat, status: tersedia)\n- Kalyca Lashira (kategori: Kids, kota: Tangerang, Banten, status: tersedia)\n- Chevazrilia Alfaruk (kategori: Kids, kota: Bekasi, Jawa Barat, status: tersedia)\n- Aleeya Shafiyah (kategori: Kids, kota: Jakarta, DKI Jakarta, status: tersedia)\n- Alisha Ahri (kategori: Kids, kota: Tangerang, Banten, status: tersedia)"
+  },
+  {
+    "tag": "A",
+    "query": "tolong rekomendasikan model hijab",
+    "intent": "model_recommendation",
+    "source": "database_realtime",
+    "confidence": 0.95,
+    "reply": "Saya dapat membantu memberikan rekomendasi model berdasarkan kategori, tema, dan kebutuhan Anda. Contoh model: Afia Khansa Rafani, Camilla Aleecea, Violla Alexandria Kirana, Clarissa Cheryl Steyz, Nathania Raynelle Wijaya. Pemilihan final tetap disesuaikan dengan konsep, tema, dan brief. Admin kami siap membantu rekomendasi final."
+  },
+  {
+    "tag": "A",
+    "query": "jam berapa kelas dimulai",
+    "intent": "schedule_info",
+    "source": "static_dictionary",
+    "confidence": 0.99,
+    "reply": "Kelas Academy Next Top Model dimulai pukul 11.00 - 15.00."
+  },
+  {
+    "tag": "A",
+    "query": "kelas diadakan hari apa",
+    "intent": "schedule_info",
+    "source": "static_dictionary",
+    "confidence": 0.99,
+    "reply": "Kelas Academy Next Top Model berlangsung setiap hari Sabtu."
+  },
+  {
+    "tag": "A",
+    "query": "jam berapa kelas",
+    "intent": "schedule_info",
+    "source": "academy_knowledge",
+    "confidence": 0.97,
+    "reply": "Kelas Academy Next Top Model dimulai pukul 11.00 - 15.00."
+  },
+  {
+    "tag": "A",
+    "query": "lokasi kelas dimana",
+    "intent": "location_info",
+    "source": "academy_knowledge",
+    "confidence": 0.97,
+    "reply": "Lokasi Academy Next Top Model berada di Trans Studio Mall Cibubur, GF Floor Second Atrium."
+  },
+  {
+    "tag": "A",
+    "query": "nomor admin berapa",
+    "intent": "contact_admin",
+    "source": "static_dictionary",
+    "confidence": 0.99,
+    "reply": "Hubungi kami via WhatsApp +6281214237742 atau email info@academyntm.com. Office hours: Senin-Sabtu 09.00-18.00 WIB."
+  },
+  {
+    "tag": "A",
+    "query": "syarat daftar apa",
+    "intent": "registration_requirements",
+    "source": "academy_knowledge",
+    "confidence": 0.97,
+    "reply": "Untuk mendaftar, peserta perlu mengisi formulir, menyiapkan foto close-up dan full body, serta mengikuti ketentuan pendaftaran yang berlaku."
+  },
+  {
+    "tag": "A",
+    "query": "jadwal kelas",
+    "intent": "schedule_info",
+    "source": "academy_knowledge",
+    "confidence": 0.97,
+    "reply": "Lokasi Academy Next Top Model berada di Trans Studio Mall Cibubur, GF Floor Second Atrium."
+  },
+  {
+    "tag": "A",
+    "query": "model teens dari depok",
+    "intent": "model_list",
+    "source": "database_realtime",
+    "confidence": 0.95,
+    "reply": "Ditemukan 4 model dengan filter kategori remaja/teens, kota Depok di database Academy Next Top Model:\n- Rara Dharmawan (kategori: Teens, kota: Depok, Jawa Barat, status: tersedia)\n- Kyna (kategori: Teens, kota: Depok, Jawa Barat, status: tersedia)\n- Dini Aura (kategori: Teens, kota: Depok, Jawa Barat, status: tersedia)\n- Maya Amjad (kategori: Teens, kota: Depok, Jawa Barat, status: tersedia)"
+  },
+  {
+    "tag": "A",
+    "query": "model unavailable",
+    "intent": "clarification",
+    "source": "nlu_engine+naive_bayes",
+    "confidence": 0.5,
+    "reply": "Pertanyaan Anda bisa mengarah ke beberapa topik. Yang dimaksud:\n  1. proses dan langkah pendaftaran\n  2. lokasi dan alamat academy\n  3. program dan materi pelatihan"
+  },
+  {
+    "tag": "A",
+    "query": "model tidak tersedia",
+    "intent": "clarification",
+    "source": "nlu_engine+naive_bayes",
+    "confidence": 0.58,
+    "reply": "Agar saya bisa menjawab dengan tepat, maksud Anda:\n  1. katalog dan daftar model talent"
+  },
+  {
+    "tag": "A",
+    "query": "daftar model kids",
+    "intent": "model_list",
+    "source": "database_realtime",
+    "confidence": 0.95,
+    "reply": "Ditemukan 9 model dengan filter kategori anak/kids di database Academy Next Top Model:\n- Violla Alexandria Kirana (kategori: Kids, kota: Jakarta, DKI Jakarta, status: tersedia)\n- Clarissa Cheryl Steyz (kategori: Kids, kota: Tangerang, Banten, status: tersedia)\n- Nathania Raynelle Wijaya (kategori: Kids, kota: Jakarta, DKI Jakarta, status: tersedia)\n- Nikita Wilmer Chung Steyz (kategori: Kids, kota: Tangerang, Banten, status: tersedia)\n- Michelle Fidellia Parinussa (kategori: Kids, kota: Bogor, Jawa Barat, status: tersedia)\n- Kalyca Lashira (kategori: Kids, kota: Tangerang, Banten, status: tersedia)\n- Chevazrilia Alfaruk (kategori: Kids, kota: Bekasi, Jawa Barat, status: tersedia)\n- Aleeya Shafiyah (kategori: Kids, kota: Jakarta, DKI Jakarta, status: tersedia)\n- Alisha Ahri (kategori: Kids, kota: Tangerang, Banten, status: tersedia)"
+  },
+  {
+    "tag": "A",
+    "query": "model apa saja yang tersedia",
+    "intent": "model_list",
+    "source": "database_realtime",
+    "confidence": 0.95,
+    "reply": "Ditemukan 22 model dengan filter status aktif/tersedia di database Academy Next Top Model:\n- Afia Khansa Rafani (kategori: Teens, kota: Bogor,  Jawa Barat, status: tersedia)\n- Camilla Aleecea (kategori: Teens, kota: Bekasi,  Jawa Barat, status: tersedia)\n- Violla Alexandria Kirana (kategori: Kids, kota: Jakarta, DKI Jakarta, status: tersedia)\n- Clarissa Cheryl Steyz (kategori: Kids, kota: Tangerang, Banten, status: tersedia)\n- Nathania Raynelle Wijaya (kategori: Kids, kota: Jakarta, DKI Jakarta, status: tersedia)\n- Nikita Wilmer Chung Steyz (kategori: Kids, kota: Tangerang, Banten, status: tersedia)\n- Michelle Fidellia Parinussa (kategori: Kids, kota: Bogor, Jawa Barat, status: tersedia)\n- Kalyca Lashira (kategori: Kids, kota: Tangerang, Banten, status: tersedia)\n- Chevazrilia Alfaruk (kategori: Kids, kota: Bekasi, Jawa Barat, status: tersedia)\n- Aleeya Shafiyah (kategori: Kids, kota: Jakarta, DKI Jakarta, status: tersedia)\n- Alisha Ahri (kategori: Kids, kota: Tangerang, Banten, status: tersedia)\n- Nazwa Audina (kategori: Teens, kota: Jakarta Timur, Jakarta, status: tersedia)\n...dan 10 model lainnya."
+  },
+  {
+    "tag": "A",
+    "query": "rekomendasi model remaja",
+    "intent": "model_recommendation",
+    "source": "database_realtime",
+    "confidence": 0.95,
+    "reply": "Untuk kategori remaja, berikut beberapa model Teens yang dapat dipertimbangkan. Contoh model: Afia Khansa Rafani, Camilla Aleecea, Nazwa Audina, Rara Dharmawan, Kyna. Pemilihan final tetap disesuaikan dengan konsep, tema, dan brief. Admin kami siap membantu rekomendasi final."
+  },
+  {
+    "tag": "A",
+    "query": "rekomendasi model untuk tema laut",
+    "intent": "model_recommendation",
+    "source": "database_realtime",
+    "confidence": 0.95,
+    "reply": "Saya dapat membantu memberikan rekomendasi model berdasarkan kategori, tema, dan kebutuhan Anda. Contoh model: Afia Khansa Rafani, Camilla Aleecea, Violla Alexandria Kirana, Clarissa Cheryl Steyz, Nathania Raynelle Wijaya. Pemilihan final tetap disesuaikan dengan konsep, tema, dan brief. Admin kami siap membantu rekomendasi final."
+  },
+  {
+    "tag": "A",
+    "query": "cari model untuk produk anak",
+    "intent": "model_recommendation",
+    "source": "database_realtime",
+    "confidence": 0.95,
+    "reply": "Untuk kategori anak-anak, berikut beberapa model Kids yang dapat dipertimbangkan. Contoh model: Violla Alexandria Kirana, Clarissa Cheryl Steyz, Nathania Raynelle Wijaya, Nikita Wilmer Chung Steyz, Michelle Fidellia Parinussa. Pemilihan final tetap disesuaikan dengan konsep, tema, dan brief. Admin kami siap membantu rekomendasi final."
+  },
+  {
+    "tag": "A",
+    "query": "status model bekasi",
+    "intent": "model_status",
+    "source": "database_realtime",
+    "confidence": 0.95,
+    "reply": "Saya belum menemukan model 'bekasi' pada database website saat ini. Anda dapat memeriksa daftar model aktif di menu Model."
+  },
+  {
+    "tag": "A",
+    "query": "status model kota",
+    "intent": "model_status",
+    "source": "database_realtime",
+    "confidence": 0.95,
+    "reply": "Saya belum menemukan model 'kota' pada database website saat ini. Anda dapat memeriksa daftar model aktif di menu Model."
+  },
+  {
+    "tag": "A",
+    "query": "cari model aktif",
+    "intent": "model_list",
+    "source": "database_realtime",
+    "confidence": 0.95,
+    "reply": "Ditemukan 22 model dengan filter status aktif/tersedia di database Academy Next Top Model:\n- Afia Khansa Rafani (kategori: Teens, kota: Bogor,  Jawa Barat, status: tersedia)\n- Camilla Aleecea (kategori: Teens, kota: Bekasi,  Jawa Barat, status: tersedia)\n- Violla Alexandria Kirana (kategori: Kids, kota: Jakarta, DKI Jakarta, status: tersedia)\n- Clarissa Cheryl Steyz (kategori: Kids, kota: Tangerang, Banten, status: tersedia)\n- Nathania Raynelle Wijaya (kategori: Kids, kota: Jakarta, DKI Jakarta, status: tersedia)\n- Nikita Wilmer Chung Steyz (kategori: Kids, kota: Tangerang, Banten, status: tersedia)\n- Michelle Fidellia Parinussa (kategori: Kids, kota: Bogor, Jawa Barat, status: tersedia)\n- Kalyca Lashira (kategori: Kids, kota: Tangerang, Banten, status: tersedia)\n- Chevazrilia Alfaruk (kategori: Kids, kota: Bekasi, Jawa Barat, status: tersedia)\n- Aleeya Shafiyah (kategori: Kids, kota: Jakarta, DKI Jakarta, status: tersedia)\n- Alisha Ahri (kategori: Kids, kota: Tangerang, Banten, status: tersedia)\n- Nazwa Audina (kategori: Teens, kota: Jakarta Timur, Jakarta, status: tersedia)\n...dan 10 model lainnya."
+  },
+  {
+    "tag": "A",
+    "query": "cari model remaja",
+    "intent": "model_list",
+    "source": "database_realtime",
+    "confidence": 0.95,
+    "reply": "Ditemukan 13 model dengan filter kategori remaja/teens di database Academy Next Top Model:\n- Afia Khansa Rafani (kategori: Teens, kota: Bogor,  Jawa Barat, status: tersedia)\n- Camilla Aleecea (kategori: Teens, kota: Bekasi,  Jawa Barat, status: tersedia)\n- Nazwa Audina (kategori: Teens, kota: Jakarta Timur, Jakarta, status: tersedia)\n- Rara Dharmawan (kategori: Teens, kota: Depok, Jawa Barat, status: tersedia)\n- Kyna (kategori: Teens, kota: Depok, Jawa Barat, status: tersedia)\n- Putri Nailah Azzahra (kategori: Teens, kota: Bogor, Jawa Barat, status: tersedia)\n- Dini Aura (kategori: Teens, kota: Depok, Jawa Barat, status: tersedia)\n- Kirana Khanza Aurelia (kategori: Teens, kota: Bogor, Jawa Barat, status: tersedia)\n- Maya Amjad (kategori: Teens, kota: Depok, Jawa Barat, status: tersedia)\n- Najwa Madina Azzahra (kategori: Teens, kota: Bogor, Jawa Barat, status: tersedia)\n- Fathia Riyandita Anwari (kategori: Teens, kota: Bogor, Jawa Barat, status: tersedia)\n- Caren Magdalena Praselia (kategori: Teens, kota: Jakarta, DKI Jakarta, status: tersedia)\n...dan 1 model lainnya."
+  },
+  {
+    "tag": "A",
+    "query": "status model anak",
+    "intent": "model_status",
+    "source": "database_realtime",
+    "confidence": 0.95,
+    "reply": "Saya belum menemukan model 'anak' pada database website saat ini. Anda dapat memeriksa daftar model aktif di menu Model."
+  },
+  {
+    "tag": "A",
+    "query": "status model remaja",
+    "intent": "model_status",
+    "source": "database_realtime",
+    "confidence": 0.95,
+    "reply": "Saya belum menemukan model 'remaja' pada database website saat ini. Anda dapat memeriksa daftar model aktif di menu Model."
+  },
+  {
+    "tag": "A",
+    "query": "cari model bogor",
+    "intent": "model_list",
+    "source": "database_realtime",
+    "confidence": 0.95,
+    "reply": "Ditemukan 6 model dengan filter kota Bogor di database Academy Next Top Model:\n- Afia Khansa Rafani (kategori: Teens, kota: Bogor,  Jawa Barat, status: tersedia)\n- Michelle Fidellia Parinussa (kategori: Kids, kota: Bogor, Jawa Barat, status: tersedia)\n- Putri Nailah Azzahra (kategori: Teens, kota: Bogor, Jawa Barat, status: tersedia)\n- Kirana Khanza Aurelia (kategori: Teens, kota: Bogor, Jawa Barat, status: tersedia)\n- Najwa Madina Azzahra (kategori: Teens, kota: Bogor, Jawa Barat, status: tersedia)\n- Fathia Riyandita Anwari (kategori: Teens, kota: Bogor, Jawa Barat, status: tersedia)"
+  },
+  {
+    "tag": "A",
+    "query": "apakah model sabrina masih aktif",
+    "intent": "model_status",
+    "source": "database_realtime",
+    "confidence": 0.95,
+    "reply": "Ya, model Sabrina Andhita Alkaf terdaftar di database Academy Next Top Model. Kategori: Teens, kota: Jakarta, DKI Jakarta, status: Tersedia (available)."
+  },
+  {
+    "tag": "A",
+    "query": "apakah model sabrina tersedia",
+    "intent": "model_status",
+    "source": "database_realtime",
+    "confidence": 0.95,
+    "reply": "Ya, model Sabrina Andhita Alkaf terdaftar di database Academy Next Top Model. Kategori: Teens, kota: Jakarta, DKI Jakarta, status: Tersedia (available)."
+  },
+  {
+    "tag": "A",
+    "query": "cek model putri",
+    "intent": "model_status",
+    "source": "database_realtime",
+    "confidence": 0.95,
+    "reply": "Ya, model Putri Nailah Azzahra terdaftar di database Academy Next Top Model. Kategori: Teens, kota: Bogor, Jawa Barat, status: Tersedia (available)."
+  },
+  {
+    "tag": "A",
+    "query": "adakah model bernama camilla",
+    "intent": "model_status",
+    "source": "database_realtime",
+    "confidence": 0.95,
+    "reply": "Ya, model Camilla Aleecea terdaftar di database Academy Next Top Model. Kategori: Teens, kota: Bekasi,  Jawa Barat, status: Tersedia (available)."
+  },
+  {
+    "tag": "A",
+    "query": "model dengan nama kyna",
+    "intent": "model_status",
+    "source": "database_realtime",
+    "confidence": 0.95,
+    "reply": "Ya, model Kyna terdaftar di database Academy Next Top Model. Kategori: Teens, kota: Depok, Jawa Barat, status: Tersedia (available)."
+  },
+  {
+    "tag": "A",
+    "query": "halo, ada berapa model remaja yang aktif dan dari bogor?",
+    "intent": "model_count",
+    "source": "database_realtime",
+    "confidence": 0.95,
+    "reply": "Saat ini terdapat 5 model dengan filter kategori remaja/teens, kota Bogor, status aktif/tersedia di database Academy Next Top Model."
+  },
+  {
+    "tag": "A",
+    "query": "ada model dari bandung?",
+    "intent": "model_list",
+    "source": "database_realtime",
+    "confidence": 0.95,
+    "reply": "Tidak ditemukan model dengan filter kota Bandung di database Academy Next Top Model. Silakan coba filter lain atau lihat menu Model pada website."
+  },
+  {
+    "tag": "A",
+    "query": "ada model dari cibubur?",
+    "intent": "model_list",
+    "source": "database_realtime",
+    "confidence": 0.95,
+    "reply": "Tidak ditemukan model dengan filter kota Cibubur di database Academy Next Top Model. Silakan coba filter lain atau lihat menu Model pada website."
+  },
+  {
+    "tag": "A",
+    "query": "usia berapa saja model yang terdaftar",
+    "intent": "model_count",
+    "source": "database_realtime",
+    "confidence": 0.95,
+    "reply": "Saat ini terdapat 22 model yang terdaftar di database Academy Next Top Model, dengan 22 model berstatus aktif/tersedia (available)."
+  },
+  {
+    "tag": "A",
+    "query": "model usia 15",
+    "intent": "registration_info",
+    "source": "nlu_engine+naive_bayes",
+    "confidence": 0.7,
+    "reply": "Selamat malam. Ada yang bisa saya bantu? Berikut jawabannya.\n\nKabar baik! 🎉 Dengan usia 15 tahun, Anda memenuhi syarat pendaftaran Academy Next Top Model (batas usia 4–25 tahun). Anda bisa langsung mendaftar melalui halaman Register di website kami.\n\nSilakan bertanya kapan saja."
+  },
+  {
+    "tag": "A",
+    "query": "model usia 10-15",
+    "intent": "registration_info",
+    "source": "nlu_engine+naive_bayes",
+    "confidence": 0.7,
+    "reply": "Selamat malam. Ada yang bisa saya bantu? Silakan disimak ya.\n\nKabar baik! 🎉 Dengan usia 10 tahun, Anda memenuhi syarat pendaftaran Academy Next Top Model (batas usia 4–25 tahun). Anda bisa langsung mendaftar melalui halaman Register di website kami.\n\nSaya siap membantu jika ada pertanyaan lainnya."
+  },
+  {
+    "tag": "A",
+    "query": "jadwl kelas kpan",
+    "intent": "schedule_info",
+    "source": "static_dictionary",
+    "confidence": 0.99,
+    "reply": "Lokasi Academy Next Top Model berada di Trans Studio Mall Cibubur, GF Floor Second Atrium."
+  },
+  {
+    "tag": "A",
+    "query": "ada model romaja gak",
+    "intent": "model_status",
+    "source": "database_realtime",
+    "confidence": 0.95,
+    "reply": "Saya belum menemukan model 'romaja gak' pada database website saat ini. Anda dapat memeriksa daftar model aktif di menu Model."
+  },
+  {
+    "tag": "A",
+    "query": "berapa byaya pendaftaran",
+    "intent": "pricing_sensitive",
+    "source": "rapidfuzz_matching",
+    "confidence": 0.96,
+    "reply": "Untuk informasi detail biaya, diskon khusus, atau paket pembayaran, silakan hubungi admin kami via WhatsApp untuk penawaran terbaik yang disesuaikan kebutuhan Anda."
+  },
+  {
+    "tag": "B",
+    "query": "status model Afia Khansa Rafani",
+    "intent": "model_status",
+    "source": "database_realtime",
+    "confidence": 0.95,
+    "reply": "Ya, model Afia Khansa Rafani terdaftar di database Academy Next Top Model. Kategori: Teens, kota: Bogor,  Jawa Barat, status: Tersedia (available)."
+  },
+  {
+    "tag": "B",
+    "query": "cari model Afia Khansa Rafani",
+    "intent": "model_status",
+    "source": "database_realtime",
+    "confidence": 0.95,
+    "reply": "Ya, model Afia Khansa Rafani terdaftar di database Academy Next Top Model. Kategori: Teens, kota: Bogor,  Jawa Barat, status: Tersedia (available)."
+  },
+  {
+    "tag": "B",
+    "query": "status model Camilla Aleecea",
+    "intent": "model_status",
+    "source": "database_realtime",
+    "confidence": 0.95,
+    "reply": "Ya, model Camilla Aleecea terdaftar di database Academy Next Top Model. Kategori: Teens, kota: Bekasi,  Jawa Barat, status: Tersedia (available)."
+  },
+  {
+    "tag": "B",
+    "query": "cari model Camilla Aleecea",
+    "intent": "model_status",
+    "source": "database_realtime",
+    "confidence": 0.95,
+    "reply": "Ya, model Camilla Aleecea terdaftar di database Academy Next Top Model. Kategori: Teens, kota: Bekasi,  Jawa Barat, status: Tersedia (available)."
+  },
+  {
+    "tag": "B",
+    "query": "status model Violla Alexandria Kirana",
+    "intent": "model_status",
+    "source": "database_realtime",
+    "confidence": 0.95,
+    "reply": "Ya, model Violla Alexandria Kirana terdaftar di database Academy Next Top Model. Kategori: Kids, kota: Jakarta, DKI Jakarta, status: Tersedia (available)."
+  },
+  {
+    "tag": "B",
+    "query": "cari model Violla Alexandria Kirana",
+    "intent": "model_status",
+    "source": "database_realtime",
+    "confidence": 0.95,
+    "reply": "Ya, model Violla Alexandria Kirana terdaftar di database Academy Next Top Model. Kategori: Kids, kota: Jakarta, DKI Jakarta, status: Tersedia (available)."
+  },
+  {
+    "tag": "B",
+    "query": "status model Clarissa Cheryl Steyz",
+    "intent": "model_status",
+    "source": "database_realtime",
+    "confidence": 0.95,
+    "reply": "Ya, model Clarissa Cheryl Steyz terdaftar di database Academy Next Top Model. Kategori: Kids, kota: Tangerang, Banten, status: Tersedia (available)."
+  },
+  {
+    "tag": "B",
+    "query": "cari model Clarissa Cheryl Steyz",
+    "intent": "model_status",
+    "source": "database_realtime",
+    "confidence": 0.95,
+    "reply": "Ya, model Clarissa Cheryl Steyz terdaftar di database Academy Next Top Model. Kategori: Kids, kota: Tangerang, Banten, status: Tersedia (available)."
+  },
+  {
+    "tag": "B",
+    "query": "status model Nathania Raynelle Wijaya",
+    "intent": "model_status",
+    "source": "database_realtime",
+    "confidence": 0.95,
+    "reply": "Ya, model Nathania Raynelle Wijaya terdaftar di database Academy Next Top Model. Kategori: Kids, kota: Jakarta, DKI Jakarta, status: Tersedia (available)."
+  },
+  {
+    "tag": "B",
+    "query": "cari model Nathania Raynelle Wijaya",
+    "intent": "model_status",
+    "source": "database_realtime",
+    "confidence": 0.95,
+    "reply": "Ya, model Nathania Raynelle Wijaya terdaftar di database Academy Next Top Model. Kategori: Kids, kota: Jakarta, DKI Jakarta, status: Tersedia (available)."
+  },
+  {
+    "tag": "B",
+    "query": "status model Nikita Wilmer Chung Steyz",
+    "intent": "model_status",
+    "source": "database_realtime",
+    "confidence": 0.95,
+    "reply": "Ya, model Nikita Wilmer Chung Steyz terdaftar di database Academy Next Top Model. Kategori: Kids, kota: Tangerang, Banten, status: Tersedia (available)."
+  },
+  {
+    "tag": "B",
+    "query": "cari model Nikita Wilmer Chung Steyz",
+    "intent": "model_status",
+    "source": "database_realtime",
+    "confidence": 0.95,
+    "reply": "Ya, model Nikita Wilmer Chung Steyz terdaftar di database Academy Next Top Model. Kategori: Kids, kota: Tangerang, Banten, status: Tersedia (available)."
+  },
+  {
+    "tag": "B",
+    "query": "status model Michelle Fidellia Parinussa",
+    "intent": "model_status",
+    "source": "database_realtime",
+    "confidence": 0.95,
+    "reply": "Ya, model Michelle Fidellia Parinussa terdaftar di database Academy Next Top Model. Kategori: Kids, kota: Bogor, Jawa Barat, status: Tersedia (available)."
+  },
+  {
+    "tag": "B",
+    "query": "cari model Michelle Fidellia Parinussa",
+    "intent": "model_status",
+    "source": "database_realtime",
+    "confidence": 0.95,
+    "reply": "Ya, model Michelle Fidellia Parinussa terdaftar di database Academy Next Top Model. Kategori: Kids, kota: Bogor, Jawa Barat, status: Tersedia (available)."
+  },
+  {
+    "tag": "B",
+    "query": "status model Kalyca Lashira",
+    "intent": "model_status",
+    "source": "database_realtime",
+    "confidence": 0.95,
+    "reply": "Ya, model Kalyca Lashira terdaftar di database Academy Next Top Model. Kategori: Kids, kota: Tangerang, Banten, status: Tersedia (available)."
+  },
+  {
+    "tag": "B",
+    "query": "cari model Kalyca Lashira",
+    "intent": "model_status",
+    "source": "database_realtime",
+    "confidence": 0.95,
+    "reply": "Ya, model Kalyca Lashira terdaftar di database Academy Next Top Model. Kategori: Kids, kota: Tangerang, Banten, status: Tersedia (available)."
+  },
+  {
+    "tag": "B",
+    "query": "status model Chevazrilia Alfaruk",
+    "intent": "model_status",
+    "source": "database_realtime",
+    "confidence": 0.95,
+    "reply": "Ya, model Chevazrilia Alfaruk terdaftar di database Academy Next Top Model. Kategori: Kids, kota: Bekasi, Jawa Barat, status: Tersedia (available)."
+  },
+  {
+    "tag": "B",
+    "query": "cari model Chevazrilia Alfaruk",
+    "intent": "model_status",
+    "source": "database_realtime",
+    "confidence": 0.95,
+    "reply": "Ya, model Chevazrilia Alfaruk terdaftar di database Academy Next Top Model. Kategori: Kids, kota: Bekasi, Jawa Barat, status: Tersedia (available)."
+  },
+  {
+    "tag": "B",
+    "query": "status model Aleeya Shafiyah",
+    "intent": "model_status",
+    "source": "database_realtime",
+    "confidence": 0.95,
+    "reply": "Ya, model Aleeya Shafiyah terdaftar di database Academy Next Top Model. Kategori: Kids, kota: Jakarta, DKI Jakarta, status: Tersedia (available)."
+  },
+  {
+    "tag": "B",
+    "query": "cari model Aleeya Shafiyah",
+    "intent": "model_status",
+    "source": "database_realtime",
+    "confidence": 0.95,
+    "reply": "Ya, model Aleeya Shafiyah terdaftar di database Academy Next Top Model. Kategori: Kids, kota: Jakarta, DKI Jakarta, status: Tersedia (available)."
+  },
+  {
+    "tag": "B",
+    "query": "status model Alisha Ahri",
+    "intent": "model_status",
+    "source": "database_realtime",
+    "confidence": 0.95,
+    "reply": "Ya, model Alisha Ahri terdaftar di database Academy Next Top Model. Kategori: Kids, kota: Tangerang, Banten, status: Tersedia (available)."
+  },
+  {
+    "tag": "B",
+    "query": "cari model Alisha Ahri",
+    "intent": "model_status",
+    "source": "database_realtime",
+    "confidence": 0.95,
+    "reply": "Ya, model Alisha Ahri terdaftar di database Academy Next Top Model. Kategori: Kids, kota: Tangerang, Banten, status: Tersedia (available)."
+  },
+  {
+    "tag": "B",
+    "query": "status model Nazwa Audina",
+    "intent": "model_status",
+    "source": "database_realtime",
+    "confidence": 0.95,
+    "reply": "Ya, model Nazwa Audina terdaftar di database Academy Next Top Model. Kategori: Teens, kota: Jakarta Timur, Jakarta, status: Tersedia (available)."
+  },
+  {
+    "tag": "B",
+    "query": "cari model Nazwa Audina",
+    "intent": "model_status",
+    "source": "database_realtime",
+    "confidence": 0.95,
+    "reply": "Ya, model Nazwa Audina terdaftar di database Academy Next Top Model. Kategori: Teens, kota: Jakarta Timur, Jakarta, status: Tersedia (available)."
+  },
+  {
+    "tag": "B",
+    "query": "status model Rara Dharmawan",
+    "intent": "model_status",
+    "source": "database_realtime",
+    "confidence": 0.95,
+    "reply": "Ya, model Rara Dharmawan terdaftar di database Academy Next Top Model. Kategori: Teens, kota: Depok, Jawa Barat, status: Tersedia (available)."
+  },
+  {
+    "tag": "B",
+    "query": "cari model Rara Dharmawan",
+    "intent": "model_status",
+    "source": "database_realtime",
+    "confidence": 0.95,
+    "reply": "Ya, model Rara Dharmawan terdaftar di database Academy Next Top Model. Kategori: Teens, kota: Depok, Jawa Barat, status: Tersedia (available)."
+  },
+  {
+    "tag": "B",
+    "query": "status model Kyna",
+    "intent": "model_status",
+    "source": "database_realtime",
+    "confidence": 0.95,
+    "reply": "Ya, model Kyna terdaftar di database Academy Next Top Model. Kategori: Teens, kota: Depok, Jawa Barat, status: Tersedia (available)."
+  },
+  {
+    "tag": "B",
+    "query": "cari model Kyna",
+    "intent": "model_status",
+    "source": "database_realtime",
+    "confidence": 0.95,
+    "reply": "Ya, model Kyna terdaftar di database Academy Next Top Model. Kategori: Teens, kota: Depok, Jawa Barat, status: Tersedia (available)."
+  },
+  {
+    "tag": "B",
+    "query": "status model Putri Nailah Azzahra",
+    "intent": "model_status",
+    "source": "database_realtime",
+    "confidence": 0.95,
+    "reply": "Ya, model Putri Nailah Azzahra terdaftar di database Academy Next Top Model. Kategori: Teens, kota: Bogor, Jawa Barat, status: Tersedia (available)."
+  },
+  {
+    "tag": "B",
+    "query": "cari model Putri Nailah Azzahra",
+    "intent": "model_status",
+    "source": "database_realtime",
+    "confidence": 0.95,
+    "reply": "Ya, model Putri Nailah Azzahra terdaftar di database Academy Next Top Model. Kategori: Teens, kota: Bogor, Jawa Barat, status: Tersedia (available)."
+  },
+  {
+    "tag": "B",
+    "query": "status model Dini Aura",
+    "intent": "model_status",
+    "source": "database_realtime",
+    "confidence": 0.95,
+    "reply": "Ya, model Dini Aura terdaftar di database Academy Next Top Model. Kategori: Teens, kota: Depok, Jawa Barat, status: Tersedia (available)."
+  },
+  {
+    "tag": "B",
+    "query": "cari model Dini Aura",
+    "intent": "model_status",
+    "source": "database_realtime",
+    "confidence": 0.95,
+    "reply": "Ya, model Dini Aura terdaftar di database Academy Next Top Model. Kategori: Teens, kota: Depok, Jawa Barat, status: Tersedia (available)."
+  },
+  {
+    "tag": "B",
+    "query": "status model Kirana Khanza Aurelia",
+    "intent": "model_status",
+    "source": "database_realtime",
+    "confidence": 0.95,
+    "reply": "Ya, model Kirana Khanza Aurelia terdaftar di database Academy Next Top Model. Kategori: Teens, kota: Bogor, Jawa Barat, status: Tersedia (available)."
+  },
+  {
+    "tag": "B",
+    "query": "cari model Kirana Khanza Aurelia",
+    "intent": "model_status",
+    "source": "database_realtime",
+    "confidence": 0.95,
+    "reply": "Ya, model Kirana Khanza Aurelia terdaftar di database Academy Next Top Model. Kategori: Teens, kota: Bogor, Jawa Barat, status: Tersedia (available)."
+  },
+  {
+    "tag": "B",
+    "query": "status model Maya Amjad",
+    "intent": "model_status",
+    "source": "database_realtime",
+    "confidence": 0.95,
+    "reply": "Ya, model Maya Amjad terdaftar di database Academy Next Top Model. Kategori: Teens, kota: Depok, Jawa Barat, status: Tersedia (available)."
+  },
+  {
+    "tag": "B",
+    "query": "cari model Maya Amjad",
+    "intent": "model_status",
+    "source": "database_realtime",
+    "confidence": 0.95,
+    "reply": "Ya, model Maya Amjad terdaftar di database Academy Next Top Model. Kategori: Teens, kota: Depok, Jawa Barat, status: Tersedia (available)."
+  },
+  {
+    "tag": "B",
+    "query": "status model Najwa Madina Azzahra",
+    "intent": "model_status",
+    "source": "database_realtime",
+    "confidence": 0.95,
+    "reply": "Ya, model Najwa Madina Azzahra terdaftar di database Academy Next Top Model. Kategori: Teens, kota: Bogor, Jawa Barat, status: Tersedia (available)."
+  },
+  {
+    "tag": "B",
+    "query": "cari model Najwa Madina Azzahra",
+    "intent": "model_status",
+    "source": "database_realtime",
+    "confidence": 0.95,
+    "reply": "Ya, model Najwa Madina Azzahra terdaftar di database Academy Next Top Model. Kategori: Teens, kota: Bogor, Jawa Barat, status: Tersedia (available)."
+  },
+  {
+    "tag": "B",
+    "query": "status model Fathia Riyandita Anwari",
+    "intent": "model_status",
+    "source": "database_realtime",
+    "confidence": 0.95,
+    "reply": "Ya, model Fathia Riyandita Anwari terdaftar di database Academy Next Top Model. Kategori: Teens, kota: Bogor, Jawa Barat, status: Tersedia (available)."
+  },
+  {
+    "tag": "B",
+    "query": "cari model Fathia Riyandita Anwari",
+    "intent": "model_status",
+    "source": "database_realtime",
+    "confidence": 0.95,
+    "reply": "Ya, model Fathia Riyandita Anwari terdaftar di database Academy Next Top Model. Kategori: Teens, kota: Bogor, Jawa Barat, status: Tersedia (available)."
+  },
+  {
+    "tag": "B",
+    "query": "status model Caren Magdalena Praselia",
+    "intent": "model_status",
+    "source": "database_realtime",
+    "confidence": 0.95,
+    "reply": "Ya, model Caren Magdalena Praselia terdaftar di database Academy Next Top Model. Kategori: Teens, kota: Jakarta, DKI Jakarta, status: Tersedia (available)."
+  },
+  {
+    "tag": "B",
+    "query": "cari model Caren Magdalena Praselia",
+    "intent": "model_status",
+    "source": "database_realtime",
+    "confidence": 0.95,
+    "reply": "Ya, model Caren Magdalena Praselia terdaftar di database Academy Next Top Model. Kategori: Teens, kota: Jakarta, DKI Jakarta, status: Tersedia (available)."
+  },
+  {
+    "tag": "B",
+    "query": "status model Sabrina Andhita Alkaf",
+    "intent": "model_status",
+    "source": "database_realtime",
+    "confidence": 0.95,
+    "reply": "Ya, model Sabrina Andhita Alkaf terdaftar di database Academy Next Top Model. Kategori: Teens, kota: Jakarta, DKI Jakarta, status: Tersedia (available)."
+  },
+  {
+    "tag": "B",
+    "query": "cari model Sabrina Andhita Alkaf",
+    "intent": "model_status",
+    "source": "database_realtime",
+    "confidence": 0.95,
+    "reply": "Ya, model Sabrina Andhita Alkaf terdaftar di database Academy Next Top Model. Kategori: Teens, kota: Jakarta, DKI Jakarta, status: Tersedia (available)."
+  }
+]
