@@ -978,6 +978,16 @@ def extract_model_filters(message: str) -> dict:
     if am:
         filters["age_min"] = int(am.group(1))
         filters["age_max"] = int(am.group(2)) if am.group(2) else int(am.group(1))
+        # Fallback rentang tanpa pemisah eksplisit: normalize_text() di atas sudah
+        # menghapus '-' SEBELUM regex ini jalan, jadi "usia 10-15" terbaca sebagai
+        # "usia 10 15" dan grup kedua (batas atas) gagal tertangkap oleh pola utama
+        # di atas (BUG-10, audit Tahap 2/3). Kalau angka kedua menempel langsung
+        # setelah angka pertama (tanpa pemisah kata lain di antaranya), tetap
+        # perlakukan sebagai batas atas rentang.
+        if am.group(2) is None:
+            am2 = re.search(r"(?:usia|umur)\s*" + re.escape(am.group(1)) + r"\s+(\d+)\b", msg)
+            if am2:
+                filters["age_max"] = int(am2.group(1))
 
     return filters
 
@@ -1803,7 +1813,10 @@ def is_model_list_query(message: str) -> bool:
     # "model <kota/kategori>" tanpa nama orang
     if "model" in msg:
         filters = extract_model_filters(msg)
-        if filters.get("categories") or filters.get("city") or filters.get("available_only"):
+        # BUG-3: sertakan unavailable_only & age_min — sebelumnya diabaikan sehingga
+        # query filter usia/unavailable jatuh ke NB/clarification, bukan list.
+        if (filters.get("categories") or filters.get("city") or filters.get("available_only")
+                or filters.get("unavailable_only") or filters.get("age_min") is not None):
             if name_lookup_exclusion:
                 return False
             # Token tepat setelah "model " yang BUKAN kata filter dikenal →
