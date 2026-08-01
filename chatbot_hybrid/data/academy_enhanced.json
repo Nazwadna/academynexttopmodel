@@ -1,0 +1,1170 @@
+{
+  "academy_info": {
+    "name": "Academy Next Top Model",
+    "description": "Academy modeling yang menyediakan layanan pengembangan model, pengelolaan portofolio digital, dan informasi seputar kegiatan academy",
+    "industry": "modeling, pengembangan talent, pelatihan model, dan manajemen portofolio digital",
+    "whatsapp": "+6281214237742",
+    "email": "info@academyntm.com",
+    "website": "https://academyntm.com"
+  },
+  "programs": {
+    "basic": {
+      "name": "Catwalk Basic",
+      "description": "Pelatihan dasar modeling untuk pemula",
+      "level": "Beginner",
+      "duration": "4 minggu",
+      "focus": "Dasar-dasar catwalk, posing, dan etiquette"
+    },
+    "advanced": {
+      "name": "Catwalk Advanced",
+      "description": "Pelatihan modeling tingkat lanjut",
+      "level": "Advanced",
+      "duration": "6 minggu",
+      "focus": "Advanced techniques, editorial posing, dan portfolio building"
+    },
+    "runway": {
+      "name": "Runway Class",
+      "description": "Kelas khusus teknik runway",
+      "level": "All levels",
+      "duration": "2 minggu",
+      "focus": "Runway techniques, fashion show preparation"
+    },
+    "beauty": {
+      "name": "Beauty Class",
+      "description": "Kelas kecantikan dan grooming",
+      "level": "All levels",
+      "duration": "3 minggu",
+      "focus": "Makeup, skincare, dan personal grooming"
+    },
+    "pose": {
+      "name": "Pose Class",
+      "description": "Kelas teknik posing untuk photoshoot",
+      "level": "All levels",
+      "duration": "2 minggu",
+      "focus": "Photoshoot posing, expression techniques"
+    },
+    "photoshoot": {
+      "name": "Photoshoot",
+      "description": "Kelas photoshoot profesional",
+      "level": "All levels",
+      "duration": "1 minggu",
+      "focus": "Professional photoshoot techniques"
+    },
+    "self_branding": {
+      "name": "Self Branding",
+      "description": "Pelatihan pengembangan personal branding",
+      "level": "All levels",
+      "duration": "3 minggu",
+      "focus": "Personal branding, social media presence"
+    },
+    "public_speaking": {
+      "name": "Public Speaking",
+      "description": "Kelas public speaking untuk model",
+      "level": "All levels",
+      "duration": "2 minggu",
+      "focus": "Communication skills, confidence building"
+    }
+  },
+  "schedule": {
+    "class_day": "Sabtu",
+    "class_time": "11.00 - 15.00",
+    "location": "Trans Studio Mall Cibubur, GF Floor Second Atrium",
+    "frequency": "Setiap minggu",
+    "address": "Trans Studio Mall Cibubur, GF Floor Second Atrium"
+  },
+  "pricing": {
+    "original_price": "Rp3.000.000",
+    "discount": "50%",
+    "final_price": "Rp1.500.000",
+    "payment_methods": [
+      "Transfer Bank",
+      "E-Wallet",
+      "Credit Card"
+    ],
+    "installment_options": "Cicilan 0% hingga 3 bulan",
+    "note": "Untuk detail pembayaran, hubungi admin WhatsApp"
+  },
+  "registration": {
+    "steps": [
+      "Buka halaman register di website",
+      "Buat akun dengan mengisi formulir lengkap",
+      "Siapkan foto close up dan full body",
+      "Lakukan pembayaran registrasi",
+      "Verifikasi akun melalui email/SMS",
+      "Login dan lengkapi profil portofolio"
+    ],
+    "requirements": [
+      "Usia start 4th - 25th",
+      "Mengisi formulir pendaftaran online",
+      "Foto close-up tanpa edit berlebihan",
+      "Foto full body tanpa edit berlebihan",
+      "Melakukan pembayaran registrasi sesuai ketentuan"
+    ],
+    "method": "Online melalui website",
+    "processing_time": "2-3 hari kerja"
+  },
+  "responses": {
+    "about_academy": [
+      "Academy Next Top Model adalah academy modeling yang menyediakan layanan pengembangan model, pengelolaan portofolio digital, dan informasi seputar kegiatan modeling.",
+      "Academy Next Top Model merupakan academy modeling yang membantu calon model, model aktif, dan klien dalam mengakses layanan modeling, pelatihan, dan portofolio digital secara lebih mudah.",
+      "Academy Next Top Model telah berjalan sejak tahun 2015 dan berfokus pada pengembangan talent, pelatihan modeling, serta penyediaan portofolio digital."
+    ],
+    "benefits_joining": {
+      "id": [
+        "Manfaat bergabung dengan Academy NTM: pelatihan dari mentor berpengalaman, portofolio profesional, kesempatan kolaborasi dengan klien ternama, manajemen karier, dan komunitas model yang suportif.",
+        "Keuntungan Academy NTM: akses ke network industri modeling, exposure ke fashion show, photoshoot profesional, dan pembinaan karier berkelanjutan."
+      ],
+      "en": [
+        "Benefits of joining Academy NTM: training from experienced mentors, professional portfolio, collaboration opportunities with top clients, career management, and supportive model community.",
+        "Advantages of Academy NTM: access to modeling industry network, fashion show exposure, professional photoshoots, and continuous career coaching."
+      ]
+    },
+    "programs_info": [
+      "Program di Academy Next Top Model meliputi Catwalk Basic, Catwalk Advanced, Runway Class, Beauty Class, Pose Class, Photoshoot, Self Branding, dan Public Speaking.",
+      "Materi kelas di Academy Next Top Model terdiri dari Catwalk Basic, Catwalk Advanced, Runway Class, Beauty Class, Pose Class, Photoshoot, Self Branding, dan Public Speaking."
+    ],
+    "registration_steps": [
+      "Cara pendaftaran di Academy Next Top Model adalah sebagai berikut:\n1. Buka halaman Register pada website.\n2. Isi data diri lengkap seperti nama, email, nomor WhatsApp, dan password.\n3. Lakukan verifikasi akun jika diminta.\n4. Login ke akun yang sudah dibuat.\n5. Lengkapi profil dan portofolio.\n6. Siapkan persyaratan pendaftaran yang diminta.\n7. Jika mengalami kendala, silakan hubungi admin.",
+      "Langkah pendaftaran di Academy Next Top Model:\n1. Masuk ke halaman Register.\n2. Buat akun dengan mengisi data diri lengkap.\n3. Verifikasi akun jika diperlukan.\n4. Login ke akun Anda.\n5. Lengkapi profil dan portofolio model.\n6. Ikuti instruksi lanjutan dari sistem atau admin.",
+      "Untuk mendaftar di Academy Next Top Model, silakan buka halaman Register, isi data diri lengkap, lakukan verifikasi akun, login ke akun yang sudah dibuat, lalu lengkapi profil dan portofolio Anda."
+    ],
+    "registration_requirements": [
+      "Persyaratan pendaftaran di Academy Next Top Model meliputi usia start 4th-25th, mengisi formulir, menyiapkan foto close-up dan full body, serta melakukan pembayaran registrasi.",
+      "Untuk mendaftar, peserta perlu mengisi formulir, menyiapkan foto close-up dan full body, serta mengikuti ketentuan pendaftaran yang berlaku."
+    ],
+    "photo_upload": [
+      "Panduan upload foto di Academy Next Top Model:\n1. Daftar/login ke website.\n2. Buka menu profil/portofolio.\n3. Unggah foto close-up dan foto full body.\n4. Gunakan format JPEG/JPG/PNG, foto jelas, dan tidak diedit berlebihan.\n5. Simpan profil agar portofolio tersimpan.\nJika gagal upload, hubungi admin via WhatsApp."
+    ],
+    "schedule_info": [
+      "Jadwal Academy Next Top Model adalah setiap hari Sabtu pukul 11.00 sampai 15.00 di Mall TSM Cibubur.",
+      "Kelas di Academy Next Top Model berlangsung setiap hari Sabtu, dari jam 11.00 hingga 15.00, berlokasi di Mall TSM Cibubur.",
+      "Untuk saat ini, jadwal pelatihan Academy Next Top Model adalah setiap Sabtu pukul 11.00-15.00 di Mall TSM Cibubur."
+    ],
+    "pricing_info": [
+      "Biaya pendaftaran Academy Next Top Model adalah Rp. 3.000.000,00 dengan diskon 50%, sehingga menjadi Rp. 1.500.000,00.",
+      "Harga awal program adalah Rp. 3.000.000,00, mendapatkan diskon 50%, sehingga biaya yang dibayar menjadi Rp. 1.500.000,00."
+    ],
+    "contact_admin": {
+      "id": [
+        "Hubungi kami via WhatsApp +6281214237742 atau email info@academyntm.com. Office hours: Senin-Sabtu 09.00-18.00 WIB.",
+        "Alamat: Trans Studio Mall Cibubur, GF Floor Second Atrium. Follow Instagram @academyntm untuk update terbaru."
+      ],
+      "en": [
+        "Contact us via WhatsApp +6281214237742 or email info@academyntm.com. Office hours: Monday-Saturday 09.00-18.00 WIB.",
+        "Address: Trans Studio Mall Cibubur, GF Floor Second Atrium. Follow Instagram @academyntm for latest updates."
+      ]
+    },
+    "homepage_info": [
+      "Owner, CEO, Founder, dan Coach Academy Next Top Model adalah Oliviarie Summer. Beliau juga merupakan Miss Queen Indonesia 2023 dan Miss International Queen 2024.",
+      "Oliviarie Summer adalah Owner, CEO, Founder, dan Coach Academy Next Top Model. Beliau juga dikenal sebagai Miss Queen Indonesia 2023 dan Miss International Queen 2024.",
+      "Academy Next Top Model dipimpin oleh Oliviarie Summer sebagai Owner, CEO, Founder, dan Coach. Prestasi beliau termasuk Miss Queen Indonesia 2023 dan Miss International Queen 2024.",
+      "Founder, CEO, dan Coach Academy Next Top Model adalah Oliviarie Summer dengan prestasi Miss Queen Indonesia 2023 dan Miss International Queen 2024.",
+      "Oliviarie Summer adalah pemilik Academy Next Top Model yang juga meraih gelar Miss Queen Indonesia 2023 dan Miss International Queen 2024."
+    ],
+    "pricing_sensitive": {
+      "id": [
+        "Untuk informasi detail biaya, diskon khusus, atau paket pembayaran, silakan hubungi admin kami via WhatsApp untuk penawaran terbaik yang disesuaikan kebutuhan Anda.",
+        "Info pembayaran dan biaya detail akan disampaikan langsung oleh admin kami agar lebih akurat. Klik tombol WhatsApp untuk konsultasi gratis."
+      ],
+      "en": [
+        "For detailed fee information, special discounts, or payment packages, please contact our admin via WhatsApp for the best offer tailored to your needs.",
+        "Payment and detailed fee information will be provided directly by our admin for accuracy. Click WhatsApp button for free consultation."
+      ]
+    },
+    "login_help": {
+      "id": [
+        "Cara login: Masukkan email dan password yang terdaftar. Bisa juga login dengan Google untuk kemudahan. Lupa password? Gunakan fitur forgot password.",
+        "Login dengan Google otomatis membuat akun dan sync data. Pastikan email Google aktif dan valid."
+      ],
+      "en": [
+        "How to login: Enter registered email and password. You can also login with Google for convenience. Forgot password? Use forgot password feature.",
+        "Google login automatically creates account and syncs data. Ensure Google email is active and valid."
+      ]
+    },
+    "register_help": {
+      "id": [
+        "Cara membuat akun: Klik 'Register', isi nama, email, password. Bisa juga register dengan Google untuk proses lebih cepat.",
+        "Register dengan Google mengisi data otomatis dari Google profile. Tetap perlu lengkapi data modeling secara manual."
+      ],
+      "en": [
+        "How to create account: Click 'Register', fill name, email, password. You can also register with Google for faster process.",
+        "Google registration automatically fills data from Google profile. Still need to complete modeling data manually."
+      ]
+    },
+    "otp_help": {
+      "id": [
+        "Verifikasi OTP digunakan untuk mengamankan akun Anda. Kode OTP dikirim ke email/SMS dan berlaku 5 menit. Maks 3 percobaan.",
+        "Jika OTP tidak masuk, cek folder spam atau request ulang kode. Masih bermasalah? Hubungi admin via WhatsApp."
+      ],
+      "en": [
+        "OTP verification is used to secure your account. OTP code is sent to email/SMS and valid for 5 minutes. Maximum 3 attempts.",
+        "If OTP doesn't arrive, check spam folder or request new code. Still having issues? Contact admin via WhatsApp."
+      ]
+    },
+    "model_categories": {
+      "id": [
+        "Kategori model: All (semua usia), Kids (6-12 tahun), Teens (13-17 tahun). Setiap kategori memiliki program yang disesuaikan.",
+        "Filter kategori membantu klien menemukan model yang tepat untuk proyek mereka. Setiap model memiliki profil lengkap."
+      ],
+      "en": [
+        "Model categories: All (all ages), Kids (6-12 years), Teens (13-17 years). Each category has age-appropriate programs.",
+        "Category filters help clients find the right models for their projects. Each model has complete profile."
+      ]
+    },
+    "client_search_model": {
+      "id": [
+        "Cara cari model: Browse halaman Models, gunakan filter kategori, lihat profil, dan klik 'Hire via WhatsApp' untuk proses booking.",
+        "Setiap profil model menampilkan portfolio, pengalaman, dan kontak langsung. Bisa juga request model untuk casting khusus."
+      ],
+      "en": [
+        "How to search models: Browse Models page, use category filters, view profiles, and click 'Hire via WhatsApp' for booking process.",
+        "Each model profile shows portfolio, experience, and direct contact. Can also request models for specific casting."
+      ]
+    },
+    "portfolio_info": {
+      "id": [
+        "Portofolio model adalah profil digital lengkap menampilkan data pribadi, pengalaman, foto profesional, dan achievement. Update rutin direkomendasikan.",
+        "Portfolio sections: personal data, measurements, experience, portfolio photos, career highlights, awards, dan contact info."
+      ],
+      "en": [
+        "Model portfolio is complete digital profile showing personal data, experience, professional photos, and achievements. Regular updates recommended.",
+        "Portfolio sections: personal data, measurements, experience, portfolio photos, career highlights, awards, and contact info."
+      ]
+    },
+    "career_highlights_info": {
+      "id": [
+        "Career Highlights menampilkan pencapaian karier model: fashion shows, photoshoots, brand collaborations, awards, dan media features.",
+        "Bagian ini penting untuk menunjukkan pengalaman dan kredibilitas model kepada calon klien dan agency."
+      ],
+      "en": [
+        "Career Highlights display model career achievements: fashion shows, photoshoots, brand collaborations, awards, and media features.",
+        "This section is important to show model experience and credibility to potential clients and agencies."
+      ]
+    },
+    "booking_info": {
+      "id": [
+        "Booking model: Pilih model dari halaman Models, klik 'Hire via WhatsApp', atau hubungi admin untuk casting khusus. Response time 1-2 jam.",
+        "Proses booking: 1) Pilih model, 2) Kirim detail proyek, 3) Konfirmasi jadwal, 4) Pembayaran DP 50%, 5) Eksekusi photoshoot/event."
+      ],
+      "en": [
+        "Model booking: Select model from Models page, click 'Hire via WhatsApp', or contact admin for custom casting. Response time 1-2 hours.",
+        "Booking process: 1) Select model, 2) Send project details, 3) Confirm schedule, 4) 50% DP payment, 5) Execute photoshoot/event."
+      ]
+    },
+    "greeting": {
+      "id": [
+        "Halo! Selamat datang di Academy Next Top Model. Saya asisten AI siap membantu informasi tentang program, pendaftaran, dan layanan kami.",
+        "Selamat datang di Academy NTM! Ada yang bisa saya bantu mengenai pelatihan modeling atau informasi lainnya?"
+      ],
+      "en": [
+        "Hello! Welcome to Academy Next Top Model. I'm your AI assistant ready to help with information about our programs, registration, and services.",
+        "Welcome to Academy NTM! How can I help you with modeling training or other information?"
+      ]
+    },
+    "technical_support": {
+      "id": [
+        "Masalah teknis? Coba refresh halaman atau clear cache browser. Masih bermasalah? Hubungi admin via WhatsApp untuk bantuan segera.",
+        "Untuk bantuan login, register, atau website error, silakan kontak admin kami melalui WhatsApp untuk assistance cepat."
+      ],
+      "en": [
+        "Technical issues? Try refreshing page or clearing browser cache. Still having problems? Contact admin via WhatsApp for immediate help.",
+        "For login, register, or website errors assistance, please contact our admin through WhatsApp for quick support."
+      ]
+    },
+    "emergency": {
+      "id": [
+        "Untuk kebutuhan mendesak, hubungi kami segera via WhatsApp +6281214237742. Tim siap membantu 24/7 untuk keadaan darurat.",
+        "Emergency assistance available 24/7. Call or WhatsApp +6281214237742 for urgent matters. We're here to help!"
+      ],
+      "en": [
+        "For urgent matters, contact us immediately via WhatsApp +6281214237742. Our team is ready to help 24/7 for emergency situations.",
+        "Emergency assistance available 24/7. Call or WhatsApp +6281214237742 for urgent needs. We're here to help!"
+      ]
+    },
+    "academy_info": [
+      "Academy Next Top Model telah berjalan sejak tahun 2015 dan menyediakan program pelatihan modeling serta pengembangan talent.",
+      "Academy Next Top Model merupakan academy modeling sejak 2015 yang menyediakan pelatihan, pengembangan talent, dan persiapan portofolio."
+    ],
+    "program_info": [
+      "Program dan materi kelas di Academy Next Top Model meliputi Catwalk Basic, Catwalk Advanced, Runway Class, Beauty Class, Pose Class, Photoshoot, Self Branding, dan Public Speaking."
+    ],
+    "location_info": [
+      "Lokasi Academy Next Top Model berada di Trans Studio Mall Cibubur, GF Floor Second Atrium.",
+      "Academy Next Top Model berlokasi di Trans Studio Mall Cibubur, GF Floor Second Atrium."
+    ],
+    "join_registration_info": [
+      "Cara pendaftaran di Academy Next Top Model adalah sebagai berikut:\n1. Buka halaman Register pada website.\n2. Isi data diri lengkap seperti nama, email, nomor WhatsApp, dan password.\n3. Lakukan verifikasi akun jika diminta.\n4. Login ke akun yang sudah dibuat.\n5. Lengkapi profil dan portofolio.\n6. Ikuti instruksi lanjutan dari sistem atau admin.",
+      "Untuk bergabung dengan Academy Next Top Model, buka halaman Register, buat akun, isi data diri, verifikasi jika diminta, lalu lengkapi profil dan portofolio."
+    ],
+    "become_model_info": [
+      "Panduan menjadi model di Academy Next Top Model:\n1. Daftar online melalui halaman Register di website.\n2. Lengkapi syarat pendaftaran: usia start 4th-25th, mengisi formulir, menyiapkan foto close-up dan full body, serta melakukan pembayaran registrasi.\n3. Ikuti program pelatihan: Catwalk Basic, Catwalk Advanced, Runway Class, Beauty Class, Pose Class, Photoshoot, Self Branding, dan Public Speaking.\n4. Lengkapi profil dan bangun portofolio digital di website.\n5. Kelas berlangsung setiap hari Sabtu pukul 11.00 sampai 15.00 di Mall TSM Cibubur.\nUntuk informasi biaya atau promo, silakan hubungi admin melalui WhatsApp."
+    ]
+  },
+  "keywords": {
+    "about_academy": [
+      "apa itu academy next top model",
+      "academy next top model itu apa",
+      "tentang academy next top model",
+      "academy ini apa",
+      "ini website apa",
+      "academy next top model bergerak di bidang apa",
+      "academy next top model sejak kapan",
+      "tentang academy",
+      "ntm itu apa",
+      "lembaga modeling ini apa",
+      "gambaran umum academy"
+    ],
+    "benefits_joining": {
+      "id": [
+        "manfaat bergabung",
+        "keuntungan join",
+        "kenapa pilih academy",
+        "mengapa academy",
+        "kelebihan academy",
+        "keuntungan academy"
+      ],
+      "en": [
+        "benefits joining",
+        "advantages academy",
+        "why choose academy",
+        "academy benefits"
+      ]
+    },
+    "programs_info": [
+      "program apa saja",
+      "kelas apa saja",
+      "materi kelas apa saja",
+      "class materials",
+      "program academy",
+      "pelatihan apa saja",
+      "catwalk basic",
+      "catwalk advanced",
+      "runway class",
+      "beauty class",
+      "pose class",
+      "photoshoot",
+      "self branding",
+      "public speaking",
+      "materi academy apa saja",
+      "isi kelas apa saja",
+      "academy ngajarin apa saja"
+    ],
+    "registration_steps": [
+      "cara daftar",
+      "cara join",
+      "cara join academy",
+      "saya mau daftar",
+      "cara pendaftaran",
+      "proses pendaftaran",
+      "proses daftar",
+      "cara register",
+      "cara buat akun",
+      "join academy",
+      "pendaftaran academy",
+      "daftar academy",
+      "register academy",
+      "alur pendaftaran",
+      "langkah daftar"
+    ],
+    "registration_requirements": [
+      "apa syarat pendaftaran",
+      "syarat daftar",
+      "requirements",
+      "persyaratan",
+      "apa saja yang harus disiapkan",
+      "fill the form",
+      "start 4th - 25th",
+      "kriteria peserta",
+      "kualifikasi daftar",
+      "dokumen pendaftaran"
+    ],
+    "photo_upload": [
+      "cara upload foto",
+      "upload foto",
+      "unggah foto",
+      "format foto",
+      "upload portofolio",
+      "foto close up",
+      "foto full body",
+      "close up photo",
+      "full body photo",
+      "ketentuan foto portofolio",
+      "format file foto"
+    ],
+    "schedule_info": [
+      "jadwal",
+      "jadwal academy",
+      "jadwal kelas",
+      "jadwal pelatihan",
+      "kapan jadwal",
+      "jadwal kapan",
+      "kapan kelas",
+      "jam berapa",
+      "hari apa",
+      "jadwal academy kapan saja",
+      "kelas kapan diadakan",
+      "pelatihannya kapan",
+      "every saturday",
+      "setiap sabtu",
+      "sabtu buka",
+      "jam 11",
+      "jam 15"
+    ],
+    "location_info": [
+      "lokasi",
+      "lokasinya di mana",
+      "dimana tempatnya",
+      "alamat academy",
+      "alamat kelas",
+      "dimana academy",
+      "alamat mall tsm cibubur",
+      "dimana tempatnya",
+      "tempatnya dimana",
+      "lokasinya dimana ya",
+      "alamat lengkapnya",
+      "studionya dimana",
+      "google maps ada",
+      "dekat mana",
+      "kalau dari jakarta jauh",
+      "bisa kirim lokasi",
+      "patokannya apa"
+    ],
+    "join_registration_info": [
+      "saya mau join",
+      "gimana caranya join",
+      "mau gabung",
+      "mau daftar",
+      "saya ingin bergabung",
+      "cara gabung academy",
+      "ingin join academy",
+      "proses bergabung"
+    ],
+    "become_model_info": [
+      "panduan jadi model",
+      "cara jadi model",
+      "cara menjadi model",
+      "bagaimana jadi model",
+      "bagaimana menjadi model",
+      "tips jadi model",
+      "mau jadi model",
+      "pengen jadi model",
+      "ingin jadi model",
+      "jadi model profesional",
+      "menjadi model profesional",
+      "mulai karier modeling",
+      "cara jadi model profesional",
+      "saran pemula ingin jadi model",
+      "persiapan jadi model"
+    ],
+    "pricing_info": [
+      "berapa biaya pendaftaran",
+      "berapa harga register",
+      "harga program berapa",
+      "biaya program",
+      "harga academy",
+      "biaya join academy",
+      "biaya pendaftaran berapa",
+      "harga kelas berapa",
+      "total biaya",
+      "ada diskon",
+      "ada promo",
+      "diskon masih ada"
+    ],
+    "contact_admin": {
+      "id": [
+        "hubungi academy",
+        "kontak admin",
+        "nomor telepon",
+        "email academy",
+        "whatsapp academy",
+        "cara menghubungi admin",
+        "nomor cs",
+        "customer service"
+      ],
+      "en": [
+        "contact academy",
+        "contact us",
+        "admin contact",
+        "phone number",
+        "academy email",
+        "whatsapp number"
+      ]
+    },
+    "homepage_info": [
+      "tagline academy",
+      "motto academy",
+      "be smart beautiful and confident",
+      "small step to make big dream come true",
+      "siapa founder academy next top model",
+      "siapa ceo academy next top model",
+      "siapa coach academy next top model",
+      "siapa pemilik academy next top model",
+      "siapa yang punya academy next top model",
+      "oliviarie summer siapa",
+      "prestasi founder academy",
+      "siapa owner academy",
+      "siapa owner academy next top model",
+      "siapa pemilik academy",
+      "siapa founder academy",
+      "siapa ceo academy",
+      "siapa coach academy",
+      "latar belakang founder"
+    ],
+    "model_info": [
+      "siapa saja model",
+      "daftar model",
+      "nama model di website",
+      "model tersedia",
+      "model available",
+      "lihat katalog model",
+      "siapa talent",
+      "cari model"
+    ],
+    "pricing_sensitive": {
+      "id": [
+        "biaya detail",
+        "pembayaran",
+        "booking fee",
+        "kontrak",
+        "negosiasi",
+        "fee model",
+        "harga spesial",
+        "diskon detail",
+        "paket harga",
+        "cicilan"
+      ],
+      "en": [
+        "detailed pricing",
+        "payment",
+        "booking fee",
+        "contract",
+        "negotiation",
+        "model fee",
+        "special price",
+        "price packages"
+      ]
+    },
+    "login_help": {
+      "id": [
+        "cara login",
+        "bagaimana login",
+        "masuk akun",
+        "login google",
+        "gagal login",
+        "lupa password",
+        "tidak bisa login",
+        "login error"
+      ],
+      "en": [
+        "how to login",
+        "login account",
+        "google login",
+        "login failed",
+        "forgot password",
+        "cannot login"
+      ]
+    },
+    "register_help": {
+      "id": [
+        "cara membuat akun",
+        "buat akun",
+        "daftar akun",
+        "register google",
+        "gagal daftar",
+        "buat akun baru",
+        "tidak bisa register",
+        "register gagal"
+      ],
+      "en": [
+        "how to create account",
+        "create account",
+        "register google",
+        "registration failed",
+        "new account",
+        "cannot register"
+      ]
+    },
+    "otp_help": {
+      "id": [
+        "verifikasi otp",
+        "kode otp",
+        "otp tidak masuk",
+        "verifikasi akun",
+        "kode verifikasi",
+        "otp error",
+        "otp tidak diterima"
+      ],
+      "en": [
+        "otp verification",
+        "otp code",
+        "otp not received",
+        "account verification",
+        "verification code",
+        "otp failed"
+      ]
+    },
+    "model_categories": {
+      "id": [
+        "kategori model",
+        "all models",
+        "kids model",
+        "teens model",
+        "filter model",
+        "jenis model",
+        "tipe model"
+      ],
+      "en": [
+        "model categories",
+        "all models",
+        "kids models",
+        "teens models",
+        "model filter",
+        "model types"
+      ]
+    },
+    "client_search_model": {
+      "id": [
+        "cari model untuk",
+        "pilih model untuk",
+        "lihat model untuk",
+        "model available untuk",
+        "sewa model",
+        "hire model",
+        "butuh model",
+        "booking model",
+        "mau booking model"
+      ],
+      "en": [
+        "search model for",
+        "select model for",
+        "find model for",
+        "rent model",
+        "hire model",
+        "need model",
+        "book model",
+        "how to book"
+      ]
+    },
+    "portfolio_info": {
+      "id": [
+        "portofolio model",
+        "apa itu portofolio",
+        "isi portofolio",
+        "profil model lengkap",
+        "bikin portofolio",
+        "portfolio model"
+      ],
+      "en": [
+        "model portfolio",
+        "what is portfolio",
+        "portfolio content",
+        "model profile",
+        "create portfolio"
+      ]
+    },
+    "career_highlights_info": {
+      "id": [
+        "career highlights",
+        "pencapaian karier model",
+        "prestasi model di academy",
+        "portfolio karier",
+        "achievement model di website",
+        "penghargaan model"
+      ],
+      "en": [
+        "career highlights",
+        "career achievements",
+        "model accomplishments",
+        "career portfolio"
+      ]
+    },
+    "booking_info": {
+      "id": [
+        "booking model",
+        "sewa model",
+        "hire model",
+        "cara booking",
+        "proses booking",
+        "order model"
+      ],
+      "en": [
+        "model booking",
+        "rent model",
+        "hire model",
+        "contact booking",
+        "booking process"
+      ]
+    },
+    "greeting": {
+      "id": [
+        "halo",
+        "hi",
+        "hello",
+        "selamat",
+        "pagi",
+        "siang",
+        "sore",
+        "malam",
+        "hai"
+      ],
+      "en": [
+        "hello",
+        "hi",
+        "good morning",
+        "good afternoon",
+        "good evening"
+      ]
+    },
+    "technical": {
+      "id": [
+        "website error dan tidak bisa diakses",
+        "tidak bisa login ke akun website",
+        "kode otp verifikasi tidak masuk ke email atau whatsapp",
+        "email verifikasi pendaftaran tidak terkirim",
+        "gagal upload foto portofolio profil",
+        "halaman website blank putih saat membuka profil",
+        "loading terus menerus saat registrasi akun",
+        "ada bug error pada formulir pendaftaran",
+        "tidak bisa register akun baru di website",
+        "lupa password dan gagal reset akun",
+        "kendala sistem error pada website academy",
+        "akun terblokir tidak bisa masuk login",
+        "masalah verifikasi otp pendaftaran",
+        "halaman login error dan tidak merespon"
+      ],
+      "en": [
+        "website error and cannot be accessed",
+        "cannot login to website account",
+        "otp verification code not arriving",
+        "verification email not sent",
+        "failed to upload portfolio photo",
+        "blank page loading issue on profile",
+        "continuous loading during account registration",
+        "bug error on registration form",
+        "cannot register new account on website",
+        "forgot password and reset failed"
+      ]
+    },
+    "emergency": {
+      "id": [
+        "layanan darurat kendala sistem website",
+        "bantuan darurat akun terblokir atau diretas",
+        "pelaporan bug kritis pada sistem pendaftaran",
+        "panggilan darurat ke tim teknis website",
+        "kendala pembayaran gagal tapi saldo terpotong",
+        "bantuan teknis urgent sistem login website"
+      ],
+      "en": [
+        "emergency service for system issue",
+        "urgent technical help for blocked account",
+        "critical bug reporting on website",
+        "urgent hotline support for system failure"
+      ]
+    }
+  },
+  "sensitive_keywords": {
+    "id": [
+      "biaya detail",
+      "pembayaran",
+      "booking fee",
+      "kontrak",
+      "negosiasi",
+      "fee model",
+      "harga spesial",
+      "diskon detail",
+      "paket harga",
+      "cicilan"
+    ],
+    "en": [
+      "detailed pricing",
+      "payment",
+      "booking fee",
+      "contract",
+      "negotiation",
+      "model fee",
+      "special price",
+      "price packages",
+      "installment"
+    ]
+  },
+  "intents": {
+    "about_academy": "about_academy",
+    "benefits_joining": "benefits_joining",
+    "programs_info": "programs_info",
+    "registration_steps": "registration_steps",
+    "registration_requirements": "registration_requirements",
+    "schedule_info": "schedule_info",
+    "location_info": "location_info",
+    "join_registration_info": "join_registration_info",
+    "become_model_info": "become_model_info",
+    "pricing_info": "pricing_info",
+    "pricing_sensitive": "pricing_sensitive",
+    "login_help": "login_help",
+    "register_help": "register_help",
+    "otp_help": "otp_help",
+    "model_categories": "model_categories",
+    "client_search_model": "client_search_model",
+    "portfolio_info": "portfolio_info",
+    "career_highlights_info": "career_highlights_info",
+    "contact_admin": "contact_admin",
+    "booking_info": "booking_info",
+    "greeting": "greeting",
+    "technical_support": "technical_support",
+    "emergency": "emergency"
+  },
+  "retrieval": {
+    "answer_selection": "query_rank",
+    "prefer_specific_over_general": true,
+    "min_field_score": 0.18,
+    "min_snippet_score": 0.22,
+    "extract_lines_intents": [
+      "become_model_info",
+      "registration_steps",
+      "photo_upload"
+    ],
+    "fallback_message": "Maaf, informasi mengenai hal tersebut belum tersedia di knowledge base kami. Silakan hubungi admin Academy Next Top Model melalui WhatsApp untuk bantuan lebih lanjut.",
+    "intent_aliases": {
+      "training_programs": "programs_info",
+      "technical": "technical_support",
+      "join_registration_info": "registration_steps",
+      "academy_info": "about_academy",
+      "benefit_info": "benefits_joining",
+      "pricing_info": "pricing_sensitive"
+    },
+    "intent_specificity": {
+      "photo_upload": 12,
+      "registration_requirements": 11,
+      "location_info": 10,
+      "schedule_info": 9,
+      "registration_steps": 8,
+      "programs_info": 7,
+      "contact_admin": 7,
+      "benefits_joining": 6,
+      "about_academy": 5,
+      "homepage_info": 5,
+      "become_model_info": 4,
+      "pricing_sensitive": 10
+    },
+    "knowledge_fields": {
+      "schedule_info": [
+        {
+          "id": "day",
+          "specificity": 1.4,
+          "strict_keywords": true,
+          "keywords": ["hari apa", "hari", "sabtu", "setiap hari", "hari kelas"],
+          "source": "schedule.class_day",
+          "template": "Kelas Academy Next Top Model berlangsung setiap hari {value}."
+        },
+        {
+          "id": "time",
+          "specificity": 1.5,
+          "strict_keywords": true,
+          "keywords": ["jam berapa", "jam", "pukul", "waktu kelas", "mulai jam"],
+          "source": "schedule.class_time",
+          "template": "Kelas Academy Next Top Model dimulai pukul {value}."
+        },
+        {
+          "id": "location_only",
+          "specificity": 1.3,
+          "strict_keywords": true,
+          "keywords": ["di mana jadwal", "lokasi kelas", "tempat kelas"],
+          "redirect_intent": "location_info"
+        },
+        {
+          "id": "full",
+          "general": true,
+          "specificity": 0.6,
+          "keywords": ["jadwal", "jadwal kelas", "jadwal academy", "jadwal pelatihan"],
+          "response_key": "schedule_info"
+        }
+      ],
+      "registration_requirements": [
+        {
+          "id": "age",
+          "specificity": 1.5,
+          "strict_keywords": true,
+          "keywords": ["usia", "umur", "berapa tahun", "batas usia", "age"],
+          "source": "registration.requirements",
+          "template": "Persyaratan usia Academy Next Top Model: usia start 4th-25th (sesuai ketentuan pendaftaran resmi)."
+        },
+        {
+          "id": "photos",
+          "specificity": 1.4,
+          "strict_keywords": true,
+          "keywords": ["foto", "close up", "close-up", "full body", "dokumen foto"],
+          "source": "registration.requirements",
+          "template": "Syarat foto pendaftaran: menyiapkan foto close-up dan foto full body tanpa edit berlebihan."
+        },
+        {
+          "id": "payment",
+          "specificity": 1.3,
+          "strict_keywords": true,
+          "keywords": ["bayar registrasi", "pembayaran registrasi", "biaya syarat"],
+          "redirect_intent": "pricing_sensitive"
+        },
+        {
+          "id": "full",
+          "general": true,
+          "specificity": 0.6,
+          "keywords": ["syarat", "persyaratan", "requirement"],
+          "response_key": "registration_requirements"
+        }
+      ],
+      "registration_steps": [
+        {
+          "id": "register_page",
+          "specificity": 1.3,
+          "strict_keywords": true,
+          "keywords": ["halaman register", "buat akun", "isi formulir", "register"],
+          "response_key": "registration_steps",
+          "extract_relevant_lines": true
+        },
+        {
+          "id": "full",
+          "general": true,
+          "specificity": 0.6,
+          "keywords": ["cara daftar", "proses pendaftaran", "langkah", "cara join"],
+          "response_key": "registration_steps"
+        }
+      ],
+      "become_model_info": [
+        {
+          "id": "requirements",
+          "specificity": 1.6,
+          "strict_keywords": true,
+          "keywords": ["syarat jadi model", "persyaratan jadi model", "syarat menjadi model"],
+          "redirect_intent": "registration_requirements"
+        },
+        {
+          "id": "steps",
+          "specificity": 1.5,
+          "strict_keywords": true,
+          "keywords": ["cara daftar", "proses daftar", "langkah daftar", "cara join academy"],
+          "redirect_intent": "registration_steps"
+        },
+        {
+          "id": "programs",
+          "specificity": 1.5,
+          "strict_keywords": true,
+          "keywords": ["program pelatihan", "materi kelas", "pelatihan apa", "kelas apa saja"],
+          "redirect_intent": "programs_info"
+        },
+        {
+          "id": "schedule",
+          "specificity": 1.5,
+          "strict_keywords": true,
+          "keywords": ["jadwal kelas", "hari sabtu", "jam kelas"],
+          "redirect_intent": "schedule_info"
+        },
+        {
+          "id": "photo",
+          "specificity": 1.6,
+          "strict_keywords": true,
+          "keywords": ["upload foto", "unggah foto", "foto close", "full body"],
+          "redirect_intent": "photo_upload"
+        },
+        {
+          "id": "pricing",
+          "specificity": 1.6,
+          "strict_keywords": true,
+          "keywords": ["biaya jadi model", "harga pendaftaran", "diskon", "promo"],
+          "redirect_intent": "pricing_sensitive"
+        },
+        {
+          "id": "full",
+          "general": true,
+          "specificity": 0.5,
+          "keywords": ["jadi model", "menjadi model", "panduan", "karier modeling", "cara jadi model", "cara menjadi model"],
+          "response_key": "become_model_info"
+        }
+      ],
+      "contact_admin": [
+        {
+          "id": "whatsapp",
+          "specificity": 1.5,
+          "strict_keywords": true,
+          "keywords": ["wa", "whatsapp", "nomor", "hubungi", "kontak", "telepon", "admin"],
+          "response_key": "contact_admin",
+          "variant_filter_keywords": ["whatsapp", "email", "office hours", "jam"]
+        },
+        {
+          "id": "address_social",
+          "specificity": 1.3,
+          "strict_keywords": true,
+          "keywords": ["alamat admin", "instagram", "ig", "follow"],
+          "response_key": "contact_admin",
+          "variant_filter_keywords": ["alamat", "instagram", "address"]
+        },
+        {
+          "id": "full",
+          "general": true,
+          "specificity": 0.5,
+          "keywords": ["kontak", "admin"],
+          "response_key": "contact_admin"
+        }
+      ],
+      "programs_info": [
+        {
+          "id": "basic",
+          "specificity": 1.6,
+          "strict_keywords": true,
+          "keywords": ["catwalk basic", "basic"],
+          "source": "programs.basic",
+          "label": "Catwalk Basic",
+          "template": "Program {name}: {value}"
+        },
+        {
+          "id": "advanced",
+          "specificity": 1.6,
+          "strict_keywords": true,
+          "keywords": ["catwalk advanced", "advanced"],
+          "source": "programs.advanced",
+          "label": "Catwalk Advanced",
+          "template": "Program {name}: {value}"
+        },
+        {
+          "id": "runway",
+          "specificity": 1.5,
+          "strict_keywords": true,
+          "keywords": ["runway", "runway class"],
+          "source": "programs.runway",
+          "label": "Runway Class",
+          "template": "Program {name}: {value}"
+        },
+        {
+          "id": "beauty",
+          "specificity": 1.5,
+          "strict_keywords": true,
+          "keywords": ["beauty", "beauty class"],
+          "source": "programs.beauty",
+          "label": "Beauty Class",
+          "template": "Program {name}: {value}"
+        },
+        {
+          "id": "pose",
+          "specificity": 1.5,
+          "strict_keywords": true,
+          "keywords": ["pose", "pose class"],
+          "source": "programs.pose",
+          "label": "Pose Class",
+          "template": "Program {name}: {value}"
+        },
+        {
+          "id": "photoshoot",
+          "specificity": 1.5,
+          "strict_keywords": true,
+          "keywords": ["photoshoot"],
+          "source": "programs.photoshoot",
+          "label": "Photoshoot",
+          "template": "Program {name}: {value}"
+        },
+        {
+          "id": "self_branding",
+          "specificity": 1.5,
+          "strict_keywords": true,
+          "keywords": ["self branding", "branding"],
+          "source": "programs.self_branding",
+          "label": "Self Branding",
+          "template": "Program {name}: {value}"
+        },
+        {
+          "id": "public_speaking",
+          "specificity": 1.5,
+          "strict_keywords": true,
+          "keywords": ["public speaking", "speaking"],
+          "source": "programs.public_speaking",
+          "label": "Public Speaking",
+          "template": "Program {name}: {value}"
+        },
+        {
+          "id": "full",
+          "general": true,
+          "specificity": 0.5,
+          "keywords": ["program", "materi", "kelas apa saja"],
+          "response_key": "programs_info"
+        }
+      ],
+      "about_academy": [
+        {
+          "id": "since",
+          "specificity": 1.5,
+          "strict_keywords": true,
+          "keywords": ["sejak kapan", "berdiri", "tahun", "2015"],
+          "response_key": "about_academy",
+          "variant_filter_keywords": ["2015", "sejak"]
+        },
+        {
+          "id": "field",
+          "specificity": 1.3,
+          "strict_keywords": true,
+          "keywords": ["bidang", "bergerak", "industri"],
+          "response_key": "about_academy",
+          "variant_filter_keywords": ["modeling", "pengembangan", "portofolio"]
+        },
+        {
+          "id": "full",
+          "general": true,
+          "specificity": 0.5,
+          "keywords": ["apa itu", "tentang", "academy"],
+          "response_key": "about_academy"
+        }
+      ],
+      "location_info": [
+        {
+          "id": "full",
+          "general": true,
+          "specificity": 1.0,
+          "keywords": ["lokasi", "alamat", "dimana", "di mana", "tempat"],
+          "response_key": "location_info"
+        }
+      ],
+      "photo_upload": [
+        {
+          "id": "format",
+          "specificity": 1.4,
+          "strict_keywords": true,
+          "keywords": ["format", "jpeg", "jpg", "png", "ukuran"],
+          "response_key": "photo_upload",
+          "extract_relevant_lines": true
+        },
+        {
+          "id": "full",
+          "general": true,
+          "specificity": 0.6,
+          "keywords": ["upload", "unggah", "foto"],
+          "response_key": "photo_upload"
+        }
+      ],
+      "homepage_info": [
+        {
+          "id": "owner",
+          "specificity": 1.4,
+          "strict_keywords": true,
+          "keywords": ["owner", "founder", "ceo", "coach", "oliviarie", "pemilik"],
+          "response_key": "homepage_info"
+        },
+        {
+          "id": "full",
+          "general": true,
+          "specificity": 0.5,
+          "keywords": ["homepage", "beranda"],
+          "response_key": "homepage_info"
+        }
+      ]
+    }
+  },
+  "analytics": {
+    "track_interactions": true,
+    "log_user_queries": true,
+    "measure_response_time": true,
+    "track_intent_accuracy": true,
+    "user_feedback_enabled": true
+  },
+  "learning": {
+    "enabled": true,
+    "feedback_threshold": 0.7,
+    "auto_update_keywords": true,
+    "learn_from_mistakes": true,
+    "improve_responses": true
+  }
+}
