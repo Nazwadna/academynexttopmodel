@@ -1833,8 +1833,13 @@ def is_model_count_query(message: str) -> bool:
     msg = normalize_text(message)
     if "model" not in msg:
         return False
-    count_markers = ["berapa", "jumlah", "total", "ada berapa", "berapa banyak"]
-    return any(k in msg for k in count_markers)
+    # BUG-6 (audit Tahap 2/4): "berapa" saja terlalu luas — menangkap "usia berapa
+    # saja model yang terdaftar" (tanya rentang usia) sebagai count query. "jumlah"/
+    # "total" cukup jarang dipakai untuk hal selain hitungan, jadi tetap dicek bebas;
+    # "berapa" dipersempit supaya harus berdekatan langsung dengan "model".
+    if "jumlah" in msg or "total" in msg:
+        return True
+    return bool(re.search(r"\bberapa\s+(banyak\s+)?model\b", msg))
 
 def is_model_status_query(message: str) -> bool:
     """Detect model status / name lookup queries"""
