@@ -31,6 +31,7 @@ Catatan penting:
 """
 import argparse
 import json
+import re
 import sys
 import uuid
 from pathlib import Path
@@ -38,6 +39,61 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 import app as appmod  # noqa: E402  (import setelah sys.path diset)
+
+
+# ============================================================
+# NOISE FILTER — wrapper greeting/transisi/penutup/klarifikasi-intro
+# =====================================================================
+# nlu_engine.build_dynamic_response()/build_clarification_question()
+# menempelkan kalimat pembuka/transisi/penutup yang dipilih ACAK
+# (random.choice) dari daftar variasi di modules/nlu_engine.py — bukan
+# bagian dari isi jawaban yang sebenarnya. Tanpa difilter, ini membuat
+# diff --compare-against menandai "BERUBAH" padahal isi jawabannya sama
+# persis (terbukti di Batch 1: "model unavailable"/"model usia 15"
+# berubah wording pembuka 4x berturut-turut TANPA perubahan kode apa pun).
+#
+# Daftar variasi diimpor LANGSUNG dari modules/nlu_engine.py (bukan
+# disalin manual) supaya filter ini otomatis tetap sinkron jika daftar
+# itu berubah di kemudian hari — modules/nlu_engine.py sendiri TIDAK
+# diubah, hanya dibaca (import read-only).
+# ============================================================
+def _load_wrapper_variants():
+    try:
+        from modules.nlu_engine import (
+            TIME_GREETINGS, GREETING_VARIATIONS, TRANSITION_VARIATIONS,
+            CLOSING_VARIATIONS, CLARIFICATION_INTROS,
+        )
+    except Exception:
+        return []
+    variants = []
+    for lst in TIME_GREETINGS.values():
+        variants.extend(lst)
+    variants.extend(GREETING_VARIATIONS)
+    variants.extend(TRANSITION_VARIATIONS)
+    variants.extend(CLOSING_VARIATIONS)
+    variants.extend(CLARIFICATION_INTROS)
+    # Terpanjang dulu, supaya frasa yang jadi substring frasa lain tidak
+    # menyisakan potongan parsial setelah dihapus.
+    return sorted(set(v for v in variants if v), key=len, reverse=True)
+
+
+_WRAPPER_VARIANTS = _load_wrapper_variants()
+
+
+def normalize_core_reply(text):
+    """Hilangkan kalimat wrapper greeting/transisi/penutup/klarifikasi-intro
+    acak, sisakan ISI jawaban saja, supaya perbandingan regresi fokus ke
+    perubahan perilaku nyata (intent/isi), bukan noise pemilihan kalimat
+    pembuka/penutup yang memang didesain acak."""
+    if not text:
+        return text
+    normalized = text
+    for phrase in _WRAPPER_VARIANTS:
+        normalized = normalized.replace(phrase, " ")
+    normalized = re.sub(r"[ \t]+", " ", normalized)
+    normalized = re.sub(r"\n\s*\n+", "\n\n", normalized)
+    normalized = "\n".join(line.strip() for line in normalized.split("\n"))
+    return normalized.strip("\n ").strip()
 
 
 # ============================================================
@@ -146,6 +202,10 @@ def run_suite():
 
 
 def compare(current, baseline_path):
+    """Perbandingan STRICT: intent + source + reply string persis.
+    Bisa menandai 'BERUBAH' palsu untuk query yang lewat wrapper acak
+    nlu_engine (greeting/transisi/penutup) — lihat compare_core() untuk
+    mode yang menyaring noise itu."""
     with open(baseline_path, "r", encoding="utf-8") as f:
         baseline = json.load(f)
     baseline_by_query = {b["query"]: b for b in baseline}
@@ -163,10 +223,39 @@ def compare(current, baseline_path):
     return changed, same, missing
 
 
+def compare_core(current, baseline_path):
+    """Perbandingan TOLERAN-NOISE: intent + source + reply setelah
+    kalimat wrapper greeting/transisi/penutup/klarifikasi-intro acak
+    dihapus (normalize_core_reply). Dipakai supaya perubahan wording
+    acak (bukan perubahan perilaku) tidak ikut ditandai 'BERUBAH'."""
+    with open(baseline_path, "r", encoding="utf-8") as f:
+        baseline = json.load(f)
+    baseline_by_query = {b["query"]: b for b in baseline}
+
+    changed, same, missing = [], [], []
+    for r in current:
+        b = baseline_by_query.get(r["query"])
+        if b is None:
+            missing.append(r["query"])
+            continue
+        r_core = normalize_core_reply(r["reply"])
+        b_core = normalize_core_reply(b["reply"])
+        if (r["intent"], r["source"], r_core) != (b["intent"], b["source"], b_core):
+            changed.append((r["query"], b, r, b_core, r_core))
+        else:
+            same.append(r["query"])
+    return changed, same, missing
+
+
 def main():
     parser = argparse.ArgumentParser(description="Regression suite permanen (94 query Tahap 2)")
     parser.add_argument("--output", default=None, help="Simpan hasil run sebagai JSON ke path ini (opsional)")
     parser.add_argument("--compare-against", default=None, help="Baseline JSON untuk dibandingkan (opsional)")
+    parser.add_argument(
+        "--ignore-wrapper", action="store_true",
+        help="Saat --compare-against dipakai, abaikan variasi kalimat greeting/transisi/"
+             "penutup/klarifikasi-intro acak (nlu_engine) — bandingkan isi jawaban saja.",
+    )
     parser.add_argument("--quiet", action="store_true", help="Jangan cetak detail per-query, hanya ringkasan")
     args = parser.parse_args()
 
@@ -188,21 +277,34 @@ def main():
 
     exit_code = 0
     if args.compare_against:
-        changed, same, missing = compare(results, args.compare_against)
+        mode = "TOLERAN-NOISE (--ignore-wrapper)" if args.ignore_wrapper else "STRICT"
+        if args.ignore_wrapper:
+            changed, same, missing = compare_core(results, args.compare_against)
+        else:
+            changed, same, missing = compare(results, args.compare_against)
         print("=" * 70)
-        print(f"DIBANDINGKAN DENGAN BASELINE: {args.compare_against}")
+        print(f"DIBANDINGKAN DENGAN BASELINE ({mode}): {args.compare_against}")
         print(f"  SAMA (tidak berubah):    {len(same)}")
         print(f"  BERUBAH:                 {len(changed)}")
         print(f"  TIDAK ADA DI BASELINE:   {len(missing)}")
         if changed:
             print("-" * 70)
             print("Detail perubahan:")
-            for q, b, r in changed:
-                print(f"  Q: {q}")
-                print(f"    SEBELUM: intent={b['intent']} source={b['source']}")
-                print(f"             reply={(b['reply'] or '')[:150]}")
-                print(f"    SESUDAH: intent={r['intent']} source={r['source']}")
-                print(f"             reply={(r['reply'] or '')[:150]}")
+            for item in changed:
+                if args.ignore_wrapper:
+                    q, b, r, b_core, r_core = item
+                    print(f"  Q: {q}")
+                    print(f"    SEBELUM: intent={b['intent']} source={b['source']}")
+                    print(f"             core={b_core[:150]}")
+                    print(f"    SESUDAH: intent={r['intent']} source={r['source']}")
+                    print(f"             core={r_core[:150]}")
+                else:
+                    q, b, r = item
+                    print(f"  Q: {q}")
+                    print(f"    SEBELUM: intent={b['intent']} source={b['source']}")
+                    print(f"             reply={(b['reply'] or '')[:150]}")
+                    print(f"    SESUDAH: intent={r['intent']} source={r['source']}")
+                    print(f"             reply={(r['reply'] or '')[:150]}")
         if missing:
             exit_code = 1
 
