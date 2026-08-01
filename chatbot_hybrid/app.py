@@ -1556,10 +1556,13 @@ def handle_model_list(query: str = ""):
     """Handle model list / available models query from DB (dengan filter NL)."""
     models = get_all_models()
     if not models:
+        # BUG-9 (audit Tahap 2/4): DB/API tidak terjangkau — kegagalan sistem,
+        # bukan jawaban valid, jadi confidence harus rendah.
         return {
             "reply": "Saat ini data model di database tidak dapat diakses. Pastikan MySQL/Laravel API aktif, atau periksa menu Model pada website.",
             "intent": "model_list",
             "source": "database_realtime",
+            "confidence": 0.3,
             "handoff": False
         }
 
@@ -1577,6 +1580,8 @@ def handle_model_list(query: str = ""):
     scope = f" dengan filter {filter_desc}" if filter_desc else ""
 
     if not display_list:
+        # BUG-9: query valid tapi hasil kosong — bukan kegagalan sistem, tapi juga
+        # bukan jawaban spesifik seperti hasil ketemu, jadi confidence menengah.
         return {
             "reply": (
                 f"Tidak ditemukan model{scope} di database Academy Next Top Model. "
@@ -1584,6 +1589,7 @@ def handle_model_list(query: str = ""):
             ),
             "intent": "model_list",
             "source": "database_realtime",
+            "confidence": 0.6,
             "handoff": False,
         }
 
@@ -1608,6 +1614,7 @@ def handle_model_list(query: str = ""):
         "reply": reply,
         "intent": "model_list",
         "source": "database_realtime",
+        "confidence": 0.95,
         "handoff": False
     }
 
@@ -1615,10 +1622,12 @@ def handle_model_count(query: str = ""):
     """Handle model count query in real-time from DB (dengan filter NL)."""
     models = get_all_models()
     if not models:
+        # BUG-9: DB/API tidak terjangkau — confidence rendah.
         return {
             "reply": "Saat ini data model di database tidak dapat diakses secara langsung. Pastikan MySQL/Laravel API aktif, lalu coba lagi.",
             "intent": "model_count",
             "source": "database_realtime",
+            "confidence": 0.3,
             "handoff": False
         }
 
@@ -1651,6 +1660,7 @@ def handle_model_count(query: str = ""):
         "reply": reply,
         "intent": "model_count",
         "source": "database_realtime",
+        "confidence": 0.95,
         "handoff": False
     }
 
@@ -1672,14 +1682,18 @@ def handle_model_status(query: str):
         model = search_model_via_api(model_name)
 
     if not models and not model:
+        # BUG-9: DB/API tidak terjangkau — confidence rendah.
         return {
             "reply": "Saat ini data model di database tidak dapat diakses. Pastikan MySQL/Laravel API aktif, lalu coba lagi.",
             "intent": "model_status",
             "source": "database_realtime",
+            "confidence": 0.3,
             "handoff": False
         }
 
     if not model:
+        # BUG-9: pencarian valid tapi nama tidak ketemu — confidence menengah,
+        # bukan sama tingginya dengan hasil yang benar-benar ditemukan.
         hint = f" '{model_name}'" if model_name else ""
         return {
             "reply": (
@@ -1688,6 +1702,7 @@ def handle_model_status(query: str):
             ),
             "intent": "model_status",
             "source": "database_realtime",
+            "confidence": 0.6,
             "handoff": False
         }
 
@@ -1707,6 +1722,7 @@ def handle_model_status(query: str):
         ),
         "intent": "model_status",
         "source": "database_realtime",
+        "confidence": 0.95,
         "handoff": False
     }
 
@@ -1749,17 +1765,22 @@ def handle_model_recommendation(query: str):
             "Pemilihan final tetap disesuaikan dengan konsep, tema, dan brief. "
             "Admin kami siap membantu rekomendasi final."
         )
+        # BUG-9: shortlist nyata ditemukan — confidence tinggi.
+        confidence = 0.95
     else:
         reply = (
             f"{intro} "
             "Saat ini belum ada shortlist yang cocok dari database untuk filter tersebut. "
             "Untuk rekomendasi final, admin kami dapat membantu memilihkan model terbaik."
         )
+        # BUG-9: tidak ada shortlist yang cocok — confidence menengah.
+        confidence = 0.6
 
     return {
         "reply": reply,
         "intent": "model_recommendation",
         "source": "database_realtime",
+        "confidence": confidence,
         "handoff": True,
         "whatsapp_url": build_whatsapp_url(
             "Halo Admin Academy Next Top Model, saya ingin meminta rekomendasi model."
@@ -3380,61 +3401,67 @@ def chat():
         if is_model_count_query(processed_message) or is_model_count_query(user_message):
             q = processed_message if is_model_count_query(processed_message) else user_message
             result = handle_model_count(q)
+            # BUG-9 (audit Tahap 2/4): pakai confidence dari handler (beda untuk
+            # sukses/gagal/DB-unreachable), bukan literal 0.95 yang seragam.
+            conf = result.get("confidence", 0.95)
             response_data = {
                 "success": True,
                 "reply": result["reply"],
-                "confidence": 0.95,
+                "confidence": conf,
                 "handoff": result.get("handoff", False),
                 "intent": result["intent"],
                 "source": result["source"],
                 "whatsapp_url": result.get("whatsapp_url")
             }
-            _safe_update_memory(session_id, user_message, response_data["reply"], result["intent"], {}, 0.95)
+            _safe_update_memory(session_id, user_message, response_data["reply"], result["intent"], {}, conf)
             return jsonify(response_data)
 
         if is_model_recommendation_query(processed_message) or is_model_recommendation_query(user_message):
             q = processed_message if is_model_recommendation_query(processed_message) else user_message
             result = handle_model_recommendation(q)
+            conf = result.get("confidence", 0.95)
             response_data = {
                 "success": True,
                 "reply": result["reply"],
-                "confidence": 0.95,
+                "confidence": conf,
                 "handoff": result.get("handoff", False),
                 "intent": result["intent"],
                 "source": result["source"],
                 "whatsapp_url": result.get("whatsapp_url")
             }
-            _safe_update_memory(session_id, user_message, response_data["reply"], result["intent"], {}, 0.95)
+            _safe_update_memory(session_id, user_message, response_data["reply"], result["intent"], {}, conf)
             return jsonify(response_data)
 
         if is_model_list_query(processed_message) or is_model_list_query(user_message):
             q = processed_message if is_model_list_query(processed_message) else user_message
             result = handle_model_list(q)
+            conf = result.get("confidence", 0.95)
             response_data = {
                 "success": True,
                 "reply": result["reply"],
-                "confidence": 0.95,
+                "confidence": conf,
                 "handoff": result.get("handoff", False),
                 "intent": result["intent"],
                 "source": result["source"],
                 "whatsapp_url": result.get("whatsapp_url")
             }
-            _safe_update_memory(session_id, user_message, response_data["reply"], result["intent"], {}, 0.95)
+            _safe_update_memory(session_id, user_message, response_data["reply"], result["intent"], {}, conf)
             return jsonify(response_data)
 
         if is_model_status_query(processed_message) or is_model_status_query(user_message):
             q = processed_message if is_model_status_query(processed_message) else user_message
             result = handle_model_status(q)
+            conf = result.get("confidence", 0.95)
             response_data = {
                 "success": True,
                 "reply": result["reply"],
-                "confidence": 0.95,
+                "confidence": conf,
                 "handoff": result.get("handoff", False),
                 "intent": result["intent"],
                 "source": result["source"],
                 "whatsapp_url": result.get("whatsapp_url")
             }
-            _safe_update_memory(session_id, user_message, response_data["reply"], result["intent"], {}, 0.95)
+            _safe_update_memory(session_id, user_message, response_data["reply"], result["intent"], {}, conf)
             return jsonify(response_data)
 
         # =====================================================================
