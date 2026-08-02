@@ -299,7 +299,8 @@
       "Untuk bergabung dengan Academy Next Top Model, buka halaman Register, buat akun, isi data diri, verifikasi jika diminta, lalu lengkapi profil dan portofolio."
     ],
     "become_model_info": [
-      "Panduan menjadi model di Academy Next Top Model:\n1. Daftar online melalui halaman Register di website.\n2. Lengkapi syarat pendaftaran: usia start 4th-25th, mengisi formulir, menyiapkan foto close-up dan full body, serta melakukan pembayaran registrasi.\n3. Ikuti program pelatihan: Catwalk Basic, Catwalk Advanced, Runway Class, Beauty Class, Pose Class, Photoshoot, Self Branding, dan Public Speaking.\n4. Lengkapi profil dan bangun portofolio digital di website.\n5. Kelas berlangsung setiap hari Sabtu pukul 11.00 sampai 15.00 di Mall TSM Cibubur.\nUntuk informasi biaya atau promo, silakan hubungi admin melalui WhatsApp."
+      "Panduan menjadi model di Academy Next Top Model:\n1. Daftar online melalui halaman Register di website.\n2. Lengkapi syarat pendaftaran: usia start 4th-25th, mengisi formulir, menyiapkan foto close-up dan full body, serta melakukan pembayaran registrasi.\n3. Ikuti program pelatihan: Catwalk Basic, Catwalk Advanced, Runway Class, Beauty Class, Pose Class, Photoshoot, Self Branding, dan Public Speaking.\n4. Lengkapi profil dan bangun portofolio digital di website.\n5. Kelas berlangsung setiap hari Sabtu pukul 11.00 sampai 15.00 di Mall TSM Cibubur.\nUntuk informasi biaya atau promo, silakan hubungi admin melalui WhatsApp.",
+      "Ya, Academy Next Top Model dapat membantu Anda berkembang menjadi model profesional melalui pelatihan, pembentukan portofolio, dan pengembangan kemampuan modeling."
     ]
   },
   "keywords": {
@@ -973,10 +974,23 @@
           "redirect_intent": "pricing_sensitive"
         },
         {
+          "id": "can_help_confirmation",
+          "specificity": 1.5,
+          "strict_keywords": true,
+          "keywords": [
+            "apakah bisa membantu", "apakah bisa bantu",
+            "bisakah membantu", "bisakah bantu",
+            "apa bisa membantu", "apa bisa bantu"
+          ],
+          "response_key": "become_model_info",
+          "variant_filter_keywords": ["ya, academy next top model dapat membantu"]
+        },
+        {
           "id": "full",
           "general": true,
           "specificity": 0.5,
           "keywords": ["jadi model", "menjadi model", "panduan", "karier modeling", "cara jadi model", "cara menjadi model"],
+          "variant_filter_keywords": ["panduan menjadi model"],
           "response_key": "become_model_info"
         }
       ],
