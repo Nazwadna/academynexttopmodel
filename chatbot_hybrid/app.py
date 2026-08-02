@@ -1325,7 +1325,7 @@ def is_homepage_info_query(message: str) -> bool:
         "siapakah oliviarie summer",
         "apa tagline academy"
     ]
-    return any(k == msg for k in keywords) or any(k in msg for k in keywords)
+    return any(k == msg for k in keywords) or any(k in msg for k in keywords) or is_owner_query(message)
 
 def is_academy_definition_query(message: str) -> bool:
     """Detect if message is asking about academy definition"""
@@ -1911,6 +1911,7 @@ def is_program_query(q: str) -> bool:
         "materi kelas",
         "materi pelatihan",
         "ngajarin apa",
+        "programnya",
     ]
     return any(k in q for k in keywords)
 
