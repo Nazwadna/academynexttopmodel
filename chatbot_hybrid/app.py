@@ -70,9 +70,11 @@ def _filtered_print(*args, **kwargs):
 print = _filtered_print
 
 try:
+    import openai
     from openai import OpenAI
     openai_client = OpenAI(api_key=os.getenv("OPENAI_API_KEY")) if os.getenv("OPENAI_API_KEY") else None
 except ImportError:
+    openai = None
     OpenAI = None
     openai_client = None
 
@@ -837,6 +839,10 @@ except FileNotFoundError:
     print(f"Warning: faq.json not found at {FAQ_PATH}")
 
 # =========================
+# CATATAN (audit Tahap 5): blok ini menimpa blok inisialisasi openai_client
+# sebelumnya (baris ~781, yang mewajibkan prefix "sk-") TANPA validasi format
+# apa pun — kemungkinan bug tersembunyi (validasi "sk-" jadi sia-sia). Belum
+# diperbaiki, di luar scope Tahap 5 (murni logging), perlu diaudit terpisah.
 try:
     from openai import OpenAI
     openai_client = OpenAI(api_key=OPENAI_API_KEY) if OPENAI_API_KEY else None
@@ -1123,6 +1129,16 @@ def search_faq(query: str):
 # =========================
 # SMART LLM FALLBACK
 # =========================
+def _redact_secrets(text: str) -> str:
+    """Hapus fragmen yang mirip API key dari teks sebelum di-log (Tahap 5).
+    Beberapa error message OpenAI SDK menyertakan sebagian karakter key
+    (mis. 'sk-abc***...xyz') — fungsi ini memastikan itu tidak pernah
+    ikut tercetak ke log/console, baik pada kasus sukses maupun gagal."""
+    if not text:
+        return text
+    return re.sub(r"sk-[A-Za-z0-9_\-*]{6,}", "[REDACTED]", str(text))
+
+
 def smart_llm_fallback(original_message: str, processed_message: str) -> str:
     """Smart LLM fallback with sensitive data filtering"""
     # Check for sensitive keywords that should NOT use OpenAI
@@ -1145,16 +1161,17 @@ def smart_llm_fallback(original_message: str, processed_message: str) -> str:
     # Only use OpenAI for general questions
     if CHATBOT_MODE == "openai" and openai_client:
         try:
+            logging.info("[LLM_FALLBACK] Memanggil OpenAI model=gpt-4o-mini")
             context = f"""
             Kamu adalah asisten virtual Academy Next Top Model.
             Jawab dengan bahasa Indonesia yang sopan, natural, dan membantu.
             HANYA jawab pertanyaan umum tentang modeling, academy, atau program.
             JANGAN berikan informasi spesifik tentang biaya, kontak, atau data sensitif.
             Jika ditanya hal sensitif, arahkan ke admin.
-            
+
             Pertanyaan user: {original_message}
             """
-            
+
             response = openai_client.chat.completions.create(
                 model="gpt-4o-mini",
                 messages=[
@@ -1166,9 +1183,36 @@ def smart_llm_fallback(original_message: str, processed_message: str) -> str:
             )
             content = response.choices[0].message.content
             if content:
+                logging.info("[LLM_FALLBACK] OpenAI sukses, panjang balasan=%d karakter", len(content))
                 return content
         except Exception as e:
-            print("OpenAI fallback error:", e)
+            # Klasifikasi jenis error (Tahap 5) — tidak mengubah reply ke user,
+            # hanya menambah visibility di sisi server. Pesan error di-redaksi
+            # dulu (_redact_secrets) karena beberapa error OpenAI SDK (mis.
+            # AuthenticationError) menyertakan sebagian karakter API key.
+            if isinstance(e, openai.AuthenticationError):
+                error_type = "auth"
+            elif isinstance(e, openai.RateLimitError):
+                error_type = "rate_limit"
+            elif isinstance(e, openai.APITimeoutError):
+                error_type = "timeout"
+            elif isinstance(e, openai.APIConnectionError):
+                error_type = "network"
+            else:
+                error_type = "other"
+            logging.error(
+                "[LLM_FALLBACK] OpenAI gagal (jenis=%s): %s",
+                error_type, _redact_secrets(str(e))
+            )
+    elif CHATBOT_MODE != "openai":
+        logging.warning(
+            "[LLM_FALLBACK] Dilewati — CHATBOT_MODE=%s (bukan 'openai')", CHATBOT_MODE
+        )
+    else:
+        logging.warning(
+            "[LLM_FALLBACK] Dilewati — openai_client tidak tersedia "
+            "(key kosong/format tidak valid). CHATBOT_MODE=%s", CHATBOT_MODE
+        )
 
     return (
         "Saya adalah asisten virtual Academy Next Top Model. "
