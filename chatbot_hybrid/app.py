@@ -1840,6 +1840,36 @@ def is_model_status_query(message: str) -> bool:
                 return True
     return False
 
+def is_bare_model_name_query(message: str):
+    """Deteksi query bare 1-2 kata TANPA keyword 'model'/'status'/'cari'/dsb
+    yang PERSIS cocok dengan nama (atau salah satu token nama) model yang
+    SEDANG ADA di database. Return nama_model asli kalau match, None kalau
+    tidak — match harus terhadap data DB live, bukan tebakan/daftar statis,
+    supaya kata umum yang kebetulan mirip nama tidak salah-tembak kecuali
+    memang ada model bernama persis itu saat ini (audit A1)."""
+    msg = normalize_text(message).strip()
+    if not msg:
+        return None
+    tokens = msg.split()
+    if len(tokens) > 2:
+        return None
+    try:
+        models = get_all_models()
+    except Exception:
+        return None
+    if not models:
+        return None
+    msg_l = msg.lower()
+    for m in models:
+        name = str(m.get("nama_model") or m.get("name") or "").strip()
+        if not name:
+            continue
+        name_l = name.lower()
+        name_tokens = [t for t in name_l.split() if t]
+        if msg_l == name_l or msg_l in name_tokens:
+            return name
+    return None
+
 def is_model_recommendation_query(message: str) -> bool:
     """Detect model recommendation queries"""
     msg = normalize_text(message)
@@ -3408,6 +3438,30 @@ def chat():
                 "whatsapp_url": result.get("whatsapp_url")
             }
             _safe_update_memory(session_id, user_message, response_data["reply"], result["intent"], {}, conf)
+            return jsonify(response_data)
+
+        # LAYER 4b: BARE MODEL-NAME PROBE (audit A1) — query 1-2 kata TANPA
+        # keyword "model"/"status"/"cari" sama sekali (mis. "nazwa") yang
+        # persis cocok nama model di DB saat ini. Tanpa ini, query semacam
+        # ini jatuh ke NB+clarification generik (confidence rendah, tidak
+        # menyebut nama sama sekali). Balasan tetap transparan menyebut nama
+        # yang cocok, supaya kalau kebetulan salah tembak (kata umum yang
+        # kebetulan sama dengan nama model), langsung terlihat jelas.
+        bare_name = is_bare_model_name_query(processed_message) or is_bare_model_name_query(user_message)
+        if bare_name:
+            result = handle_model_status(bare_name)
+            conf = min(0.85, result.get("confidence", 0.85))
+            reply_text = f"Sepertinya Anda mencari model bernama {bare_name}. " + result.get("reply", "")
+            response_data = {
+                "success": True,
+                "reply": reply_text,
+                "confidence": conf,
+                "handoff": result.get("handoff", False),
+                "intent": result.get("intent", "model_status"),
+                "source": "database_realtime_bare_name_probe",
+                "whatsapp_url": result.get("whatsapp_url")
+            }
+            _safe_update_memory(session_id, user_message, response_data["reply"], response_data["intent"], {}, conf)
             return jsonify(response_data)
 
         # =====================================================================
