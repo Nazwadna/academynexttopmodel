@@ -161,7 +161,6 @@ REFERENCE_MAP = {
     "disana": "{active_topic}",
     "yang tadi": "{active_topic}",
     "yang tersebut": "{active_topic}",
-    "info itu": "{active_topic}",
     "tadi": "{active_topic}"
 }
 
