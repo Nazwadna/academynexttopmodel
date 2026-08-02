@@ -171,11 +171,16 @@
     "pricing_sensitive": {
       "id": [
         "Untuk informasi detail biaya, diskon khusus, atau paket pembayaran, silakan hubungi admin kami via WhatsApp untuk penawaran terbaik yang disesuaikan kebutuhan Anda.",
-        "Info pembayaran dan biaya detail akan disampaikan langsung oleh admin kami agar lebih akurat. Klik tombol WhatsApp untuk konsultasi gratis."
+        "Info pembayaran dan biaya detail akan disampaikan langsung oleh admin kami agar lebih akurat. Klik tombol WhatsApp untuk konsultasi gratis.",
+        "Soal biaya, diskon, atau skema cicilan, admin kami siap membantu langsung lewat WhatsApp supaya informasinya akurat dan sesuai kebutuhan Anda.",
+        "Untuk info fee model atau kebijakan pembayaran, admin akan bantu jelaskan detailnya lewat WhatsApp agar tidak salah info.",
+        "Detail harga, cicilan, dan cara pembayaran sebaiknya dikonfirmasi langsung ke admin kami via WhatsApp, supaya Anda dapat info yang paling update."
       ],
       "en": [
         "For detailed fee information, special discounts, or payment packages, please contact our admin via WhatsApp for the best offer tailored to your needs.",
-        "Payment and detailed fee information will be provided directly by our admin for accuracy. Click WhatsApp button for free consultation."
+        "Payment and detailed fee information will be provided directly by our admin for accuracy. Click WhatsApp button for free consultation.",
+        "For cost, discounts, or installment plans, our admin will assist you directly via WhatsApp so the information stays accurate.",
+        "Please confirm pricing, installment, and payment details directly with our admin via WhatsApp for the most up-to-date information."
       ]
     },
     "login_help": {
