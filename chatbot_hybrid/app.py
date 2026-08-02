@@ -1827,7 +1827,11 @@ def is_model_status_query(message: str) -> bool:
         return True
 
     # Pola singkat: "model <namaorang>" — tolak token filter
-    m = re.search(r"\bmodel\s+([a-z0-9]+(?:\s+[a-z0-9]+)?)", msg)
+    # (?<!top ) mengecualikan "...Next Top Model <predikat>" — nama brand
+    # akademi sendiri diakhiri kata "Model", jadi tanpa pengecualian ini
+    # SETIAP kalimat yang menyebut nama akademi sebagai subjek (diikuti
+    # predikat apa pun) salah-tembak sebagai name-lookup. (Audit Grup D)
+    m = re.search(r"(?<!top )\bmodel\s+([a-z0-9]+(?:\s+[a-z0-9]+)?)", msg)
     if m:
         candidate = m.group(1).strip()
         tokens = candidate.split()
