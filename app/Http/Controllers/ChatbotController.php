@@ -389,18 +389,7 @@ class ChatbotController extends Controller
             'health' => $this->healthSnapshot(),
         ];
 
-        $candidates = [
-            base_path('chatbot_hybrid/logs_db/chat_logs.db'),
-            base_path('chatbot_hybrid/chat_logs.db'),
-        ];
-
-        $dbPath = null;
-        foreach ($candidates as $path) {
-            if (is_file($path)) {
-                $dbPath = $path;
-                break;
-            }
-        }
+        $dbPath = $this->resolveChatLogDbPath();
 
         if ($dbPath === null) {
             return response()->json($defaults);
@@ -488,10 +477,71 @@ class ChatbotController extends Controller
     /**
      * Halaman report printable chatbot.
      */
-    public function adminReport()
+    public function adminReport(Request $request)
     {
         return view('admin_chatbot_report', [
-            'report' => $this->buildAdminReportData(),
+            'report' => $this->buildAdminReportData($request),
+        ]);
+    }
+
+    /**
+     * Export Activity Report (chat_logs) sebagai CSV, mewarisi filter yang sama
+     * dengan halaman report (tanggal, intent, keyword, handoff).
+     */
+    public function exportReportCsv(Request $request)
+    {
+        $dbPath = $this->resolveChatLogDbPath();
+        $filename = 'chatbot-activity-report-' . now()->format('Ymd_His') . '.csv';
+
+        return response()->streamDownload(function () use ($dbPath, $request) {
+            $out = fopen('php://output', 'w');
+            fputcsv($out, [
+                'ID', 'Timestamp', 'User Message', 'Bot Response', 'Intent', 'Confidence',
+                'Source', 'Handoff', 'Session ID', 'Response Time (s)', 'Feedback Rating',
+                'Feedback Comment', 'Resolved',
+            ]);
+
+            if ($dbPath !== null) {
+                try {
+                    $pdo = new \PDO('sqlite:' . $dbPath);
+                    $pdo->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
+
+                    [$where, $params] = $this->buildReportFilterClause($request);
+
+                    $stmt = $pdo->prepare("
+                        SELECT id, timestamp, user_message, bot_response, intent, confidence, source, handoff,
+                               session_id, response_time, feedback_rating, feedback_comment, resolved
+                        FROM chat_logs
+                        $where
+                        ORDER BY timestamp DESC
+                    ");
+                    $stmt->execute($params);
+
+                    while ($row = $stmt->fetch(\PDO::FETCH_ASSOC)) {
+                        fputcsv($out, [
+                            $row['id'],
+                            $row['timestamp'],
+                            $row['user_message'],
+                            $row['bot_response'],
+                            $row['intent'],
+                            $row['confidence'],
+                            $row['source'],
+                            !empty($row['handoff']) ? 'yes' : 'no',
+                            $row['session_id'],
+                            $row['response_time'],
+                            $row['feedback_rating'],
+                            $row['feedback_comment'],
+                            $row['resolved'],
+                        ]);
+                    }
+                } catch (\Throwable $e) {
+                    Log::warning('[ChatbotController] exportReportCsv: ' . $e->getMessage());
+                }
+            }
+
+            fclose($out);
+        }, $filename, [
+            'Content-Type' => 'text/csv',
         ]);
     }
 
@@ -627,22 +677,38 @@ class ChatbotController extends Controller
     /**
      * @return array<string, mixed>
      */
-    private function buildAdminReportData(): array
+    private function buildAdminReportData(?Request $request = null): array
     {
         $analytics = $this->adminAnalytics()->getData(true);
         $rows = [];
+        $intents = [];
 
         $dbPath = $this->resolveChatLogDbPath();
         if ($dbPath !== null) {
             try {
                 $pdo = new \PDO('sqlite:' . $dbPath);
                 $pdo->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
-                $stmt = $pdo->query("
-                    SELECT timestamp, user_message, intent, confidence, source, handoff, bot_response
+
+                $intents = array_column(
+                    $pdo->query("
+                        SELECT DISTINCT intent FROM chat_logs
+                        WHERE intent IS NOT NULL AND intent != ''
+                        ORDER BY intent ASC
+                    ")->fetchAll(\PDO::FETCH_ASSOC),
+                    'intent'
+                );
+
+                [$where, $params] = $this->buildReportFilterClause($request);
+
+                $stmt = $pdo->prepare("
+                    SELECT id, timestamp, user_message, bot_response, intent, confidence, source, handoff,
+                           session_id, response_time, feedback_rating, feedback_comment, resolved
                     FROM chat_logs
+                    $where
                     ORDER BY timestamp DESC
                     LIMIT 100
                 ");
+                $stmt->execute($params);
                 $rows = $stmt->fetchAll(\PDO::FETCH_ASSOC) ?: [];
             } catch (\Throwable $e) {
                 Log::warning('[ChatbotController] adminReport rows: ' . $e->getMessage());
@@ -654,14 +720,74 @@ class ChatbotController extends Controller
             'period' => 'Last 7 Days',
             'stats' => $analytics,
             'rows' => $rows,
+            'intents' => $intents,
+            'filters' => [
+                'date_from' => (string) ($request?->query('date_from', '') ?? ''),
+                'date_to' => (string) ($request?->query('date_to', '') ?? ''),
+                'intent' => (string) ($request?->query('intent', '') ?? ''),
+                'keyword' => (string) ($request?->query('keyword', '') ?? ''),
+                'handoff' => (string) ($request?->query('handoff', '') ?? ''),
+            ],
         ];
+    }
+
+    /**
+     * Bangun klausa WHERE + bound params untuk filter Activity Report,
+     * dipakai bersama oleh halaman report dan export CSV supaya hasilnya konsisten.
+     *
+     * @return array{0: string, 1: array<string, string>}
+     */
+    private function buildReportFilterClause(?Request $request): array
+    {
+        $where = [];
+        $params = [];
+
+        if ($request) {
+            $dateFrom = trim((string) $request->query('date_from', ''));
+            $dateTo = trim((string) $request->query('date_to', ''));
+            $intent = trim((string) $request->query('intent', ''));
+            $keyword = trim((string) $request->query('keyword', ''));
+            $handoff = trim((string) $request->query('handoff', ''));
+
+            if ($dateFrom !== '') {
+                $where[] = 'date(timestamp) >= :date_from';
+                $params[':date_from'] = $dateFrom;
+            }
+            if ($dateTo !== '') {
+                $where[] = 'date(timestamp) <= :date_to';
+                $params[':date_to'] = $dateTo;
+            }
+            if ($intent !== '') {
+                $where[] = 'intent = :intent';
+                $params[':intent'] = $intent;
+            }
+            if ($keyword !== '') {
+                $where[] = '(user_message LIKE :keyword1 OR bot_response LIKE :keyword2)';
+                $params[':keyword1'] = '%' . $keyword . '%';
+                $params[':keyword2'] = '%' . $keyword . '%';
+            }
+            if ($handoff === 'yes') {
+                $where[] = 'handoff = 1';
+            } elseif ($handoff === 'no') {
+                $where[] = 'handoff = 0';
+            }
+        }
+
+        $sql = $where ? ('WHERE ' . implode(' AND ', $where)) : '';
+
+        return [$sql, $params];
     }
 
     private function resolveChatLogDbPath(): ?string
     {
+        // chatbot_hybrid/chat_logs.db adalah database yang benar-benar ditulis
+        // oleh modules/chat_logger.py (path relatif terhadap cwd Flask).
+        // chatbot_hybrid/logs_db/chat_logs.db adalah artefak lama yang tidak
+        // direferensikan oleh kode Python manapun — dicek terakhir sebagai
+        // fallback saja, bukan prioritas utama.
         $candidates = [
-            base_path('chatbot_hybrid/logs_db/chat_logs.db'),
             base_path('chatbot_hybrid/chat_logs.db'),
+            base_path('chatbot_hybrid/logs_db/chat_logs.db'),
         ];
 
         foreach ($candidates as $path) {

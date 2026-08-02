@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>Intent Management - Admin Dashboard</title>
+    <title>FAQ Management - Admin Dashboard</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
@@ -22,7 +22,7 @@
     <header class="fixed w-full flex items-center justify-between h-14 bg-gray-800 text-white z-10">
         <div class="flex items-center pl-3 w-14 md:w-64 h-14">
             <img class="w-8 h-8 md:w-10 md:h-10 mr-2 rounded-full" src="{{ asset('img/logo.jpg') }}" alt="Logo" />
-            <span class="hidden md:block font-bold text-lg">Intent Management</span>
+            <span class="hidden md:block font-bold text-lg">FAQ Management</span>
         </div>
         <div class="flex items-center header-right pr-4">
             <a href="/admin/chatbot-management" class="flex items-center hover:text-gray-300 text-white">
@@ -37,7 +37,7 @@
     <main class="flex-1 ml-14 mt-14 md:ml-64 p-6 bg-gray-900 min-h-screen">
         <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 mb-6">
             <div>
-                <h1 class="text-3xl font-bold text-white mb-2">Intent Management</h1>
+                <h1 class="text-3xl font-bold text-white mb-2">FAQ Management</h1>
                 <p class="text-gray-400">Kelola intent chatbot langsung dari `faq.json`, lalu retrain model agar perubahan ikut dipakai chatbot.</p>
             </div>
             <div class="flex flex-wrap gap-2">

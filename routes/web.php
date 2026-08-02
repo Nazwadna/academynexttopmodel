@@ -262,6 +262,8 @@ Route::middleware(['auth', 'admin'])->group(function () {
         ->name('admin.chatbot.clear-logs');
     Route::get('/admin/chatbot-report', [ChatbotController::class, 'adminReport'])
         ->name('admin.chatbot.report');
+    Route::get('/admin/chatbot-report/export', [ChatbotController::class, 'exportReportCsv'])
+        ->name('admin.chatbot.report.export');
     Route::post('/admin/chatbot-evaluation/run', [ChatbotController::class, 'runEvaluation'])
         ->name('admin.chatbot.evaluation.run');
     Route::get('/admin/chatbot-evaluation-report', [ChatbotController::class, 'evaluationReport'])
@@ -278,9 +280,6 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::get('/admin/intents', function () {
         return view('admin_intents');
     })->name('admin.intents');
-    Route::get('/admin/chat-logs', function () {
-        return view('admin_chat_logs');
-    })->name('admin.chat-logs');
 
     Route::post('/chatbot/train', [ChatbotController::class, 'train'])->name('chatbot.train');
 });

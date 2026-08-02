@@ -23,13 +23,6 @@
                 </a>
             </li>
             <li>
-                <a href="/admin/chat-logs"
-                   class="flex items-center h-11 px-4 {{ request()->is('admin/chat-logs') ? 'bg-gray-700' : 'hover:bg-gray-700' }}">
-                    <i class="fa-solid fa-comments w-5 min-w-[20px] text-center"></i>
-                    <span class="ml-2 text-sm tracking-wide truncate">{{ __('messages.cb_sidebar_logs') }}</span>
-                </a>
-            </li>
-            <li>
                 <a href="/admin/chatbot-evaluation-report"
                    class="flex items-center h-11 px-4 {{ request()->is('admin/chatbot-evaluation-report') ? 'bg-gray-700' : 'hover:bg-gray-700' }}">
                     <i class="fa-solid fa-chart-column w-5 min-w-[20px] text-center"></i>

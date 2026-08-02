@@ -101,6 +101,11 @@
                         <i class="fa-solid fa-file-lines mr-2"></i>
                         <span class="leading-tight">{{ __('messages.cb_open_report') }}</span>
                     </a>
+                    <a href="{{ route('admin.chatbot.report') }}" target="_blank"
+                        class="action-btn h-11 bg-teal-600 hover:bg-teal-700 text-white px-4 rounded-lg text-sm font-medium flex items-center whitespace-nowrap min-w-[170px] justify-center">
+                        <i class="fa-solid fa-clock-rotate-left mr-2"></i>
+                        <span class="leading-tight">{{ __('messages.cb_open_activity_report') }}</span>
+                    </a>
                     <button @click="clearLogs()"
                         class="action-btn h-11 bg-red-600 hover:bg-red-700 text-white px-4 rounded-lg text-sm font-medium flex items-center whitespace-nowrap min-w-[130px] justify-center">
                         <i class="fa-solid fa-trash mr-2"></i>
