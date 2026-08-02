@@ -5,7 +5,8 @@
     "industry": "modeling, pengembangan talent, pelatihan model, dan manajemen portofolio digital",
     "whatsapp": "+6281214237742",
     "email": "info@academyntm.com",
-    "website": "https://academyntm.com"
+    "website": "https://academyntm.com",
+    "founded_year": 2015
   },
   "programs": {
     "basic": {
@@ -1090,6 +1091,8 @@
           "specificity": 1.5,
           "strict_keywords": true,
           "keywords": ["sejak kapan", "berdiri", "tahun", "2015"],
+          "source": "academy_info.founded_year",
+          "template": "Academy Next Top Model berdiri sejak tahun {value}.",
           "response_key": "about_academy",
           "variant_filter_keywords": ["2015", "sejak"]
         },
@@ -1098,6 +1101,8 @@
           "specificity": 1.3,
           "strict_keywords": true,
           "keywords": ["bidang", "bergerak", "industri"],
+          "source": "academy_info.industry",
+          "template": "Academy Next Top Model bergerak di bidang {value}.",
           "response_key": "about_academy",
           "variant_filter_keywords": ["modeling", "pengembangan", "portofolio"]
         },
