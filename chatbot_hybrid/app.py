@@ -72,11 +72,9 @@ print = _filtered_print
 try:
     import openai
     from openai import OpenAI
-    openai_client = OpenAI(api_key=os.getenv("OPENAI_API_KEY")) if os.getenv("OPENAI_API_KEY") else None
 except ImportError:
     openai = None
     OpenAI = None
-    openai_client = None
 
 try:
     from sqlalchemy import create_engine  # type: ignore[import-not-found]
@@ -784,7 +782,7 @@ OPENAI_API_KEY = os.getenv("OPENAI_API_KEY", "")
 print("DEBUG: OPENAI KEY LOADED:", bool(OPENAI_API_KEY))
 print("DEBUG: OPENAI KEY VALUE:", OPENAI_API_KEY[:10] + "..." if OPENAI_API_KEY else "None")
 
-if OPENAI_API_KEY and OPENAI_API_KEY.startswith("sk-"):
+if OpenAI and OPENAI_API_KEY and OPENAI_API_KEY.startswith("sk-"):
     openai_client = OpenAI(api_key=OPENAI_API_KEY)
     print("DEBUG: OpenAI client initialized successfully")
 else:
@@ -837,18 +835,6 @@ try:
 except FileNotFoundError:
     FAQ_DATA = []
     print(f"Warning: faq.json not found at {FAQ_PATH}")
-
-# =========================
-# CATATAN (audit Tahap 5): blok ini menimpa blok inisialisasi openai_client
-# sebelumnya (baris ~781, yang mewajibkan prefix "sk-") TANPA validasi format
-# apa pun — kemungkinan bug tersembunyi (validasi "sk-" jadi sia-sia). Belum
-# diperbaiki, di luar scope Tahap 5 (murni logging), perlu diaudit terpisah.
-try:
-    from openai import OpenAI
-    openai_client = OpenAI(api_key=OPENAI_API_KEY) if OPENAI_API_KEY else None
-except ImportError:
-    OpenAI = None
-    openai_client = None
 
 # ============================================
 # REAL-TIME DATABASE RETRIEVAL FUNCTIONS
