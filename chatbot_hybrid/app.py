@@ -3365,7 +3365,7 @@ def chat():
             if is_sensitive_query(processed_message) and not is_multi_intent_query(processed_message):
                 response_data = {
                     "success": True,
-                    "reply": "Untuk informasi biaya pendaftaran, promo, diskon, sistem pembayaran, booking, kontrak, dan fee model, silakan hubungi admin Academy Next Top Model melalui WhatsApp agar mendapatkan informasi terbaru dan akurat.",
+                    "reply": _pick_academy_response("sensitive_intent", query=processed_message),
                     "confidence": 0.95,
                     "handoff": True,
                     "intent": "sensitive_intent",
@@ -3539,7 +3539,7 @@ def chat():
                     "become_model_info": "Untuk bergabung sebagai model di Academy Next Top Model, Anda dapat mendaftar kursus pelatihan terlebih dahulu. Kami menerima usia 4–25 tahun.",
                     "homepage_info":     "Academy Next Top Model adalah lembaga pelatihan modeling terpercaya yang mencetak model profesional untuk dunia fashion dan entertainment Indonesia.",
                     "technical_support": "Jika mengalami kendala teknis (login, akun, atau website), silakan hubungi admin kami melalui WhatsApp.",
-                    "sensitive_intent":  "Untuk informasi biaya pendaftaran, promo, diskon, sistem pembayaran, booking, kontrak, dan fee model, silakan hubungi admin Academy Next Top Model via WhatsApp.",
+                    "sensitive_intent":  _pick_academy_response("sensitive_intent", query=processed_message),
                     "gratitude":         "Sama-sama! Jangan ragu untuk bertanya kembali jika ada yang ingin diketahui tentang Academy Next Top Model. 😊",
                 }
 
@@ -3674,7 +3674,7 @@ def chat():
             wa_url = "https://wa.me/6281214237742?text=Halo%20Admin%20Academy%20Next%20Top%20Model"
             response_data = {
                 "success": True,
-                "reply": "Untuk informasi mengenai biaya, pembayaran, promo, diskon, kontrak, atau booking, silakan hubungi admin Academy Next Top Model melalui WhatsApp agar mendapatkan informasi terbaru.",
+                "reply": _pick_academy_response("sensitive_intent", query=message_lower),
                 "confidence": 0.95,
                 "handoff": True,
                 "intent": detected_intent,

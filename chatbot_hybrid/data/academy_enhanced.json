@@ -183,6 +183,22 @@
         "Please confirm pricing, installment, and payment details directly with our admin via WhatsApp for the most up-to-date information."
       ]
     },
+    "sensitive_intent": {
+      "id": [
+        "Untuk informasi biaya pendaftaran, promo, diskon, sistem pembayaran, booking, kontrak, dan fee model, silakan hubungi admin Academy Next Top Model melalui WhatsApp agar mendapatkan informasi terbaru dan akurat.",
+        "Soal biaya, promo, diskon, booking, atau kontrak kerja sama, admin Academy Next Top Model siap bantu jelaskan langsung lewat WhatsApp.",
+        "Untuk info tarif, cicilan, atau kontrak, sebaiknya ditanyakan langsung ke admin kami via WhatsApp supaya dapat penjelasan yang paling akurat dan update.",
+        "Detail biaya, promo, dan booking sebaiknya dikonfirmasi langsung ke admin Academy Next Top Model lewat WhatsApp ya, supaya informasinya tepat.",
+        "Untuk pertanyaan seputar biaya, fee, atau kontrak, admin kami siap membantu lebih lanjut melalui WhatsApp."
+      ],
+      "en": [
+        "For registration fees, promos, discounts, payment systems, bookings, contracts, and model fees, please contact Academy Next Top Model admin via WhatsApp for the latest and most accurate information.",
+        "For fees, promos, discounts, bookings, or partnership contracts, our admin is ready to help directly via WhatsApp.",
+        "For rate, installment, or contract details, please ask our admin directly via WhatsApp for the most accurate and up-to-date explanation.",
+        "Details on fees, promos, and bookings should be confirmed directly with Academy Next Top Model admin via WhatsApp for accuracy.",
+        "For questions about fees, model rates, or contracts, our admin is ready to help further via WhatsApp."
+      ]
+    },
     "login_help": {
       "id": [
         "Cara login: Masukkan email dan password yang terdaftar. Bisa juga login dengan Google untuk kemudahan. Lupa password? Gunakan fitur forgot password.",
