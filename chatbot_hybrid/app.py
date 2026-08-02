@@ -408,14 +408,20 @@ STATIC_RESPONSES = {
 }
 
 # Exact Q&A Dictionary for factual questions with specific answers
-def _pick_academy_response(key: str, query: str = None) -> str:
+def _pick_academy_response(key: str, query: str = None, suppress_redirect_fields: bool = False) -> str:
     """Ambil jawaban dari knowledge academy_enhanced.json (tanpa mengarang).
 
     Jika query diberikan dan knowledge_retriever aktif, pilih field/varian
     paling spesifik berdasarkan ranking kemiripan (config-driven).
+
+    suppress_redirect_fields: diteruskan ke select_knowledge_answer() —
+    lihat docstring-nya di modules/knowledge_retriever.py.
     """
     if KNOWLEDGE_RETRIEVER_AVAILABLE and pick_academy_response_ranked:
-        text = pick_academy_response_ranked(key, ACADEMY_DATA, query=query)
+        text = pick_academy_response_ranked(
+            key, ACADEMY_DATA, query=query,
+            suppress_redirect_fields=suppress_redirect_fields,
+        )
         if text:
             return text
 
@@ -1955,8 +1961,8 @@ def is_schedule_query(q: str) -> bool:
 
 
 
-def get_registration_steps_knowledge(query: str = None) -> str:
-    text = _pick_academy_response("registration_steps", query=query)
+def get_registration_steps_knowledge(query: str = None, suppress_redirect_fields: bool = False) -> str:
+    text = _pick_academy_response("registration_steps", query=query, suppress_redirect_fields=suppress_redirect_fields)
     if text:
         return text
     steps = ((ACADEMY_DATA or {}).get("registration") or {}).get("steps") or []
@@ -1974,9 +1980,9 @@ def get_registration_steps_knowledge(query: str = None) -> str:
     )
 
 
-def get_registration_requirements_knowledge(query: str = None) -> str:
+def get_registration_requirements_knowledge(query: str = None, suppress_redirect_fields: bool = False) -> str:
     # Prioritas jawaban kanonis di responses (hindari data requirements yang bertentangan)
-    text = _pick_academy_response("registration_requirements", query=query)
+    text = _pick_academy_response("registration_requirements", query=query, suppress_redirect_fields=suppress_redirect_fields)
     if text:
         return text
     reqs = ((ACADEMY_DATA or {}).get("registration") or {}).get("requirements") or []
@@ -1989,8 +1995,8 @@ def get_registration_requirements_knowledge(query: str = None) -> str:
     )
 
 
-def get_photo_upload_knowledge(query: str = None) -> str:
-    text = _pick_academy_response("photo_upload", query=query)
+def get_photo_upload_knowledge(query: str = None, suppress_redirect_fields: bool = False) -> str:
+    text = _pick_academy_response("photo_upload", query=query, suppress_redirect_fields=suppress_redirect_fields)
     if text:
         return text
     return (
@@ -2004,8 +2010,8 @@ def get_photo_upload_knowledge(query: str = None) -> str:
     )
 
 
-def get_schedule_knowledge(query: str = None) -> str:
-    text = _pick_academy_response("schedule_info", query=query)
+def get_schedule_knowledge(query: str = None, suppress_redirect_fields: bool = False) -> str:
+    text = _pick_academy_response("schedule_info", query=query, suppress_redirect_fields=suppress_redirect_fields)
     if text:
         return text
     sched = (ACADEMY_DATA or {}).get("schedule") or {}
@@ -2037,9 +2043,9 @@ def is_become_model_query(text: str) -> bool:
     return any(k in q for k in keywords)
 
 
-def get_become_model_knowledge(query: str = None) -> str:
+def get_become_model_knowledge(query: str = None, suppress_redirect_fields: bool = False) -> str:
     """Ambil panduan jadi model dari academy_enhanced.json; jangan mengarang."""
-    text = _pick_academy_response("become_model_info", query=query)
+    text = _pick_academy_response("become_model_info", query=query, suppress_redirect_fields=suppress_redirect_fields)
     if text:
         return text
     # Susun dari potongan knowledge yang ada (tanpa fakta baru) — hanya jika query umum
@@ -2210,15 +2216,22 @@ _INTENT_SECTION_TITLES = {
 
 
 def _answer_for_intent(intent_name: str, message: str) -> str:
-    """Ambil jawaban kanonis per intent dari knowledge / handler (tanpa mengarang)."""
+    """Ambil jawaban kanonis per intent dari knowledge / handler (tanpa mengarang).
+
+    suppress_redirect_fields=True dipakai di sini (BUKAN di caller lain) karena
+    fungsi ini eksklusif dipanggil dari handle_multi_intent(), yang sudah
+    memastikan len(intents) >= 2 sebelum memanggil — jadi query di titik ini
+    SELALU genuinely multi-topic. Field redirect_intent milik topik lain di
+    dalam kalimat gabungan tidak boleh membajak jawaban topik ini (item #21).
+    """
     if intent_name == "registration_requirements":
-        return get_registration_requirements_knowledge(query=message)
+        return get_registration_requirements_knowledge(query=message, suppress_redirect_fields=True)
     if intent_name == "photo_upload":
-        return get_photo_upload_knowledge(query=message)
+        return get_photo_upload_knowledge(query=message, suppress_redirect_fields=True)
     if intent_name == "registration_steps":
-        return get_registration_steps_knowledge(query=message)
+        return get_registration_steps_knowledge(query=message, suppress_redirect_fields=True)
     if intent_name == "schedule_info":
-        return get_schedule_knowledge(query=message)
+        return get_schedule_knowledge(query=message, suppress_redirect_fields=True)
     if intent_name == "location_info":
         text = _pick_academy_response("location_info", query=message)
         return text or "Lokasi Academy Next Top Model berada di Trans Studio Mall Cibubur, GF Floor Second Atrium."
@@ -2235,7 +2248,7 @@ def _answer_for_intent(intent_name: str, message: str) -> str:
             "pengembangan portofolio, serta peningkatan kemampuan catwalk, pose, dan self branding."
         )
     if intent_name == "become_model_info":
-        return get_become_model_knowledge(query=message)
+        return get_become_model_knowledge(query=message, suppress_redirect_fields=True)
     if intent_name == "about_academy":
         text = _pick_academy_response("about_academy", query=message)
         return text or "Academy Next Top Model adalah academy modeling yang menyediakan layanan pengembangan model, pengelolaan portofolio digital, dan informasi seputar kegiatan academy."

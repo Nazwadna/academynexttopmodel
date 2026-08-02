@@ -342,12 +342,20 @@ def select_knowledge_answer(
     *,
     language: str = "id",
     allow_general_fallback: bool = True,
+    suppress_redirect_fields: bool = False,
 ) -> str:
     """
     Pilih jawaban SSOT paling spesifik untuk (query, intent).
     1) Rank knowledge_fields by keyword specificity
     2) Else rank response variants by query similarity
     3) Else official fallback
+
+    suppress_redirect_fields: kalau True, field dengan `redirect_intent`
+    tidak pernah menang skor (dipaksa 0.0). Dipakai KHUSUS oleh caller
+    yang sudah tahu query-nya genuinely multi-topic (mis. jalur
+    multi-intent di app.py) supaya field redirect tidak salah-tembak
+    kalimat gabungan dan membajak jawaban topik ini jadi konten topik
+    lain. Default False = perilaku normal untuk query single-topic.
     """
     data = academy_data or {}
     cfg = get_retrieval_config(data)
@@ -363,7 +371,9 @@ def select_knowledge_answer(
         for field in fields:
             if not isinstance(field, dict):
                 continue
-            if field.get("general"):
+            if suppress_redirect_fields and field.get("redirect_intent"):
+                score = 0.0
+            elif field.get("general"):
                 # general = fallback field, score lightly unless nothing else matches
                 score = _score_field(query, field) * 0.35
             else:
@@ -412,10 +422,14 @@ def pick_academy_response(
     academy_data: Optional[dict],
     query: Optional[str] = None,
     language: str = "id",
+    suppress_redirect_fields: bool = False,
 ) -> str:
     """Drop-in replacement untuk _pick_academy_response dengan ranking query-aware."""
     if query:
-        return select_knowledge_answer(query, key, academy_data, language=language)
+        return select_knowledge_answer(
+            query, key, academy_data, language=language,
+            suppress_redirect_fields=suppress_redirect_fields,
+        )
     variants = get_intent_variants(academy_data, key, language=language)
     return variants[0] if variants else ""
 
