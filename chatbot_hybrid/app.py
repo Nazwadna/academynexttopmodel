@@ -1780,7 +1780,14 @@ def is_model_count_query(message: str) -> bool:
     # "berapa" dipersempit supaya harus berdekatan langsung dengan "model".
     if "jumlah" in msg or "total" in msg:
         return True
-    return bool(re.search(r"\bberapa\s+(banyak\s+)?model\b", msg))
+    if re.search(r"\bberapa\s+(banyak\s+)?model\b", msg):
+        return True
+    # Audit Bagian 5B: pola "X ada berapa?" (mis. "model kategori kids ada
+    # berapa?") — "model" muncul di awal, "berapa" di akhir, tidak match regex
+    # di atas yang mensyaratkan "berapa" langsung sebelum "model". Idiom "ada
+    # berapa" spesifik menanyakan JUMLAH (beda dari "usia berapa" yang
+    # menanyakan NILAI atribut, tetap tidak match — BUG-6 tidak reintroduced).
+    return bool(re.search(r"\bada\s+berapa\b", msg))
 
 def is_model_status_query(message: str) -> bool:
     """Detect model status / name lookup queries"""
