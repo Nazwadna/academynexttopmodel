@@ -914,7 +914,7 @@
           "id": "payment",
           "specificity": 1.3,
           "strict_keywords": true,
-          "keywords": ["bayar registrasi", "pembayaran registrasi", "biaya syarat"],
+          "keywords": ["bayar registrasi", "pembayaran registrasi", "biaya sebagai syarat"],
           "redirect_intent": "pricing_sensitive"
         },
         {
