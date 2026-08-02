@@ -15,6 +15,10 @@
         :root { --c-main: #121212; --c-sec:#1e1e1e; }
         .bg-gray-900 { background-color: var(--c-main) !important; }
         .bg-gray-800, .bg-gray-700 { background-color: var(--c-sec) !important; }
+        /* Tailwind v2.2.19 (CDN statis) tidak mengaktifkan varian disabled:
+           untuk opacity secara default — class disabled:opacity-50 diam-diam
+           mati tanpa rule ini. */
+        button:disabled { opacity: .5; cursor: not-allowed; }
     </style>
 </head>
 <body class="bg-gray-900 text-white" x-data="intentAdmin()" x-init="init()">
@@ -46,7 +50,7 @@
                     <i class="fas fa-plus mr-2"></i> Tambah Intent
                 </button>
                 <button @click="retrain()" :disabled="trainingBusy"
-                    class="bg-green-600 hover:bg-green-700 disabled:opacity-50 text-white px-4 py-2 rounded-md flex items-center">
+                    class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-md flex items-center">
                     <i class="fas fa-rotate mr-2" :class="trainingBusy ? 'fa-spin' : ''"></i> Simpan & Retrain
                 </button>
             </div>
@@ -180,7 +184,7 @@
 
                 <div class="flex justify-end space-x-3">
                     <button type="button" @click="closeModal()" class="px-4 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-700">Batal</button>
-                    <button type="submit" :disabled="saving" class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:opacity-50">
+                    <button type="submit" :disabled="saving" class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">
                         <span x-text="saving ? 'Menyimpan...' : 'Simpan Intent'"></span>
                     </button>
                 </div>

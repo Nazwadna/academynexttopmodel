@@ -20,6 +20,14 @@
         .metric-accent { height: 3px; border-radius: 9999px; }
         .pill { border: 1px solid #3f3f46; background: #111827; }
         .action-btn { min-height: 46px; justify-content: center; }
+        /* Tailwind v2.2.19 (CDN statis) tidak punya utility untuk ini —
+           class v3-style di bawah ini diam-diam mati tanpa CSS custom. */
+        .dashboard-hero-grid { display: grid; grid-template-columns: 1fr; gap: 1.25rem; }
+        @media (min-width: 1280px) {
+            .dashboard-hero-grid { grid-template-columns: minmax(0, 1fr) 430px; }
+        }
+        .max-h-900 { max-height: 900px; }
+        button:disabled { opacity: .5; cursor: not-allowed; }
     </style>
 </head>
 <body class="bg-gray-900 text-white" x-data="chatbotAdmin()" x-init="init()">
@@ -74,7 +82,7 @@
     @include('partials.admin_sidebar_chatbot')
 
     <main class="flex-1 ml-14 mt-14 md:ml-64 p-5 md:p-6 bg-gray-900 min-h-screen">
-        <div class="grid grid-cols-1 xl:grid-cols-[minmax(0,1fr)_430px] gap-5 mb-5">
+        <div class="dashboard-hero-grid mb-5">
             <div class="bg-gray-800 rounded-2xl border border-gray-700 p-6">
                 <h1 class="text-3xl font-bold text-white leading-tight">{{ __('messages.cb_mgmt_title') }}</h1>
             </div>
@@ -82,12 +90,12 @@
                 <p class="text-sm font-semibold text-white mb-3">{{ __('messages.cb_quick_actions') }}</p>
                 <div class="flex flex-wrap items-center gap-3">
                     <button @click="syncRetrain()" :disabled="trainingBusy"
-                        class="action-btn h-11 bg-purple-600 hover:bg-purple-700 disabled:opacity-50 text-white px-4 rounded-lg text-sm font-medium flex items-center whitespace-nowrap min-w-[180px]">
+                        class="action-btn h-11 bg-purple-600 hover:bg-purple-700 text-white px-4 rounded-lg text-sm font-medium flex items-center whitespace-nowrap min-w-[180px]">
                         <i class="fa-solid fa-rotate mr-2" :class="trainingBusy ? 'fa-spin' : ''"></i>
                         <span class="leading-tight">{{ __('messages.cb_sync_retrain') }}</span>
                     </button>
                     <button @click="runEvaluation()" :disabled="evalBusy || trainingBusy"
-                        class="action-btn h-11 bg-green-600 hover:bg-green-700 disabled:opacity-50 text-white px-4 rounded-lg text-sm font-medium flex items-center whitespace-nowrap min-w-[160px] justify-center">
+                        class="action-btn h-11 bg-green-600 hover:bg-green-700 text-white px-4 rounded-lg text-sm font-medium flex items-center whitespace-nowrap min-w-[160px] justify-center">
                         <i class="fa-solid fa-flask mr-2" :class="evalBusy ? 'fa-spin' : ''"></i>
                         <span class="leading-tight" x-text="evalBusy ? i18n.evaluating : i18n.runEvaluation"></span>
                     </button>
@@ -264,7 +272,7 @@
             <div class="space-y-6">
                 <div class="bg-gray-800 rounded-xl p-5 border border-gray-700">
                     <h3 class="font-semibold mb-4 flex items-center"><i class="fa-solid fa-lightbulb mr-2 text-yellow-300"></i> {{ __('messages.cb_trained_intents') }}</h3>
-                    <div class="space-y-4 max-h-[900px] overflow-y-auto pr-1">
+                    <div class="space-y-4 max-h-900 overflow-y-auto pr-1">
                         <template x-for="intent in stats.trained_intents" :key="intent.intent">
                             <div class="bg-gray-900 rounded-lg p-4 border border-gray-700">
                                 <p class="text-blue-300 font-semibold mb-2" x-text="intent.intent"></p>
