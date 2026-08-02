@@ -948,7 +948,7 @@ def extract_model_filters(message: str) -> dict:
     for cat in detect_age_category(msg):
         filters["categories"].append(cat.lower())  # kids / teens
 
-    if any(k in msg for k in ["tidak tersedia", "unavailable", "tidak aktif", "nonaktif"]):
+    if any(k in msg for k in ["tidak tersedia", "unavailable", "tidak aktif", "nonaktif", "belum tersedia"]):
         filters["unavailable_only"] = True
     elif any(k in msg for k in ["aktif", "available", "tersedia"]):
         filters["available_only"] = True
