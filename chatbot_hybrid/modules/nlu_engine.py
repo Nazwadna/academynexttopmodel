@@ -165,6 +165,13 @@ REFERENCE_MAP = {
     "tadi": "{active_topic}"
 }
 
+# C1 (audit lanjutan Grup A #1): pronoun anaforik yang HANYA masuk akal
+# disubstitusi kalau memang ada current_topic nyata — jangan dipaksa default
+# "pendaftaran" saat current_topic masih None (sesi baru / belum ada topik).
+_TOPIC_DEPENDENT_PRONOUNS = {
+    "itu", "di sana", "disana", "yang tadi", "yang tersebut", "tadi",
+}
+
 INTENT_TO_TOPIC = {
     "registration_info": "pendaftaran",
     "registration_steps": "pendaftaran",
@@ -315,14 +322,15 @@ class ConversationMemory:
                 # Fix Grup A (audit kegagalan "Informasi Academy"): "itu" sering
                 # dipakai non-anaforik dalam idiom "apa itu X" (tanya definisi,
                 # bukan merujuk topik sebelumnya) — jangan disubstitusi dalam
-                # pola ini. Juga jangan disubstitusi kalau memang belum ada
-                # topik nyata (current_topic None) — biarkan teks asli daripada
-                # memaksa default "pendaftaran" yang sering salah. Pronoun lain
-                # di REFERENCE_MAP tidak disentuh (di luar scope Grup A).
+                # pola ini.
                 if re.search(r"\bapa itu\b", text_lower):
                     continue
-                if not self.current_topic:
-                    continue
+            if pronoun in _TOPIC_DEPENDENT_PRONOUNS and not self.current_topic:
+                # C1 (audit lanjutan): pronoun anaforik lain berbagi bug yang
+                # sama dengan "itu" — jangan disubstitusi kalau memang belum
+                # ada topik nyata (current_topic None), biarkan teks asli
+                # daripada memaksa default "pendaftaran" yang sering salah.
+                continue
             actual_rep = replacement.replace("{active_topic}", topic_context)
             if actual_rep:
                 text_lower = text_lower.replace(pronoun, actual_rep)
