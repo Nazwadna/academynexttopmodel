@@ -303,7 +303,9 @@
     ],
     "become_model_info": [
       "Panduan menjadi model di Academy Next Top Model:\n1. Daftar online melalui halaman Register di website.\n2. Lengkapi syarat pendaftaran: usia start 4th-25th, mengisi formulir, menyiapkan foto close-up dan full body, serta melakukan pembayaran registrasi.\n3. Ikuti program pelatihan: Catwalk Basic, Catwalk Advanced, Runway Class, Beauty Class, Pose Class, Photoshoot, Self Branding, dan Public Speaking.\n4. Lengkapi profil dan bangun portofolio digital di website.\n5. Kelas berlangsung setiap hari Sabtu pukul 11.00 sampai 15.00 di Mall TSM Cibubur.\nUntuk informasi biaya atau promo, silakan hubungi admin melalui WhatsApp.",
-      "Ya, Academy Next Top Model dapat membantu Anda berkembang menjadi model profesional melalui pelatihan, pembentukan portofolio, dan pengembangan kemampuan modeling."
+      "Ya, Academy Next Top Model dapat membantu Anda berkembang menjadi model profesional melalui pelatihan, pembentukan portofolio, dan pengembangan kemampuan modeling.",
+      "Untuk menjadi model profesional, Anda perlu latihan, portofolio, dan pengalaman. Academy Next Top Model dapat membantu melalui program pelatihan seperti Catwalk Basic, Catwalk Advanced, Photoshoot, Self Branding, dan Public Speaking.",
+      "Untuk menjadi model profesional, Anda perlu membangun dasar catwalk, pose, public speaking, self branding, serta memiliki portofolio yang baik. Academy Next Top Model menyediakan program pelatihan untuk membantu proses tersebut."
     ]
   },
   "keywords": {
@@ -1019,7 +1021,7 @@
           "general": true,
           "specificity": 0.5,
           "keywords": ["jadi model", "menjadi model", "panduan", "karier modeling", "cara jadi model", "cara menjadi model"],
-          "variant_filter_keywords": ["panduan menjadi model"],
+          "variant_filter_keywords": ["panduan menjadi model", "untuk menjadi model profesional"],
           "response_key": "become_model_info"
         }
       ],
