@@ -16,6 +16,26 @@ try:
 except Exception:  # pragma: no cover
     _fuzz = None
 
+try:
+    from modules.response_orchestrator import DEDUP_FINGERPRINT_KEYS
+except Exception:  # pragma: no cover
+    try:
+        from response_orchestrator import DEDUP_FINGERPRINT_KEYS
+    except Exception:
+        DEDUP_FINGERPRINT_KEYS = {}
+
+
+def _fingerprint_hit_count(text: str) -> int:
+    """Hitung berapa kategori DEDUP_FINGERPRINT_KEYS (response_orchestrator.py)
+    yang cocok literal di teks ini. Read-only terhadap konstanta itu — TIDAK
+    mengubah/menyentuh response_orchestrator.py. Dipakai item #26: hindari
+    variant jawaban yang isinya merangkum banyak topik sekaligus, supaya
+    tidak selalu kalah dedup orchestrator saat digabung dengan topik lain
+    di jalur multi-intent.
+    """
+    t = (text or "").lower()
+    return sum(1 for kws in DEDUP_FINGERPRINT_KEYS.values() if any(k in t for k in kws))
+
 
 DEFAULT_FALLBACK = (
     "Maaf, informasi mengenai hal tersebut belum tersedia di knowledge base kami. "
@@ -283,8 +303,18 @@ def resolve_field_answer(
     field: dict,
     academy_data: dict,
     language: str = "id",
+    suppress_redirect_fields: bool = False,
 ) -> str:
-    """Susun jawaban dari satu knowledge field (config-driven)."""
+    """Susun jawaban dari satu knowledge field (config-driven).
+
+    suppress_redirect_fields: kalau True (dipakai KHUSUS di jalur multi-intent,
+    lihat select_knowledge_answer()), variant jawaban yang fingerprint
+    dedup-nya (DEDUP_FINGERPRINT_KEYS) lebih tinggi dari minimum di pool
+    disingkirkan SEBELUM select_best_variant() memilih — item #26, supaya
+    jawaban yang merangkum banyak topik sekaligus tidak selalu kalah dedup
+    orchestrator saat digabung dengan topik lain. Tie-break random di
+    select_best_variant() TIDAK disentuh, cuma daftar kandidatnya dipersempit.
+    """
     # Redirect ke intent lain yang lebih spesifik
     redirect = field.get("redirect_intent")
     if redirect:
@@ -321,6 +351,11 @@ def resolve_field_answer(
                 filtered.append(v)
         if filtered:
             variants = filtered
+
+    if suppress_redirect_fields and len(variants) > 1:
+        counts = [(_fingerprint_hit_count(v), v) for v in variants]
+        min_count = min(c for c, _ in counts)
+        variants = [v for c, v in counts if c == min_count]
 
     if variants:
         ans = select_best_variant(query, variants)
@@ -386,18 +421,27 @@ def select_knowledge_answer(
             best_score, best_field = ranked_fields[0]
             # Jika ada field spesifik (non-general) yang menang, pakai itu
             if prefer_specific and not best_field.get("general"):
-                answer = resolve_field_answer(query, best_field, data, language=language)
+                answer = resolve_field_answer(
+                    query, best_field, data, language=language,
+                    suppress_redirect_fields=suppress_redirect_fields,
+                )
                 if answer:
                     return answer
             elif best_field.get("general") and allow_general_fallback:
-                answer = resolve_field_answer(query, best_field, data, language=language)
+                answer = resolve_field_answer(
+                    query, best_field, data, language=language,
+                    suppress_redirect_fields=suppress_redirect_fields,
+                )
                 if answer:
                     return answer
 
         # Tidak ada field spesifik cukup kuat → coba field general eksplisit
         for score, field in ranked_fields:
             if field.get("general"):
-                answer = resolve_field_answer(query, field, data, language=language)
+                answer = resolve_field_answer(
+                    query, field, data, language=language,
+                    suppress_redirect_fields=suppress_redirect_fields,
+                )
                 if answer:
                     return answer
 
