@@ -517,8 +517,8 @@ KNOWLEDGE_QUERY_ALIASES = {
     "syarat": "registration_requirements",
     "syarat pendaftaran apa saja": "registration_requirements",
     "apakah harus upload foto close up dan full body": "registration_requirements",
-    "setelah daftar langkah selanjutnya apa": "registration_requirements",
-    "apakah pendaftaran bisa online": "registration_requirements",
+    "setelah daftar langkah selanjutnya apa": "registration_steps",
+    "apakah pendaftaran bisa online": "registration_steps",
 
     # Photo Upload Aliases
     "cara upload foto": "photo_upload",
