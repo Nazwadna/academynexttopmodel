@@ -1,0 +1,91 @@
+{
+  "chatbot_name": "Academy Next Top Model Hybrid Chatbot",
+  "generated_at": "2026-08-02 23:12:00",
+  "algorithm": "Multinomial Naive Bayes + TF-IDF",
+  "metrics": {
+    "accuracy": 93.97,
+    "precision": 93.2,
+    "recall": 93.01,
+    "f1": 93.07,
+    "cv_mean": 88.13,
+    "cv_std": 0.78
+  },
+  "dataset": {
+    "original_samples": 577,
+    "prepared_samples": 851,
+    "test_samples": 116
+  },
+  "per_class": [
+    {
+      "intent": "become_model_info",
+      "precision": 75.0,
+      "recall": 75.0,
+      "f1": 75.0,
+      "support": 4
+    },
+    {
+      "intent": "greeting",
+      "precision": 100.0,
+      "recall": 100.0,
+      "f1": 100.0,
+      "support": 8
+    },
+    {
+      "intent": "homepage_info",
+      "precision": 93.75,
+      "recall": 100.0,
+      "f1": 96.77,
+      "support": 15
+    },
+    {
+      "intent": "location_info",
+      "precision": 100.0,
+      "recall": 100.0,
+      "f1": 100.0,
+      "support": 12
+    },
+    {
+      "intent": "model_info",
+      "precision": 91.67,
+      "recall": 84.62,
+      "f1": 88.0,
+      "support": 13
+    },
+    {
+      "intent": "program_info",
+      "precision": 100.0,
+      "recall": 100.0,
+      "f1": 100.0,
+      "support": 8
+    },
+    {
+      "intent": "registration_info",
+      "precision": 94.74,
+      "recall": 90.0,
+      "f1": 92.31,
+      "support": 20
+    },
+    {
+      "intent": "sensitive_intent",
+      "precision": 92.0,
+      "recall": 95.83,
+      "f1": 93.88,
+      "support": 24
+    },
+    {
+      "intent": "technical_support",
+      "precision": 91.67,
+      "recall": 91.67,
+      "f1": 91.67,
+      "support": 12
+    }
+  ],
+  "summary": "Model dievaluasi pada 116 sampel uji murni (20% data asli, tanpa augmentasi). Akurasi uji 93.97% dengan rata-rata 5-Fold CV 88.13% (±0.78%).",
+  "recommendations": [
+    "Tambahkan contoh kalimat baru pada intent dengan F1 terendah sebelum retrain.",
+    "Pastikan augmentasi hanya diterapkan pada data latih agar tidak terjadi data leakage.",
+    "Jalankan ulang evaluasi setelah setiap retrain model dari admin.",
+    "Pantau fallback chatbot di Activity Report untuk menemukan gap data intent."
+  ],
+  "confusion_matrix_image": "confusion_matrix.png"
+}

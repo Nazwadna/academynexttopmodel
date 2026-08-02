@@ -220,7 +220,6 @@
     <script>
         // Debug Alpine.js
         document.addEventListener('alpine:init', () => {
-            console.log('✅ Alpine.js initialized successfully');
         });
         
         // Check if Alpine.js loaded
@@ -230,19 +229,16 @@
                 // Fallback: use vanilla JavaScript for dropdown
                 initFallbackDropdown();
             } else {
-                console.log('✅ Alpine.js is available globally');
             }
         });
         
         // Welcome page specific debugging
         if (window.location.pathname === '/' || window.location.pathname === '/welcome') {
-          console.log('🌐 Welcome page detected - applying special fixes for dropdown');
           
           // Force dropdown to be above loading screen and hero section
           setTimeout(() => {
             const dropdowns = document.querySelectorAll('.language-dropdown');
             dropdowns.forEach((dropdown, index) => {
-              console.log(`Found dropdown ${index}:`, dropdown);
               dropdown.style.zIndex = '10051';
               dropdown.style.position = 'relative';
               
@@ -250,14 +246,12 @@
               if (button) {
                 button.style.zIndex = '10051';
                 button.style.position = 'relative';
-                console.log(`Dropdown ${index} button:`, button);
               }
               
               const ul = dropdown.querySelector('ul');
               if (ul) {
                 ul.style.zIndex = '10052';
                 ul.style.position = 'absolute';
-                console.log(`Dropdown ${index} ul:`, ul);
               }
             });
           }, 2000); // Wait for page to fully load
@@ -290,7 +284,7 @@
         @endif
       @endauth
       <li class="relative language-dropdown" x-data="{ open: false }" @click.away="open = false">
-        <button @click="open = !open; console.log('Desktop dropdown clicked, open:', open)"
+        <button @click="open = !open"
           class="flex items-center gap-2 px-4 py-2 text-white rounded-lg hover:bg-white hover:text-black font-medium focus:outline-none nav-link-hover"
           style="cursor: pointer;">
           <span class="inline-block w-5 h-5 rounded-full overflow-hidden align-middle">
@@ -313,7 +307,7 @@
           x-cloak
           style="min-width: 144px;">
           <li>
-            <a href="{{ route('lang.switch', 'en') }}" onclick="console.log('Switching to English')"
+            <a href="{{ route('lang.switch', 'en') }}"
               class="flex items-center gap-2 px-4 py-2 text-black hover:bg-gray-100 transition-colors duration-200"
               style="text-decoration: none; display: block;">
               <img src="https://flagcdn.com/24x18/gb.png" alt="English"
@@ -322,8 +316,7 @@
             </a>
           </li>
           <li>
-            <a href="{{ route('lang.switch', 'id') }}" 
-              onclick="console.log('Switching to Indonesia'); console.log('Link href:', this.href);"
+            <a href="{{ route('lang.switch', 'id') }}"
               class="flex items-center gap-2 px-4 py-2 text-black hover:bg-gray-100 transition-colors duration-200"
               style="text-decoration: none; display: block; cursor: pointer; pointer-events: auto;"
               id="indonesia-link">
@@ -369,7 +362,7 @@
     @endauth
     <!-- Dropdown Bahasa dengan Alpine.js -->
     <li class="relative language-dropdown" x-data="{ open: false }" @click.away="open = false">
-      <button @click="open = !open; console.log('Mobile dropdown clicked, open:', open)"
+      <button @click="open = !open"
         class="flex items-center gap-2 px-4 py-2 text-white rounded-lg hover:bg-white hover:text-black font-medium focus:outline-none nav-link-hover"
         style="cursor: pointer;">
         <span class="inline-block w-5 h-5 rounded-full overflow-hidden align-middle">
@@ -392,7 +385,7 @@
         x-cloak
         style="min-width: 144px;">
         <li>
-          <a href="{{ route('lang.switch', 'en') }}" onclick="console.log('Mobile: Switching to English')"
+          <a href="{{ route('lang.switch', 'en') }}"
             class="flex items-center gap-2 px-4 py-2 text-black hover:bg-gray-100 transition-colors duration-200"
             style="text-decoration: none; display: block;">
             <img src="https://flagcdn.com/24x18/gb.png" alt="English"
@@ -401,8 +394,7 @@
           </a>
         </li>
         <li>
-          <a href="{{ route('lang.switch', 'id') }}" 
-            onclick="console.log('Mobile: Switching to Indonesia'); console.log('Mobile Link href:', this.href);"
+          <a href="{{ route('lang.switch', 'id') }}"
             class="flex items-center gap-2 px-4 py-2 text-black hover:bg-gray-100 transition-colors duration-200"
             style="text-decoration: none; display: block; cursor: pointer; pointer-events: auto;"
             id="indonesia-link-mobile">
@@ -435,7 +427,6 @@
   // Navbar animation on load
   document.addEventListener('DOMContentLoaded', function() {
     // Debug Alpine.js
-    console.log('DOM loaded, checking Alpine.js...');
     
     // Check if Alpine.js is loaded
     if (typeof Alpine === 'undefined') {
@@ -443,17 +434,13 @@
       // Fallback: use vanilla JavaScript for dropdown
       initFallbackDropdown();
     } else {
-      console.log('Alpine.js is loaded successfully');
     }
     
     // Ensure Indonesia links are clickable
     setTimeout(() => {
       const indonesiaLinks = document.querySelectorAll('#indonesia-link, #indonesia-link-mobile');
       indonesiaLinks.forEach(link => {
-        console.log('Found Indonesia link:', link);
         link.addEventListener('click', function(e) {
-          console.log('Indonesia link clicked!');
-          console.log('Link href:', this.href);
           // Don't prevent default, let it navigate
         });
         
@@ -594,7 +581,6 @@
 
   // Fallback dropdown function if Alpine.js fails
   function initFallbackDropdown() {
-    console.log('Initializing fallback dropdown...');
     
     const dropdownButtons = document.querySelectorAll('[x-data]');
     dropdownButtons.forEach(button => {
@@ -604,7 +590,6 @@
         if (dropdown && dropdown.tagName === 'UL') {
           const isVisible = dropdown.style.display === 'block';
           dropdown.style.display = isVisible ? 'none' : 'block';
-          console.log('Fallback dropdown toggled:', !isVisible);
         }
       });
     });
@@ -622,7 +607,6 @@
   
   // Additional fallback for welcome page
   function initWelcomePageDropdown() {
-    console.log('Initializing welcome page dropdown fallback...');
     
     // Force all language links to be clickable
     const languageLinks = document.querySelectorAll('a[href*="lang/"]');
@@ -633,7 +617,6 @@
       link.style.zIndex = '10053';
       
       link.addEventListener('click', function(e) {
-        console.log('Language link clicked:', this.href);
         // Let the link navigate normally
       });
     });

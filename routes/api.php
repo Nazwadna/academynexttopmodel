@@ -5,6 +5,7 @@ use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\TalentController;
 use App\Http\Controllers\Auth\GoogleController;
+use App\Http\Controllers\ChatbotModelController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -22,6 +23,11 @@ Route::get('/talents/{id}', [TalentController::class, 'show']);
 Route::post('/talents', [TalentController::class, 'store']);
 Route::put('/talents/{id}', [TalentController::class, 'update']);
 Route::delete('/talents/{id}', [TalentController::class, 'destroy']);
+
+// Chatbot → Laravel data models (dipakai Flask Layer 4 dynamic query)
+Route::get('/chatbot/models', [ChatbotModelController::class, 'index']);
+Route::get('/chatbot/models/search', [ChatbotModelController::class, 'search']);
+Route::get('/chatbot/models/count', [ChatbotModelController::class, 'count']);
 
 Route::get('auth/google', [GoogleController::class, 'redirectToGoogle'])->name('google.redirect');
 Route::get('auth/google/callback', [GoogleController::class, 'handleGoogleCallback'])->name('google.callback');

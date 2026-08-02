@@ -1,0 +1,7 @@
+{
+  "include": ["."],
+  "exclude": ["**/__pycache__", "logs_db", "models", "nlp_pipeline"],
+  "extraPaths": [".", "modules"],
+  "reportMissingImports": "warning",
+  "pythonVersion": "3.12"
+}

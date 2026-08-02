@@ -4,63 +4,84 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\Session;
 
 class VisitorLogger
 {
     /**
-     * Handle an incoming request.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \Closure  $next
-     * @return mixed
+     * Catat visitor di homepage tanpa pernah menggagalkan response.
      */
     public function handle(Request $request, Closure $next)
     {
-        $excluded = ['admin', 'addmodel', 'editmodel', 'editprofile'];
+        // Selalu lanjutkan request dulu — logging bersifat best-effort
+        $response = $next($request);
+
+        try {
+            $this->logHomepageVisit($request);
+        } catch (\Throwable $e) {
+            Log::warning('VisitorLogger skipped: '.$e->getMessage());
+        }
+
+        return $response;
+    }
+
+    private function logHomepageVisit(Request $request): void
+    {
         $path = $request->path();
-        
-        foreach ($excluded as $ex) {
+        if ($path !== '/' && $path !== '') {
+            return;
+        }
+
+        foreach (['admin', 'addmodel', 'editmodel', 'editprofile'] as $ex) {
             if (stripos($path, $ex) !== false) {
-                return $next($request);
+                return;
             }
         }
 
-        // Hanya catat jika user mengakses website utama (halaman utama)
-        if ($path === '/' || $path === '') {
-            $sessionId = Session::getId();
-            $ipAddress = $request->ip();
-            $userAgent = $request->userAgent();
-            
-            // Cek apakah user yang login adalah admin
-            $user = Auth::user();
-            $isAdmin = $user && $user->role === 'admin';
-            
-            // Hanya catat jika bukan admin
-            if (!$isAdmin) {
-                // Update atau insert record untuk user yang sedang online
-                DB::table('visitor')->updateOrInsert(
-                    [
-                        'session_id' => $sessionId,
-                        'ip_address' => $ipAddress
-                    ],
-                    [
-                        'user_agent' => $userAgent,
-                        'visited_at' => now(),
-                        'last_activity' => now(),
-                        'is_online' => 1,
-                        'user_id' => $user ? $user->id_user : null
-                    ]
-                );
-                // Update last_active di tabel users
-                if ($user) {
-                    DB::table('users')->where('id_user', $user->id_user)->update(['last_active' => now()]);
-                }
-            }
+        if (!$this->databaseReady()) {
+            return;
         }
 
-        return $next($request);
+        $user = Auth::user();
+        if ($user && ($user->role ?? null) === 'admin') {
+            return;
+        }
+
+        $sessionId = Session::getId();
+        if ($sessionId === '') {
+            return;
+        }
+
+        DB::table('visitor')->updateOrInsert(
+            ['session_id' => $sessionId],
+            [
+                'ip_address' => (string) $request->ip(),
+                'user_agent' => (string) $request->userAgent(),
+                'visited_at' => now(),
+                'last_activity' => now(),
+                'is_online' => 1,
+                'user_id' => $user->id_user ?? null,
+            ]
+        );
+
+        if ($user && isset($user->id_user)) {
+            DB::table('users')
+                ->where('id_user', $user->id_user)
+                ->update(['last_active' => now()]);
+        }
+    }
+
+    private function databaseReady(): bool
+    {
+        try {
+            DB::connection()->getPdo();
+            return Schema::hasTable('visitor');
+        } catch (\Throwable $e) {
+            return false;
+        }
     }
 }

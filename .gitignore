@@ -21,3 +21,41 @@
 Homestead.json
 Homestead.yaml
 Thumbs.db
+
+# Python / chatbot
+**/__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+*.egg-info/
+.venv/
+venv/
+env/
+
+# Temp / editor / OS
+*.tmp
+*.temp
+*.bak
+*.orig
+*.swp
+*~
+.DS_Store
+Thumbs.db
+
+# Local SQLite journals / runtime noise (keep *.db data tracked only if needed)
+*.db-journal
+*.db-wal
+*.db-shm
+
+# Local debug / scratch
+chatbot_hybrid/scratch/
+*_uat_*
+*_reg_*
+_audit_*
+
+# Laravel compiled views (regenerated)
+/storage/framework/views/*.php

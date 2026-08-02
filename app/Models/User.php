@@ -24,6 +24,7 @@ class User extends Authenticatable
         'role',
         'number_phone',
         'pin',
+        'is_verified',
     ];
 
     /**

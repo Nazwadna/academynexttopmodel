@@ -125,6 +125,12 @@
                     <span class="ml-2 text-sm tracking-wide truncate">{{ __('messages.admin_listofmodel') }}</span>
                 </a>
             </li>
+            <li>
+                <a href="/admin/chatbot-management" class="flex items-center h-11 hover:bg-gray-700 px-4">
+                    <i class="fa-solid fa-robot w-5 min-w-[20px] text-center"></i>
+                    <span class="ml-2 text-sm tracking-wide truncate">Chatbot Management</span>
+                </a>
+            </li>
 
             <!-- Settings Dropdown -->
             <li x-data="{ open: false }">

@@ -3,9 +3,29 @@
 <head>
   <meta charset="UTF-8">
   <title>{{ __('messages.title') }}</title>
-  <link href="https://fonts.googleapis.com/css2?family=Fondamento&family=Newsreader:wght@400;600&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Fondamento&family=Newsreader:wght@400;600;700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
+    /* Nama di kartu model — seragam di Face of Models / New Models / Hire Models */
+    .model-card-name {
+      font-family: 'Newsreader', Georgia, serif !important;
+      font-weight: 700 !important;
+      font-size: 22px;
+      line-height: 1;
+      color: #000 !important;
+      letter-spacing: 0.02em;
+      text-shadow: 0 0 4px #fff, 0 0 2px #fff;
+    }
+    @media (min-width: 640px) {
+      .model-card-name {
+        font-size: 22px;
+      }
+    }
+    @media (max-width: 640px) {
+      .model-card-name {
+        font-size: 16px;
+      }
+    }
     body {
       font-family: "Open Sans", sans-serif;
     }
@@ -2039,14 +2059,13 @@
     
     <!-- Responsive Grid: 2 cols on mobile/tablet, 4 cols on desktop -->
     <div class="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8 place-items-center">
-      @foreach($featuredTalents as $index => $ft)
-        @if($ft->talent)
+      @foreach($ourTalents as $index => $ft)
         <div class="relative w-full max-w-[250px] h-[320px] rounded-[20px] overflow-hidden bg-neutral-800 flex flex-col hover-lift" data-scroll-animation="scale-in" data-delay="{{ 400 + ($index * 100) }}">
-          <img src="{{ asset('storage/' . $ft->talent->photo) }}" alt="{{ $ft->talent->nama_model }}" class="w-full h-full object-cover animate-float">
+          <img src="{{ asset('storage/' . ltrim($ft->image ?? '', '/')) }}" alt="Our Talent {{ $loop->iteration }}" class="w-full h-full object-cover animate-float">
 
 
           <!-- Portfolio Button -->
-<a href="{{ url('/portofolio/' . $ft->talent->id_model) }}"
+<a href="{{ url('/models') }}"
   class="absolute top-2 right-2 bg-white bg-opacity-80 rounded-full p-2 shadow hover:bg-black group transition hover-glow">
   <svg xmlns="http://www.w3.org/2000/svg"
     class="w-4 h-4 text-black group-hover:text-white transition"
@@ -2056,12 +2075,13 @@
 </a>
 
 
-          <!-- Model Name -->
-          <div class="absolute bottom-2 p-1 left-2 font-semibold text-black text-[22px] md:text-[24px] font-['Newsreader']">
-            {{ explode(' ', $ft->talent->nama_model)[0] }}
+          <!-- Model Name — gaya seragam dengan Hire Models / Sabrina -->
+          <div class="absolute left-3 bottom-3 z-10 text-left">
+            <h3 class="model-card-name">
+              Talent {{ $loop->iteration }}
+            </h3>
           </div>
         </div>
-        @endif
       @endforeach
     </div>
   </div>
@@ -2115,8 +2135,15 @@ function renderNewModels(models, target) {
   } else {
     models.forEach((model, index) => {
       let firstName = model.nama_model ? model.nama_model.split(' ')[0] : '';
+      let photo = model.photo || '';
+      // DB bisa simpan "photos/xxx.png" atau hanya "xxx.png"
+      if (photo && !photo.startsWith('http') && !photo.startsWith('/')) {
+        photo = photo.startsWith('photos/') ? ('/storage/' + photo) : ('/storage/photos/' + photo);
+      } else if (!photo) {
+        photo = '/img/models_list/jasmine.png';
+      }
       html += `<div class="relative w-full aspect-[5/7] max-w-[250px] rounded-[20px] overflow-hidden bg-neutral-800 flex flex-col items-center justify-end hover-lift" data-scroll-animation="scale-in" data-delay="${400 + (index * 100)}">
-  <img src="${model.photo ? '/storage/' + model.photo : '/img/models_list/jasmine.png'}" alt="${firstName}" class="w-full h-full object-cover animate-float">
+  <img src="${photo}" alt="${firstName}" class="w-full h-full object-cover animate-float">
   <a href="/portofolio/${model.id_model}" class="absolute top-2 right-2 bg-white bg-opacity-80 rounded-full p-2 shadow transition hover:bg-black group hover-glow">
   <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-black transition group-hover:text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
@@ -2160,7 +2187,7 @@ fetch('/api/new-models')
     <div class="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-8 place-items-center">
       @foreach($popularTalents as $index => $pt)
         <div class="relative w-full max-w-[250px] aspect-[5/7] rounded-[20px] overflow-hidden bg-neutral-800 hover-lift" data-scroll-animation="scale-in" data-delay="{{ 400 + ($index * 100) }}">
-          <img src="{{ asset('storage/' . $pt->image) }}" alt="Popular Talent {{ $loop->iteration }}" class="w-full h-full object-cover animate-float">
+          <img src="{{ asset('storage/' . ltrim($pt->image ?? '', '/')) }}" alt="Popular Talent {{ $loop->iteration }}" class="w-full h-full object-cover animate-float">
         </div>
       @endforeach
     </div>
@@ -2304,7 +2331,7 @@ fetch('/api/new-models')
   </div>
 
   <!-- Models Benefits -->
-  <div id="mobileModelsBenefits" class="flex flex-col gap-4 w-full max-w-[400px] hidden">
+  <div id="mobileModelsBenefits" class="hidden w-full max-w-[400px] flex-col gap-4">
     @php $modelColors = ['#FF4E4E', '#00C2FF', '#FFB800', '#FF00B8', '#B800FF']; @endphp
     @for ($i = 1; $i <= 5; $i++)
       <div class="bg-white rounded-[20px] p-4 hover-lift" data-scroll-animation="scale-in" data-delay="{{ ($i - 1) * 100 }}">
@@ -2372,7 +2399,7 @@ fetch('/api/new-models')
   <div class="grid grid-cols-2 lg:grid-cols-5 gap-4 sm:gap-8 max-w-[1200px] mx-auto">
   @foreach($hireModels as $index => $model)
     <div class="relative w-full max-w-[200px] aspect-[3/4] bg-white rounded-[16px] shadow-lg overflow-hidden mx-auto flex flex-col justify-between hover-lift" data-scroll-animation="scale-in" data-delay="{{ 600 + ($index * 100) }}">
-      <img src="{{ asset('storage/' . $model->photo) }}" alt="{{ $model->name }}" class="w-full h-full object-cover absolute inset-0 animate-float" />
+      <img src="{{ asset('storage/' . ltrim($model->photo ?? '', '/')) }}" alt="{{ $model->nama_model }}" class="w-full h-full object-cover absolute inset-0 animate-float" />
       <div class="absolute top-2 right-2 z-10">
         <a href="{{ url('/portofolio/' . $model->id_model) }}" class="hover-glow">
           <span class="flex items-center justify-center text-black text-xl font-bold">➝</span>
@@ -2380,10 +2407,10 @@ fetch('/api/new-models')
       </div>
       <div class="absolute left-2 bottom-2 z-10 font-['Newsreader'] text-black text-left">
         <h3 class="text-[16px] sm:text-[22px] font-bold leading-none" style="text-shadow: 0 0 4px #fff, 0 0 2px #fff;">
-          {{ explode(' ', $model->nama_model)[0] }}
+          {{ explode(' ', $model->nama_model ?? 'Model')[0] }}
         </h3>
         <p class="text-[12px] sm:text-[13px] leading-none">
-          {{ explode(',', $model->city)[0] }}
+          {{ explode(',', $model->categories ?? '-')[0] }}
         </p>
       </div>
     </div>
@@ -2517,7 +2544,7 @@ fetch('/api/new-models')
     <p class="text-center text-gray-700 mb-6 text-[14px] sm:text-[15px] md:text-[16px] max-w-[600px]" data-scroll-animation="fade-in-up" data-delay="800">
       {{ __('messages.from_photoshoot_to_runway_coaching') }}
     </p>
-    <div class="flex flex-col items-center justify-center sm:flex-row w-full items-center gap-4" data-scroll-animation="fade-in-up" data-delay="1000">
+    <div class="flex flex-col sm:flex-row items-center justify-center w-full gap-4" data-scroll-animation="fade-in-up" data-delay="1000">
       <span class="font-bold text-black text-[20px] sm:text-[24px] md:text-[28px] text-center sm:text-left">
         {{ __('messages.join_the_movement') }}
       </span>
@@ -2683,7 +2710,9 @@ function showBenefits(type) {
       mobileModelsTab.classList.remove('opacity-100', 'border-white');
       mobileModelsTab.classList.add('opacity-40', 'border-transparent');
       mobileClientsBenefits.classList.remove('hidden');
+      mobileClientsBenefits.classList.add('flex');
       mobileModelsBenefits.classList.add('hidden');
+      mobileModelsBenefits.classList.remove('flex');
     });
     mobileModelsTab.addEventListener('click', function() {
       mobileModelsTab.classList.add('opacity-100', 'border-white');
@@ -2691,10 +2720,13 @@ function showBenefits(type) {
       mobileClientsTab.classList.remove('opacity-100', 'border-white');
       mobileClientsTab.classList.add('opacity-40', 'border-transparent');
       mobileModelsBenefits.classList.remove('hidden');
+      mobileModelsBenefits.classList.add('flex');
       mobileClientsBenefits.classList.add('hidden');
+      mobileClientsBenefits.classList.remove('flex');
     });
   }
 </script>
+@include('chatbot.widget_fixed')
 </body>
 </html>
 
