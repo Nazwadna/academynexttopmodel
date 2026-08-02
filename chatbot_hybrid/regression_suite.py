@@ -80,6 +80,63 @@ def _load_wrapper_variants():
 _WRAPPER_VARIANTS = _load_wrapper_variants()
 
 
+# ============================================================
+# VARIANT-TIE TOLERANCE — field yang kena random tie-break di
+# select_best_variant() (modules/knowledge_retriever.py)
+# =====================================================================
+# Sejak fix "random tie-break for select_best_variant() to prevent
+# permanent variant starvation", 4 field berikut punya >=2 variant
+# jawaban yang skor kemiripannya identik untuk query umum ("apa itu X",
+# "jadwal kelas", dst) — select_best_variant() sekarang memilih SATU
+# secara acak di antara yang tie, alih-alih selalu variant terpendek.
+# Ini benar dan disengaja (lihat AUDIT_PROGRESS.md), tapi artinya
+# perbandingan string-persis terhadap baseline TIDAK BISA stabil untuk
+# field ini — bukan berarti hasilnya boleh diabaikan begitu saja,
+# harus tetap divalidasi sebagai ANGGOTA SAH pool variant field itu.
+# ============================================================
+TIE_PRONE_RESPONSE_KEYS = {
+    "about_academy", "registration_requirements", "homepage_info", "schedule_info",
+}
+
+
+def _load_variant_pools():
+    path = Path(__file__).resolve().parent / "data" / "academy_enhanced.json"
+    try:
+        with open(path, "r", encoding="utf-8") as f:
+            data = json.load(f)
+    except Exception:
+        return {}
+    responses = data.get("responses", {})
+    pools = {}
+    for key in TIE_PRONE_RESPONSE_KEYS:
+        raw = responses.get(key)
+        if isinstance(raw, dict):
+            variants = raw.get("id") or raw.get("en") or []
+        elif isinstance(raw, list):
+            variants = raw
+        else:
+            variants = []
+        pools[key] = {str(v).strip() for v in variants if str(v).strip()}
+    return pools
+
+
+_VARIANT_POOLS = _load_variant_pools()
+
+try:
+    from modules.knowledge_retriever import canonicalize_intent as _canonicalize_intent
+except Exception:
+    _canonicalize_intent = None
+
+
+def _canonical_response_key(intent):
+    if not intent or not _canonicalize_intent:
+        return intent
+    try:
+        return _canonicalize_intent(intent, getattr(appmod, "ACADEMY_DATA", None))
+    except Exception:
+        return intent
+
+
 def normalize_core_reply(text):
     """Hilangkan kalimat wrapper greeting/transisi/penutup/klarifikasi-intro
     acak, sisakan ISI jawaban saja, supaya perbandingan regresi fokus ke
@@ -247,6 +304,46 @@ def compare_core(current, baseline_path):
     return changed, same, missing
 
 
+def compare_tolerant_variants(current, baseline_path):
+    """Seperti compare_core() (toleran wrapper), TAPI untuk query yang
+    intent-nya masuk salah satu TIE_PRONE_RESPONSE_KEYS: reply dianggap
+    SAMA kalau (intent, source) cocok dengan baseline DAN core reply
+    adalah ANGGOTA SAH pool variant field itu di academy_enhanced.json
+    — bukan sekadar di-skip. Reply yang bukan anggota pool sah (mis.
+    field/isi berubah karena bug, bukan karena tie-break) tetap
+    ditandai BERUBAH seperti biasa."""
+    with open(baseline_path, "r", encoding="utf-8") as f:
+        baseline = json.load(f)
+    baseline_by_query = {b["query"]: b for b in baseline}
+
+    changed, same, missing = [], [], []
+    for r in current:
+        b = baseline_by_query.get(r["query"])
+        if b is None:
+            missing.append(r["query"])
+            continue
+
+        r_core = normalize_core_reply(r["reply"])
+        b_core = normalize_core_reply(b["reply"])
+
+        # Exact match (termasuk sub-field templated deterministik seperti
+        # schedule_info.time/.day) -> selalu SAMA, tidak perlu cek pool.
+        if (r["intent"], r["source"], r_core) == (b["intent"], b["source"], b_core):
+            same.append(r["query"])
+            continue
+
+        # Tidak exact match -> baru toleransi tie-break: hanya SAMA kalau
+        # intent+source cocok DAN reply saat ini anggota sah pool variant
+        # umum field itu (bukan field spesifik lain yang kebetulan share intent).
+        canonical_key = _canonical_response_key(r["intent"])
+        pool = _VARIANT_POOLS.get(canonical_key)
+        if pool and r["intent"] == b["intent"] and r["source"] == b["source"] and r_core in pool:
+            same.append(r["query"])
+        else:
+            changed.append((r["query"], b, r, b_core, r_core))
+    return changed, same, missing
+
+
 def main():
     parser = argparse.ArgumentParser(description="Regression suite permanen (94 query Tahap 2)")
     parser.add_argument("--output", default=None, help="Simpan hasil run sebagai JSON ke path ini (opsional)")
@@ -255,6 +352,15 @@ def main():
         "--ignore-wrapper", action="store_true",
         help="Saat --compare-against dipakai, abaikan variasi kalimat greeting/transisi/"
              "penutup/klarifikasi-intro acak (nlu_engine) — bandingkan isi jawaban saja.",
+    )
+    parser.add_argument(
+        "--tolerate-variant-tie", action="store_true",
+        help="Otomatis toleran-wrapper juga (disarankan tetap pasang --ignore-wrapper "
+             "eksplisit untuk kejelasan). Untuk field yang diketahui kena random "
+             "tie-break di select_best_variant() (about_academy, "
+             "registration_requirements, homepage_info, schedule_info), reply dianggap "
+             "SAMA jika (intent, source) cocok DAN reply adalah anggota sah pool variant "
+             "field itu — bukan sekadar diabaikan. Query lain tidak terpengaruh.",
     )
     parser.add_argument("--quiet", action="store_true", help="Jangan cetak detail per-query, hanya ringkasan")
     args = parser.parse_args()
@@ -277,10 +383,14 @@ def main():
 
     exit_code = 0
     if args.compare_against:
-        mode = "TOLERAN-NOISE (--ignore-wrapper)" if args.ignore_wrapper else "STRICT"
-        if args.ignore_wrapper:
+        if args.tolerate_variant_tie:
+            mode = "TOLERAN-NOISE + TOLERAN-VARIANT-TIE"
+            changed, same, missing = compare_tolerant_variants(results, args.compare_against)
+        elif args.ignore_wrapper:
+            mode = "TOLERAN-NOISE (--ignore-wrapper)"
             changed, same, missing = compare_core(results, args.compare_against)
         else:
+            mode = "STRICT"
             changed, same, missing = compare(results, args.compare_against)
         print("=" * 70)
         print(f"DIBANDINGKAN DENGAN BASELINE ({mode}): {args.compare_against}")
@@ -291,7 +401,7 @@ def main():
             print("-" * 70)
             print("Detail perubahan:")
             for item in changed:
-                if args.ignore_wrapper:
+                if args.ignore_wrapper or args.tolerate_variant_tie:
                     q, b, r, b_core, r_core = item
                     print(f"  Q: {q}")
                     print(f"    SEBELUM: intent={b['intent']} source={b['source']}")
