@@ -882,7 +882,7 @@
           "id": "location_only",
           "specificity": 1.3,
           "strict_keywords": true,
-          "keywords": ["di mana jadwal", "lokasi kelas", "tempat kelas"],
+          "keywords": ["di mana jadwal", "lokasi kelas", "tempat kelas", "jadwal kelas dimana", "kelas dimana", "dimana jadwal", "dimana kelas"],
           "redirect_intent": "location_info"
         },
         {
@@ -1043,7 +1043,7 @@
         },
         {
           "id": "address_social",
-          "specificity": 1.3,
+          "specificity": 1.6,
           "strict_keywords": true,
           "keywords": ["alamat admin", "instagram", "ig", "follow"],
           "response_key": "contact_admin",
