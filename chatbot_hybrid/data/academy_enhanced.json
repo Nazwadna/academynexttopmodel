@@ -6,7 +6,8 @@
     "whatsapp": "+6281214237742",
     "email": "info@academyntm.com",
     "website": "https://academyntm.com",
-    "founded_year": 2015
+    "founded_year": 2015,
+    "purpose": "membantu pengembangan kemampuan model, membangun portofolio profesional, serta membuka peluang model untuk berkembang di dunia modeling"
   },
   "programs": {
     "basic": {
@@ -1105,6 +1106,14 @@
           "template": "Academy Next Top Model bergerak di bidang {value}.",
           "response_key": "about_academy",
           "variant_filter_keywords": ["modeling", "pengembangan", "portofolio"]
+        },
+        {
+          "id": "purpose",
+          "specificity": 1.4,
+          "strict_keywords": true,
+          "keywords": ["tujuan", "apa tujuan", "tujuannya apa", "misi"],
+          "source": "academy_info.purpose",
+          "template": "Tujuan Academy Next Top Model adalah {value}."
         },
         {
           "id": "full",
