@@ -2145,6 +2145,8 @@ def detect_all_topic_intents(message: str) -> list:
         ("programs_info", is_program_query),
         ("benefit_info", is_benefit_query),
         ("become_model_info", is_become_model_query),
+        ("about_academy", is_about_academy_query),
+        ("homepage_info", is_homepage_info_query),
         ("pricing_info", is_sensitive_query),
         ("model_count", is_model_count_query),
         ("model_list", is_model_list_query),
@@ -2211,6 +2213,12 @@ def _answer_for_intent(intent_name: str, message: str) -> str:
         )
     if intent_name == "become_model_info":
         return get_become_model_knowledge(query=message)
+    if intent_name == "about_academy":
+        text = _pick_academy_response("about_academy", query=message)
+        return text or "Academy Next Top Model adalah academy modeling yang menyediakan layanan pengembangan model, pengelolaan portofolio digital, dan informasi seputar kegiatan academy."
+    if intent_name == "homepage_info":
+        text = _pick_academy_response("homepage_info", query=message)
+        return text or "Academy Next Top Model dipimpin oleh Oliviarie Summer sebagai Owner, CEO, Founder, dan Coach."
     if intent_name == "pricing_info":
         return (
             "Untuk informasi biaya pendaftaran, promo, diskon, dan sistem pembayaran, "
