@@ -7,6 +7,7 @@ Clarification Engine, Multi Intent, atau Response Orchestrator.
 """
 from __future__ import annotations
 
+import random
 import re
 from typing import Any, Dict, List, Optional, Sequence, Tuple
 
@@ -162,8 +163,7 @@ def select_best_variant(
     best_score = ranked[0][0]
     top = [v for s, v in ranked if abs(s - best_score) < 1e-6]
     if prefer_shortest_on_tie and len(top) > 1:
-        # Prefer jawaban lebih spesifik/pendek saat skor sama
-        top.sort(key=len)
+        return random.choice(top)
     return top[0]
 
 
