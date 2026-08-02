@@ -24,6 +24,10 @@ from typing import Optional
 # ============================================================
 INTENT_PRIORITY: dict[str, int] = {
     "technical_support":        10,
+    # otp_help / login_help (di bawah): saat ini tidak terjangkau — is_technical_support_query()
+    # di app.py hanya mengembalikan intent generik "technical_support", tidak memecah
+    # OTP/login/password. Entry ini kemungkinan placeholder untuk pemisahan granular di masa
+    # depan; jangan dihapus tanpa konfirmasi produk. (Audit Tahap 4)
     "otp_help":                 15,
     "login_help":               20,
     "registration_info":        25,
