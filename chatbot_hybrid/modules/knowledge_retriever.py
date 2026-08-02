@@ -179,7 +179,7 @@ def _score_field(query: str, field: dict) -> float:
         k = _normalize(str(kw))
         if not k:
             continue
-        if k in q or all(t in q.split() for t in k.split() if len(t) >= 2):
+        if k in q or (len(k.split()) == 1 and all(t in q.split() for t in k.split() if len(t) >= 2)):
             hits += 1
             # Longer keyword phrases = more specific
             weighted += 0.15 + 0.08 * max(0, len(k.split()) - 1)
