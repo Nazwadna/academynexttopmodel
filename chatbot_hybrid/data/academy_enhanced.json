@@ -129,7 +129,9 @@
     "registration_steps": [
       "Cara pendaftaran di Academy Next Top Model adalah sebagai berikut:\n1. Buka halaman Register pada website.\n2. Isi data diri lengkap seperti nama, email, nomor WhatsApp, dan password.\n3. Lakukan verifikasi akun jika diminta.\n4. Login ke akun yang sudah dibuat.\n5. Lengkapi profil dan portofolio.\n6. Siapkan persyaratan pendaftaran yang diminta.\n7. Jika mengalami kendala, silakan hubungi admin.",
       "Langkah pendaftaran di Academy Next Top Model:\n1. Masuk ke halaman Register.\n2. Buat akun dengan mengisi data diri lengkap.\n3. Verifikasi akun jika diperlukan.\n4. Login ke akun Anda.\n5. Lengkapi profil dan portofolio model.\n6. Ikuti instruksi lanjutan dari sistem atau admin.",
-      "Untuk mendaftar di Academy Next Top Model, silakan buka halaman Register, isi data diri lengkap, lakukan verifikasi akun, login ke akun yang sudah dibuat, lalu lengkapi profil dan portofolio Anda."
+      "Untuk mendaftar di Academy Next Top Model, silakan buka halaman Register, isi data diri lengkap, lakukan verifikasi akun, login ke akun yang sudah dibuat, lalu lengkapi profil dan portofolio Anda.",
+      "Ya, pendaftaran dilakukan secara online melalui halaman Register pada website Academy Next Top Model.",
+      "Setelah mendaftar, Anda perlu login ke akun yang sudah dibuat, melakukan verifikasi jika diminta, lalu melengkapi profil dan portofolio."
     ],
     "registration_requirements": [
       "Persyaratan pendaftaran di Academy Next Top Model meliputi usia start 4th-25th, mengisi formulir, menyiapkan foto close-up dan full body, serta melakukan pembayaran registrasi.",
@@ -921,14 +923,40 @@
           "strict_keywords": true,
           "keywords": ["halaman register", "buat akun", "isi formulir", "register"],
           "response_key": "registration_steps",
-          "extract_relevant_lines": true
+          "extract_relevant_lines": true,
+          "variant_filter_keywords": [
+            "cara pendaftaran di academy next top model adalah sebagai berikut",
+            "langkah pendaftaran di academy next top model",
+            "untuk mendaftar di academy next top model, silakan buka halaman register"
+          ]
+        },
+        {
+          "id": "online_confirmation",
+          "specificity": 1.5,
+          "strict_keywords": true,
+          "keywords": ["bisa online", "pendaftaran online", "daftar online"],
+          "response_key": "registration_steps",
+          "variant_filter_keywords": ["ya, pendaftaran dilakukan secara online"]
+        },
+        {
+          "id": "next_step",
+          "specificity": 1.5,
+          "strict_keywords": true,
+          "keywords": ["langkah selanjutnya", "setelah daftar", "setelah mendaftar", "step selanjutnya"],
+          "response_key": "registration_steps",
+          "variant_filter_keywords": ["setelah mendaftar, anda perlu login"]
         },
         {
           "id": "full",
           "general": true,
           "specificity": 0.6,
           "keywords": ["cara daftar", "proses pendaftaran", "langkah", "cara join"],
-          "response_key": "registration_steps"
+          "response_key": "registration_steps",
+          "variant_filter_keywords": [
+            "cara pendaftaran di academy next top model adalah sebagai berikut",
+            "langkah pendaftaran di academy next top model",
+            "untuk mendaftar di academy next top model, silakan buka halaman register"
+          ]
         }
       ],
       "become_model_info": [
