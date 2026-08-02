@@ -281,6 +281,8 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::get('/admin/chat-logs', function () {
         return view('admin_chat_logs');
     })->name('admin.chat-logs');
+
+    Route::post('/chatbot/train', [ChatbotController::class, 'train'])->name('chatbot.train');
 });
 
 /*
@@ -293,4 +295,3 @@ Route::post('/chatbot/chat', [ChatbotController::class, 'chat'])->name('chatbot.
 Route::post('/chatbot/analyze', [ChatbotController::class, 'analyze'])->name('chatbot.analyze');
 Route::get('/chatbot/health', [ChatbotController::class, 'health'])->name('chatbot.health');
 Route::get('/chatbot/intents', [ChatbotController::class, 'intents'])->name('chatbot.intents');
-Route::post('/chatbot/train', [ChatbotController::class, 'train'])->name('chatbot.train');
