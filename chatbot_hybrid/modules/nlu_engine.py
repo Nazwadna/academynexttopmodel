@@ -734,7 +734,12 @@ def _default_clarification_candidates():
 
 
 def _ensure_clarification_candidates(ranked):
-    if ranked:
+    # Audit Bagian 5 A5 (izin terbatas: HANYA threshold count, TIDAK
+    # menyentuh candidate_gap): sebelumnya fallback broad-default cuma aktif
+    # kalau ranking KOSONG TOTAL. Query ambigu tanpa sinyal kata kunci sama
+    # sekali sering lolos gap-filter dengan cuma 1 kandidat (bukan 0), jadi
+    # user cuma ditawari 1 opsi sempit, bukan gambaran topik yang luas.
+    if len(ranked) >= CLARIFICATION_POLICY['max_candidates']:
         return ranked
     return _default_clarification_candidates()
 
