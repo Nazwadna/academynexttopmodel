@@ -50,6 +50,7 @@ DEFAULT_ALIAS_MAP = {
     "benefit_info": "benefits_joining",
     "pricing_info": "pricing_sensitive",
     "program_info": "programs_info",
+    "registration_info": "registration_steps",
 }
 
 
