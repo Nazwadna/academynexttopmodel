@@ -51,6 +51,7 @@ DEFAULT_ALIAS_MAP = {
     "pricing_info": "pricing_sensitive",
     "program_info": "programs_info",
     "registration_info": "registration_steps",
+    "model_info": "client_search_model",
 }
 
 
