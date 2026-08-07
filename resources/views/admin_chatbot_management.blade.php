@@ -306,6 +306,10 @@ const i18n = {
     statusNew: @json(__('messages.cb_status_new')),
     queueMsg: @json(__('messages.cb_js_queue_msg')),
     jobQueued: @json(__('messages.cb_js_job_queued')),
+    trainingDone: @json(__('messages.cb_js_training_done')),
+    trainingDoneWithAccuracy: @json(__('messages.cb_js_training_done_with_accuracy')),
+    trainingFailedAsync: @json(__('messages.cb_js_training_failed_async')),
+    trainingTimeout: @json(__('messages.cb_js_training_timeout')),
     evalRunning: @json(__('messages.cb_js_eval_running')),
     evalDone: @json(__('messages.cb_js_eval_done')),
     evalFailed: @json(__('messages.cb_js_eval_failed')),
@@ -436,6 +440,8 @@ function chatbotAdmin() {
             }
         },
 
+        trainPollTimer: null,
+
         async syncRetrain() {
             if (this.trainingBusy) return;
             this.trainingBusy = true;
@@ -458,22 +464,87 @@ function chatbotAdmin() {
                 const data = await res.json().catch(() => ({}));
 
                 if (!res.ok) {
+                    this.trainingBusy = false;
                     this.trainingStatus = 'failed';
                     this.trainingMessage = data.message || data.error || ('HTTP ' + res.status);
                     this.lastLog = new Date().toLocaleString(i18n.locale) + ' - FAILED';
                     return;
                 }
 
-                this.trainingStatus = 'done';
                 this.trainingMessage = data.message || i18n.jobQueued;
                 this.lastLog = new Date().toLocaleString(i18n.locale) + ' - Job queued';
                 await this.loadAnalytics();
+                // trainingBusy tetap true -- dilepas oleh pollTrainingStatus() saat job BENERAN selesai.
+                this.pollTrainingStatus();
             } catch (e) {
+                this.trainingBusy = false;
                 this.trainingStatus = 'failed';
                 this.trainingMessage = 'Error: ' + e.message;
                 this.lastLog = new Date().toLocaleString(i18n.locale) + ' - ERROR';
-            } finally {
-                this.trainingBusy = false;
+            }
+        },
+
+        // Polling singkat status job async (bukan delay buta) -- supaya notifikasi
+        // "training selesai" muncul persis saat job selesai, bukan cuma pesan
+        // "masuk antrian" yang menggantung tanpa follow-up.
+        pollTrainingStatus() {
+            if (this.trainPollTimer) clearInterval(this.trainPollTimer);
+            let attempts = 0;
+            let sawRunning = false;
+            const maxAttempts = 40; // ~2 menit @ 3 detik/poll -- jauh di atas durasi training normal (~beberapa detik)
+
+            this.trainPollTimer = setInterval(async () => {
+                attempts++;
+                try {
+                    const res = await fetch(@json(url('/chatbot/train/status')), {
+                        headers: { 'Accept': 'application/json' },
+                        credentials: 'same-origin'
+                    });
+                    const data = await res.json().catch(() => ({}));
+
+                    if (data.running) sawRunning = true;
+
+                    if (!data.running && (data.result || sawRunning)) {
+                        clearInterval(this.trainPollTimer);
+                        this.trainPollTimer = null;
+                        await this.onTrainingFinished(data.result);
+                        return;
+                    }
+                } catch (e) {
+                    // hiccup jaringan sesaat -- lanjut poll sampai maxAttempts
+                }
+
+                if (attempts >= maxAttempts) {
+                    clearInterval(this.trainPollTimer);
+                    this.trainPollTimer = null;
+                    this.trainingBusy = false;
+                    this.trainingStatus = 'unknown';
+                    this.trainingMessage = i18n.trainingTimeout;
+                    this.lastLog = new Date().toLocaleString(i18n.locale) + ' - Training status unknown (timeout)';
+                }
+            }, 3000);
+        },
+
+        async onTrainingFinished(result) {
+            this.trainingBusy = false;
+            await this.loadAnalytics();
+
+            if (result && result.status === 'success') {
+                this.trainingStatus = 'done';
+                const accVal = result.model_info && typeof result.model_info.accuracy === 'number'
+                    ? result.model_info.accuracy
+                    : null;
+                this.trainingMessage = accVal !== null
+                    ? i18n.trainingDoneWithAccuracy.replace(':accuracy', this.formatPercent(accVal * 100))
+                    : i18n.trainingDone;
+                this.lastLog = new Date().toLocaleString(i18n.locale) + ' - Training selesai';
+            } else if (result && result.status === 'failed') {
+                this.trainingStatus = 'failed';
+                this.trainingMessage = result.error ? `${i18n.trainingFailedAsync}: ${result.error}` : i18n.trainingFailedAsync;
+                this.lastLog = new Date().toLocaleString(i18n.locale) + ' - Training gagal';
+            } else {
+                this.trainingStatus = 'done';
+                this.trainingMessage = i18n.jobQueued;
             }
         },
 

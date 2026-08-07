@@ -1203,4 +1203,17 @@ class ChatbotController extends Controller
             ], 500);
         }
     }
+
+    /**
+     * Status polling ringan untuk job training async (dipanggil frontend tiap beberapa
+     * detik setelah Sync & Retrain di-dispatch) supaya UI tahu kapan training BENERAN
+     * selesai, bukan cuma "masuk antrian".
+     */
+    public function trainStatus()
+    {
+        return response()->json([
+            'running' => Cache::has(ProcessChatbotTraining::LOCK_KEY),
+            'result' => Cache::get(ProcessChatbotTraining::RESULT_KEY),
+        ]);
+    }
 }

@@ -282,6 +282,7 @@ Route::middleware(['auth', 'admin'])->group(function () {
     })->name('admin.intents');
 
     Route::post('/chatbot/train', [ChatbotController::class, 'train'])->name('chatbot.train');
+    Route::get('/chatbot/train/status', [ChatbotController::class, 'trainStatus'])->name('chatbot.train.status');
 });
 
 /*

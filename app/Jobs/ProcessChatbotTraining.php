@@ -29,6 +29,9 @@ class ProcessChatbotTraining implements ShouldQueue, ShouldBeUnique
 
     public const LOCK_KEY = 'chatbot:training:active';
 
+    /** Hasil training terakhir (success/failed + metrik), dibaca endpoint polling /chatbot/train/status. */
+    public const RESULT_KEY = 'chatbot:training:last_result';
+
     public int $timeout = 320;
 
     public int $tries = 1;
@@ -131,17 +134,31 @@ class ProcessChatbotTraining implements ShouldQueue, ShouldBeUnique
             return;
         }
 
+        $json = $response->json();
+
+        Cache::put(self::RESULT_KEY, [
+            'status' => 'success',
+            'finished_at' => now()->toDateTimeString(),
+            'model_info' => $json['model_info'] ?? null,
+        ], now()->addMinutes(15));
+
         Cache::forget(self::LOCK_KEY);
 
         Log::info('[ProcessChatbotTraining] Training selesai', [
             'status' => $response->status(),
-            'result' => $response->json(),
+            'result' => $json,
         ]);
     }
 
     public function failed(?\Throwable $exception): void
     {
         Cache::forget(self::LOCK_KEY);
+
+        Cache::put(self::RESULT_KEY, [
+            'status' => 'failed',
+            'finished_at' => now()->toDateTimeString(),
+            'error' => $exception?->getMessage(),
+        ], now()->addMinutes(15));
 
         Log::error('[ProcessChatbotTraining] Job gagal total', [
             'error' => $exception?->getMessage(),
