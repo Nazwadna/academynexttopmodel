@@ -2134,6 +2134,41 @@ def is_sensitive_query(q: str) -> bool:
     return any(k in q for k in keywords)
 
 
+# Kata kunci negatif untuk topik yang JELAS di luar domain academy modeling
+# (jabatan publik/pemerintahan, profesi tidak terkait, cuaca, resep masakan).
+# Dipakai is_out_of_domain_query() (Temuan 3, audit sesi testing manual) --
+# BUKAN daftar lengkap dunia, hanya kategori yang terbukti nyata menghijack
+# NB confidence tinggi (mis. "siapa menteri indonesia" -> homepage_info 0.97)
+# karena polanya ("siapa X [indonesia]") terlalu mirip pertanyaan legit
+# tentang owner/founder academy secara struktural, bukan makna.
+OUT_OF_DOMAIN_KEYWORDS = [
+    "presiden", "menteri", "gubernur", "ketua", "direktur",
+    "pilot", "suster", "dokter", "guru", "polisi", "tentara",
+    "cuaca", "resep",
+]
+# Pola matematika sederhana ("1+1 berapa?") -- TIDAK termasuk "-" karena
+# normalize_text() sudah menghapus tanda hubung (dipakai rentang usia,
+# mis. "usia 10-15", BUG-10) sebelum sampai ke sini.
+OUT_OF_DOMAIN_MATH_PATTERN = re.compile(r"\d+\s*[+*/×÷]\s*\d+")
+
+
+def is_out_of_domain_query(q: str) -> bool:
+    """Deteksi topik yang jelas di luar domain academy modeling (Temuan 3).
+
+    Dicek SETELAH semua detector spesifik (Exact QA, Academy Knowledge,
+    RapidFuzz, Sensitive, Layer 4 Dynamic Query, bare-name probe) --
+    jadi hanya query yang SUDAH gagal semua detector legit itu yang bisa
+    kena di sini, sebelum NB classifier dipaksa menebak salah satu dari
+    10 kelasnya (yang tidak punya kelas "none of the above").
+    """
+    normalized = normalize_text(q)
+    if any(k in normalized for k in OUT_OF_DOMAIN_KEYWORDS):
+        return True
+    if OUT_OF_DOMAIN_MATH_PATTERN.search(normalized):
+        return True
+    return False
+
+
 def is_multi_intent_query(message: str) -> bool:
     """True jika pesan mengandung 2+ topik/pertanyaan berbeda."""
     intents = detect_all_topic_intents(message)
@@ -3469,6 +3504,27 @@ def chat():
                 "whatsapp_url": result.get("whatsapp_url")
             }
             _safe_update_memory(session_id, user_message, response_data["reply"], response_data["intent"], {}, conf)
+            return jsonify(response_data)
+
+        # LAYER 4c: OUT-OF-DOMAIN DETECTOR (Temuan 3, audit sesi testing manual) --
+        # dicek SETELAH semua detector spesifik di atas gagal, SEBELUM NB classifier
+        # dipaksa menebak salah satu dari 10 kelasnya untuk topik yang jelas di luar
+        # academy modeling (mis. "siapa menteri indonesia" sebelumnya nyasar ke
+        # homepage_info confidence 0.97 -- NB tidak punya kelas "none of the above").
+        if is_out_of_domain_query(processed_message) or is_out_of_domain_query(user_message):
+            response_data = {
+                "success": True,
+                "reply": (
+                    "Saya fokus membantu informasi seputar Academy Next Top Model. "
+                    "Jika Anda ingin mengetahui program, pendaftaran, model, atau jadwal, "
+                    "saya siap membantu."
+                ),
+                "confidence": 0.90,
+                "handoff": False,
+                "intent": "out_of_scope_general",
+                "source": "out_of_domain_detector",
+            }
+            log_chat_interaction(user_message, response_data, session_id, language, user_ip, user_agent, start_time)
             return jsonify(response_data)
 
         # =====================================================================
