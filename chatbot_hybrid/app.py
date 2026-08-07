@@ -624,6 +624,22 @@ KNOWLEDGE_QUERY_ALIASES = {
     "apa kabar": "out_of_scope_greeting",
     "cuaca hari ini bagaimana": "out_of_scope_weather",
     "siapa presiden indonesia": "out_of_scope_general",
+
+    # Single-word shortcuts (Temuan 4, audit sesi testing manual) — kata
+    # tunggal umum yang maksudnya sudah jelas, tidak perlu ditebak NB.
+    # Match hanya kalau SELURUH pesan persis kata ini (lihat build_exact_qa_dict
+    # / "enhanced_processed in EXACT_QA" di chat()) — bukan substring, jadi
+    # kalimat lain yang kebetulan mengandung kata ini tidak ikut ke-alias.
+    "admin": "contact_admin",
+    "kontak": "contact_admin",
+    "instagram": "contact_admin",
+    "wa": "contact_admin",
+    "whatsapp": "contact_admin",
+    "makasih": "gratitude",
+    "terimakasih": "gratitude",
+    "thanks": "gratitude",
+    "thankyou": "gratitude",
+    "kapan": "schedule_info",
 }
 
 def resolve_alias_knowledge(target_key: str, query: str = None) -> str:
@@ -638,6 +654,11 @@ def resolve_alias_knowledge(target_key: str, query: str = None) -> str:
         return "Saya fokus membantu informasi seputar Academy Next Top Model. Jika Anda ingin mengetahui program, pendaftaran, model, atau jadwal, saya siap membantu."
     if target_key == "greeting":
         return "Halo. Saya adalah asisten virtual Academy Next Top Model. Saya dapat membantu informasi seputar program, pendaftaran, jadwal, lokasi, model, benefit, dan kontak admin."
+    if target_key == "gratitude":
+        # academy_enhanced.json belum punya responses.gratitude — reuse teks
+        # yang sudah dipakai NB_INTENT_RESPONSES supaya konsisten (bukan
+        # konten baru, sama seperti "greeting" di atas yang juga hardcoded).
+        return "Sama-sama! Jangan ragu untuk bertanya kembali jika ada yang ingin diketahui tentang Academy Next Top Model. 😊"
 
     text = _pick_academy_response(target_key, query=query)
     if text:
