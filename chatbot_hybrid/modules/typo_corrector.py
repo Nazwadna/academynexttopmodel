@@ -37,8 +37,8 @@ DOMAIN_VOCAB = {
     "upload", "unggah", "branding", "speaking",
 
     # Model / Talent
-    "model", "talent", "anggota", "peserta", "member",
-    "remaja", "anak", "kids", "teens",
+    "model", "models", "mode", "talent", "anggota", "peserta", "member",
+    "remaja", "anak", "kids", "teens", "teen",
 
     # Biaya (sensitive — hanya normalisasi, bukan ambil jawaban)
     "biaya", "harga", "bayar", "tarif", "fee", "diskon",
@@ -46,12 +46,16 @@ DOMAIN_VOCAB = {
 
     # Teknis / Auth
     "login", "password", "akun", "otp", "verifikasi",
-    "email", "whatsapp", "instagram", "website",
+    "email", "whatsapp", "instagram", "website", "kontak",
+
+    # Ukuran (loanword umum, mis. "baju size small") — TIDAK boleh
+    # ke-fuzzy-correct jadi "mall" (QRatio("small","mall")=88.89).
+    "small",
 
     # Sapaan & Umum
     "halo", "hai", "selamat", "pagi", "siang", "sore", "malam",
     "terima", "kasih", "admin", "bagaimana", "berapa", "dimana",
-    "tidak", "ingin", "bisa", "saya", "tolong", "untuk",
+    "tidak", "ingin", "bisa", "saya", "kami", "tolong", "untuk",
     "kapan", "apa", "apakah", "academy", "akademi",
 }
 
