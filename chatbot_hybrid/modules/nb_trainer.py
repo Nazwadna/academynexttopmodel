@@ -6,6 +6,8 @@ from __future__ import annotations
 
 import os
 import pickle
+import tempfile
+import time
 from typing import Any
 
 import numpy as np
@@ -20,6 +22,37 @@ NLP_DIR = os.path.join(BASE, "..", "nlp_pipeline")
 CSV_PATH = os.path.join(NLP_DIR, "dataset_prepared.csv")
 NB_MODEL_PATH = os.path.join(NLP_DIR, "nb_model.pkl")
 TFIDF_PATH = os.path.join(NLP_DIR, "tfidf_vectorizer.pkl")
+
+
+def _atomic_pickle_dump(obj: Any, final_path: str, replace_retries: int = 10, replace_delay: float = 0.3) -> None:
+    """Tulis obj ke file temp di direktori yang sama, lalu os.replace() ke final_path.
+
+    Mencegah pembaca lain (mis. evaluation.py) membaca file setengah-tertulis
+    kalau kebetulan pickle.load() dipanggil di tengah proses training menimpa file.
+
+    os.replace() sendiri di-retry singkat: di Windows, replace bisa gagal dengan
+    PermissionError sesaat kalau pembaca lain kebetulan sedang punya file lama
+    terbuka persis di waktu yang sama (dibuktikan lewat pengujian race langsung).
+    """
+    directory = os.path.dirname(final_path) or "."
+    fd, tmp_path = tempfile.mkstemp(dir=directory, prefix=".tmp_", suffix=".pkl")
+    try:
+        with os.fdopen(fd, "wb") as f:
+            pickle.dump(obj, f)
+        last_err: PermissionError | None = None
+        for attempt in range(1, replace_retries + 1):
+            try:
+                os.replace(tmp_path, final_path)
+                return
+            except PermissionError as e:
+                last_err = e
+                if attempt < replace_retries:
+                    time.sleep(replace_delay)
+        raise last_err
+    except BaseException:
+        if os.path.exists(tmp_path):
+            os.remove(tmp_path)
+        raise
 
 
 def train_naive_bayes_from_csv() -> dict[str, Any]:
@@ -55,10 +88,8 @@ def train_naive_bayes_from_csv() -> dict[str, Any]:
     rec = float(recall_score(y_test, y_pred, average="macro", zero_division=0))
     f1 = float(f1_score(y_test, y_pred, average="macro", zero_division=0))
 
-    with open(NB_MODEL_PATH, "wb") as f:
-        pickle.dump(nb, f)
-    with open(TFIDF_PATH, "wb") as f:
-        pickle.dump(vectorizer, f)
+    _atomic_pickle_dump(nb, NB_MODEL_PATH)
+    _atomic_pickle_dump(vectorizer, TFIDF_PATH)
 
     return {
         "success": True,

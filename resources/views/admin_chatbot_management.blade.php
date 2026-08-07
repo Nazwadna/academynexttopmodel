@@ -181,7 +181,9 @@
                     </div>
                 </div>
             </div>
-            <p class="text-xs text-yellow-500 mt-3" x-show="trainingMessage" x-text="trainingMessage"></p>
+            <p class="text-xs mt-3 whitespace-pre-wrap break-words max-h-40 overflow-y-auto"
+                :class="trainingStatus === 'failed' ? 'text-red-400' : 'text-yellow-500'"
+                x-show="trainingMessage" x-text="trainingMessage"></p>
         </div>
 
         <div class="grid grid-cols-1 xl:grid-cols-3 gap-6">
@@ -496,7 +498,9 @@ function chatbotAdmin() {
                 const data = await res.json().catch(() => ({}));
 
                 if (!res.ok) {
-                    this.trainingMessage = data.error || data.message || (i18n.evalFailed + ' (HTTP ' + res.status + ')');
+                    this.trainingStatus = 'failed';
+                    const baseMsg = data.error || data.message || (i18n.evalFailed + ' (HTTP ' + res.status + ')');
+                    this.trainingMessage = data.detail ? `${baseMsg}\n${data.detail}` : baseMsg;
                     this.lastLog = new Date().toLocaleString(i18n.locale) + ' - EVAL FAILED';
                     return;
                 }
@@ -504,6 +508,7 @@ function chatbotAdmin() {
                 if (data.metrics) {
                     this.stats.metrics = { ...this.stats.metrics, ...data.metrics };
                 }
+                this.trainingStatus = 'done';
                 this.trainingMessage = data.message || i18n.evalDone;
                 this.lastLog = new Date().toLocaleString(i18n.locale) + ' - EVAL DONE';
 
@@ -511,6 +516,7 @@ function chatbotAdmin() {
                     window.open(data.report_url, '_blank');
                 }
             } catch (e) {
+                this.trainingStatus = 'failed';
                 this.trainingMessage = 'Error: ' + e.message;
                 this.lastLog = new Date().toLocaleString(i18n.locale) + ' - EVAL ERROR';
             } finally {

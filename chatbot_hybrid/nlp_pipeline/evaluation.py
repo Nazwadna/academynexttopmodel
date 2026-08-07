@@ -2,7 +2,7 @@
 FASE EVALUATION - HIGH PERFORMANCE OPTIMIZED
 Chatbot Academy Next Top Model
 """
-import sys, os, json, re, pickle
+import sys, os, json, re, pickle, time
 import numpy as np
 import pandas as pd
 from sklearn.feature_extraction.text import TfidfVectorizer
@@ -115,8 +115,28 @@ if not os.path.exists(MODEL_PATH) or not os.path.exists(VECT_PATH):
     print("Jalankan modeling.py terlebih dahulu.")
     sys.exit(1)
 
-with open(MODEL_PATH, "rb") as f:  nb = pickle.load(f)
-with open(VECT_PATH, "rb") as f:  vectorizer = pickle.load(f)
+def _load_pickle_with_retry(path, retries=3, delay=0.7):
+    """Baca pickle dengan retry singkat — melindungi dari file yang sedang
+    ditimpa oleh proses training (nb_trainer.py) di waktu hampir bersamaan."""
+    last_err = None
+    for attempt in range(1, retries + 1):
+        try:
+            with open(path, "rb") as f:
+                return pickle.load(f)
+        except (pickle.UnpicklingError, EOFError, OSError) as e:
+            last_err = e
+            if attempt < retries:
+                time.sleep(delay)
+    raise last_err
+
+
+try:
+    nb = _load_pickle_with_retry(MODEL_PATH)
+    vectorizer = _load_pickle_with_retry(VECT_PATH)
+except (pickle.UnpicklingError, EOFError, OSError) as e:
+    print(f"ERROR: Gagal memuat {os.path.basename(MODEL_PATH)}/{os.path.basename(VECT_PATH)} setelah beberapa percobaan.")
+    print(f"Kemungkinan training sedang berjalan bersamaan. Detail: {type(e).__name__}: {e}")
+    sys.exit(1)
 
 df_ori = load_original()
 X_text  = df_ori["question"].values
