@@ -38,6 +38,7 @@ DOMAIN_VOCAB = {
 
     # Model / Talent
     "model", "talent", "anggota", "peserta", "member",
+    "remaja", "anak", "kids", "teens",
 
     # Biaya (sensitive — hanya normalisasi, bukan ambil jawaban)
     "biaya", "harga", "bayar", "tarif", "fee", "diskon",
@@ -68,6 +69,27 @@ NO_CORRECT_TOKENS = {
 TYPO_CORRECTION_THRESHOLD = 88  # WRatio score, rentang 0-100
 # Token harus minimal sepanjang ini agar dikoreksi (hindari false positive di token pendek)
 MIN_TOKEN_LENGTH = 4
+
+# Whitelist typo spesifik (BUG-7) — mapping manual, eksplisit, TIDAK memengaruhi
+# TYPO_CORRECTION_THRESHOLD global. Dibutuhkan karena typo umum kata kategori
+# model (mis. "romaja" -> "remaja") skor fuzzy-nya di bawah threshold 88
+# (QRatio("romaja","remaja")=83.33), tapi menurunkan threshold global TERBUKTI
+# TIDAK aman saat disimulasikan (38 false positive pada kata sehari-hari umum
+# seperti "sama"->"saya"/"makasih"->"kasih", plus 54 kata domain saling
+# tertukar seperti "harga"->"hari"/"bisa"->"biaya", pada threshold serendah
+# ~67-75 yang dibutuhkan untuk menangkap SEMUA varian typo kategori ini).
+# Whitelist ini adalah exact-match tertutup, jadi 0 risiko false positive baru.
+TYPO_WHITELIST = {
+    "romaja": "remaja",
+    "remja": "remaja",
+    "remajaa": "remaja",
+    "anka": "anak",
+    "naak": "anak",
+    "kidz": "kids",
+    "kds": "kids",
+    "tens": "teens",
+    "tenns": "teens",
+}
 
 # ============================================================
 # 2. FAST HEURISTIC CHECK — apakah token kemungkinan mengandung typo
@@ -112,6 +134,9 @@ def correct_token(token: str) -> str:
     Koreksi satu token menggunakan RapidFuzz terhadap DOMAIN_VOCAB.
     Return token asli jika tidak ada koreksi yang cukup meyakinkan.
     """
+    if token in TYPO_WHITELIST:
+        return TYPO_WHITELIST[token]
+
     if not _looks_like_typo(token):
         return token
 
