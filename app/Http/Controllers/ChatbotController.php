@@ -881,12 +881,34 @@ class ChatbotController extends Controller
                     $runCmd = array_merge(['cmd', '/c'], $cmd);
                 }
 
-                $process = \Illuminate\Support\Facades\Process::path($cwd)
-                    ->timeout(300)
-                    ->run($runCmd);
+                // Retry singkat KHUSUS untuk startup crash asyncio/_overlapped (native Windows
+                // extension loading yang terbukti rapuh secara acak -- dikonfirmasi terjadi
+                // di proses APAPUN yang import sklearn/joblib, bukan bug logic evaluation.py).
+                // TIDAK memicu retry untuk kegagalan evaluasi biasa (logic error dll).
+                $maxAttempts = 2;
+                for ($attempt = 1; $attempt <= $maxAttempts; $attempt++) {
+                    $process = \Illuminate\Support\Facades\Process::path($cwd)
+                        ->timeout(300)
+                        ->run($runCmd);
 
-                $chunk = trim($process->output() . "\n" . $process->errorOutput());
-                $exitCode = $process->exitCode() ?? 1;
+                    $chunk = trim($process->output() . "\n" . $process->errorOutput());
+                    $exitCode = $process->exitCode() ?? 1;
+
+                    $isStartupCrash = $exitCode !== 0
+                        && str_contains($chunk, 'asyncio')
+                        && (str_contains($chunk, '_overlapped') || str_contains($chunk, '_winapi'));
+
+                    if ($exitCode === 0 || !$isStartupCrash || $attempt >= $maxAttempts) {
+                        break;
+                    }
+
+                    Log::warning('[ChatbotController] runEvaluation: startup crash terdeteksi (asyncio/_overlapped), retry', [
+                        'command' => implode(' ', $runCmd),
+                        'attempt' => $attempt,
+                    ]);
+                    usleep(1500000);
+                }
+
                 $outputParts[] = '$ ' . implode(' ', $runCmd) . " [exit={$exitCode}]\n" . $chunk;
 
                 // Hanya anggap jalan jika exit code berhasil (jangan andalkan file lama).
