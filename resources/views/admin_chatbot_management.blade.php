@@ -313,6 +313,10 @@ const i18n = {
     evalRunning: @json(__('messages.cb_js_eval_running')),
     evalDone: @json(__('messages.cb_js_eval_done')),
     evalFailed: @json(__('messages.cb_js_eval_failed')),
+    evalQueued: @json(__('messages.cb_js_eval_queued')),
+    evalBlockedByTraining: @json(__('messages.cb_js_eval_blocked_by_training')),
+    evalStuckInQueue: @json(__('messages.cb_js_eval_stuck_in_queue')),
+    evalTimeout: @json(__('messages.cb_js_eval_timeout')),
     clearConfirm: @json(__('messages.cb_js_clear_confirm')),
     logsCleared: @json(__('messages.cb_js_logs_cleared')),
     logsClearFailed: @json(__('messages.cb_js_logs_clear_failed')),
@@ -548,9 +552,12 @@ function chatbotAdmin() {
             }
         },
 
+        evalPollTimer: null,
+
         async runEvaluation() {
             if (this.evalBusy) return;
             this.evalBusy = true;
+            this.trainingStatus = 'running';
             this.trainingMessage = i18n.evalRunning;
             const csrf = document.querySelector('meta[name="csrf-token"]')?.content;
 
@@ -569,6 +576,7 @@ function chatbotAdmin() {
                 const data = await res.json().catch(() => ({}));
 
                 if (!res.ok) {
+                    this.evalBusy = false;
                     this.trainingStatus = 'failed';
                     const baseMsg = data.error || data.message || (i18n.evalFailed + ' (HTTP ' + res.status + ')');
                     this.trainingMessage = data.detail ? `${baseMsg}\n${data.detail}` : baseMsg;
@@ -576,22 +584,87 @@ function chatbotAdmin() {
                     return;
                 }
 
-                if (data.metrics) {
-                    this.stats.metrics = { ...this.stats.metrics, ...data.metrics };
-                }
-                this.trainingStatus = 'done';
-                this.trainingMessage = data.message || i18n.evalDone;
-                this.lastLog = new Date().toLocaleString(i18n.locale) + ' - EVAL DONE';
-
-                if (data.report_url) {
-                    window.open(data.report_url, '_blank');
-                }
+                this.trainingMessage = data.message || i18n.evalQueued;
+                this.lastLog = new Date().toLocaleString(i18n.locale) + ' - Eval queued';
+                // evalBusy tetap true -- dilepas oleh pollEvaluationStatus() saat job BENERAN selesai.
+                this.pollEvaluationStatus();
             } catch (e) {
+                this.evalBusy = false;
                 this.trainingStatus = 'failed';
                 this.trainingMessage = 'Error: ' + e.message;
                 this.lastLog = new Date().toLocaleString(i18n.locale) + ' - EVAL ERROR';
-            } finally {
-                this.evalBusy = false;
+            }
+        },
+
+        // Polling status job evaluasi async -- pola sama seperti pollTrainingStatus().
+        // Beda tambahan: bedakan "menunggu training selesai" (wajar, satu worker
+        // satu job) vs "kemungkinan queue worker tidak aktif" (queued lama TANPA
+        // training aktif bersamaan).
+        pollEvaluationStatus() {
+            if (this.evalPollTimer) clearInterval(this.evalPollTimer);
+            let attempts = 0;
+            let sawRunning = false;
+            let warnedStuck = false;
+            const maxAttempts = 40; // ~2 menit @ 3 detik/poll
+
+            this.evalPollTimer = setInterval(async () => {
+                attempts++;
+                try {
+                    const res = await fetch(@json(url('/admin/chatbot-evaluation/status')), {
+                        headers: { 'Accept': 'application/json' },
+                        credentials: 'same-origin'
+                    });
+                    const data = await res.json().catch(() => ({}));
+
+                    if (data.running) sawRunning = true;
+
+                    if (data.blocked_by_training) {
+                        this.trainingMessage = i18n.evalBlockedByTraining;
+                    } else if (data.stuck_in_queue && !warnedStuck) {
+                        warnedStuck = true;
+                        this.trainingMessage = i18n.evalStuckInQueue;
+                    }
+
+                    if (!data.running && (data.result || sawRunning)) {
+                        clearInterval(this.evalPollTimer);
+                        this.evalPollTimer = null;
+                        await this.onEvaluationFinished(data.result);
+                        return;
+                    }
+                } catch (e) {
+                    // hiccup jaringan sesaat -- lanjut poll sampai maxAttempts
+                }
+
+                if (attempts >= maxAttempts) {
+                    clearInterval(this.evalPollTimer);
+                    this.evalPollTimer = null;
+                    this.evalBusy = false;
+                    this.trainingStatus = 'unknown';
+                    this.trainingMessage = i18n.evalTimeout;
+                    this.lastLog = new Date().toLocaleString(i18n.locale) + ' - Evaluation status unknown (timeout)';
+                }
+            }, 3000);
+        },
+
+        async onEvaluationFinished(result) {
+            this.evalBusy = false;
+            await this.loadAnalytics();
+
+            if (result && result.status === 'success') {
+                this.trainingStatus = 'done';
+                if (result.metrics) {
+                    this.stats.metrics = { ...this.stats.metrics, ...result.metrics };
+                }
+                this.trainingMessage = i18n.evalDone;
+                this.lastLog = new Date().toLocaleString(i18n.locale) + ' - EVAL DONE';
+            } else if (result && result.status === 'failed') {
+                this.trainingStatus = 'failed';
+                const baseMsg = result.error || i18n.evalFailed;
+                this.trainingMessage = result.detail ? `${baseMsg}\n${result.detail}` : baseMsg;
+                this.lastLog = new Date().toLocaleString(i18n.locale) + ' - EVAL FAILED';
+            } else {
+                this.trainingStatus = 'done';
+                this.trainingMessage = i18n.evalDone;
             }
         },
 

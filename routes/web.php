@@ -266,6 +266,8 @@ Route::middleware(['auth', 'admin'])->group(function () {
         ->name('admin.chatbot.report.export');
     Route::post('/admin/chatbot-evaluation/run', [ChatbotController::class, 'runEvaluation'])
         ->name('admin.chatbot.evaluation.run');
+    Route::get('/admin/chatbot-evaluation/status', [ChatbotController::class, 'evaluationStatus'])
+        ->name('admin.chatbot.evaluation.status');
     Route::get('/admin/chatbot-evaluation-report', [ChatbotController::class, 'evaluationReport'])
         ->name('admin.chatbot.evaluation-report');
     Route::get('/admin/chatbot-evaluation-pdf', [ChatbotController::class, 'evaluationPdf'])

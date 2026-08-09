@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use Carbon\Carbon;
 use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\ValidationException;
+use App\Jobs\ProcessChatbotEvaluation;
 use App\Jobs\ProcessChatbotTraining;
 
 class ChatbotController extends Controller
@@ -843,14 +845,13 @@ class ChatbotController extends Controller
     }
 
     /**
-     * Jalankan evaluasi baru (Python evaluation.py) dan simpan hasil ke JSON.
-     * Sukses hanya jika proses exit 0 DAN hasil file benar-benar diperbarui.
+     * Dispatch evaluasi baru (Python evaluation.py) ke queue -- TIDAK lagi
+     * synchronous di dalam request HTTP (lihat ProcessChatbotEvaluation
+     * untuk root cause & penjelasan lengkap kenapa dipindah).
      */
     public function runEvaluation()
     {
-        $cwd = base_path('chatbot_hybrid/nlp_pipeline');
-        $script = $cwd . DIRECTORY_SEPARATOR . 'evaluation.py';
-        $resultPath = $cwd . DIRECTORY_SEPARATOR . 'evaluation_result.json';
+        $script = base_path('chatbot_hybrid/nlp_pipeline/evaluation.py');
 
         if (!is_file($script)) {
             return response()->json([
@@ -859,125 +860,64 @@ class ChatbotController extends Controller
             ], 404);
         }
 
-        try {
-            clearstatcache(true, $resultPath);
-            $beforeMtime = is_file($resultPath) ? (int) filemtime($resultPath) : 0;
-            $beforeGeneratedAt = null;
-            $beforeReport = $this->loadEvaluationResult();
-            if (is_array($beforeReport) && !empty($beforeReport['generated_at'])) {
-                $beforeGeneratedAt = (string) $beforeReport['generated_at'];
-            }
-
-            $commands = $this->evaluationPythonCommands();
-            $ranOk = false;
-            $outputParts = [];
-            $exitCode = 1;
-            $usedCommand = null;
-
-            foreach ($commands as $cmd) {
-                $runCmd = $cmd;
-                // Di Windows, spawn lewat cmd sering lebih stabil untuk interpreter absolut.
-                if (PHP_OS_FAMILY === 'Windows' && isset($cmd[0]) && str_ends_with(strtolower($cmd[0]), '.exe')) {
-                    $runCmd = array_merge(['cmd', '/c'], $cmd);
-                }
-
-                // Retry singkat KHUSUS untuk startup crash asyncio/_overlapped (native Windows
-                // extension loading yang terbukti rapuh secara acak -- dikonfirmasi terjadi
-                // di proses APAPUN yang import sklearn/joblib, bukan bug logic evaluation.py).
-                // TIDAK memicu retry untuk kegagalan evaluasi biasa (logic error dll).
-                $maxAttempts = 2;
-                for ($attempt = 1; $attempt <= $maxAttempts; $attempt++) {
-                    $process = \Illuminate\Support\Facades\Process::path($cwd)
-                        ->timeout(300)
-                        ->run($runCmd);
-
-                    $chunk = trim($process->output() . "\n" . $process->errorOutput());
-                    $exitCode = $process->exitCode() ?? 1;
-
-                    $isStartupCrash = $exitCode !== 0
-                        && str_contains($chunk, 'asyncio')
-                        && (str_contains($chunk, '_overlapped') || str_contains($chunk, '_winapi'));
-
-                    if ($exitCode === 0 || !$isStartupCrash || $attempt >= $maxAttempts) {
-                        break;
-                    }
-
-                    Log::warning('[ChatbotController] runEvaluation: startup crash terdeteksi (asyncio/_overlapped), retry', [
-                        'command' => implode(' ', $runCmd),
-                        'attempt' => $attempt,
-                    ]);
-                    usleep(1500000);
-                }
-
-                $outputParts[] = '$ ' . implode(' ', $runCmd) . " [exit={$exitCode}]\n" . $chunk;
-
-                // Hanya anggap jalan jika exit code berhasil (jangan andalkan file lama).
-                if ($exitCode === 0) {
-                    $ranOk = true;
-                    $usedCommand = implode(' ', $runCmd);
-                    break;
-                }
-            }
-
-            $output = trim(implode("\n---\n", $outputParts));
-
-            if (!$ranOk) {
-                return response()->json([
-                    'success' => false,
-                    'error' => 'Evaluasi gagal dijalankan (exit code tidak berhasil).',
-                    'detail' => mb_substr($output, -1200),
-                    'exit_code' => $exitCode,
-                ], 500);
-            }
-
-            clearstatcache(true, $resultPath);
-            $report = $this->loadEvaluationResult();
-            if (!$report || !is_file($resultPath)) {
-                return response()->json([
-                    'success' => false,
-                    'error' => 'Evaluasi selesai tapi hasil tidak tersimpan.',
-                    'detail' => mb_substr($output, -1200),
-                    'exit_code' => $exitCode,
-                ], 500);
-            }
-
-            $afterMtime = (int) filemtime($resultPath);
-            $afterGeneratedAt = isset($report['generated_at']) ? (string) $report['generated_at'] : null;
-            $fileUpdated = $afterMtime > $beforeMtime
-                || ($afterGeneratedAt !== null && $afterGeneratedAt !== $beforeGeneratedAt);
-
-            if (!$fileUpdated) {
-                return response()->json([
-                    'success' => false,
-                    'error' => 'Evaluasi tidak menghasilkan file hasil yang baru (timestamp/generated_at tidak berubah).',
-                    'detail' => mb_substr($output, -1200),
-                    'exit_code' => $exitCode,
-                    'before_generated_at' => $beforeGeneratedAt,
-                    'after_generated_at' => $afterGeneratedAt,
-                ], 500);
-            }
-
-            Log::info('[ChatbotController] Evaluasi model selesai', [
-                'accuracy' => $report['metrics']['accuracy'] ?? null,
-                'command' => $usedCommand,
-                'generated_at' => $afterGeneratedAt,
+        if (Cache::has(ProcessChatbotEvaluation::LOCK_KEY)) {
+            Log::warning('[ChatbotController] runEvaluation ditolak: evaluasi lain sedang berjalan', [
+                'lock' => Cache::get(ProcessChatbotEvaluation::LOCK_KEY),
             ]);
-
-            return response()->json([
-                'success' => true,
-                'message' => 'Evaluasi baru berhasil dijalankan dan disimpan.',
-                'metrics' => $report['metrics'] ?? [],
-                'generated_at' => $afterGeneratedAt,
-                'report_url' => url('/admin/chatbot-evaluation-report'),
-            ]);
-        } catch (\Throwable $e) {
-            Log::error('[ChatbotController] runEvaluation: ' . $e->getMessage());
 
             return response()->json([
                 'success' => false,
-                'error' => 'Gagal menjalankan evaluasi: ' . $e->getMessage(),
-            ], 500);
+                'error' => 'evaluation_in_progress',
+                'message' => 'Evaluasi sedang berjalan. Tunggu sebentar sebelum menjalankan ulang.',
+            ], 409);
         }
+
+        Cache::put(ProcessChatbotEvaluation::LOCK_KEY, [
+            'status' => 'queued',
+            'queued_at' => now()->toDateTimeString(),
+        ], now()->addSeconds(900));
+
+        ProcessChatbotEvaluation::dispatch();
+
+        Log::info('[ChatbotController] Evaluasi job di-dispatch', ['queue' => 'chatbot-training']);
+
+        return response()->json([
+            'success' => true,
+            'queued' => true,
+            'message' => 'Evaluasi masuk antrian. Pastikan Queue Worker aktif.',
+        ], 202);
+    }
+
+    /**
+     * Status polling ringan untuk job evaluasi async (pola sama seperti
+     * trainStatus()) -- termasuk membedakan "menunggu training selesai"
+     * (worker sibuk, wajar) vs "kemungkinan queue worker tidak aktif"
+     * (queued lama TANPA training aktif bersamaan).
+     */
+    public function evaluationStatus()
+    {
+        $evalLock = Cache::get(ProcessChatbotEvaluation::LOCK_KEY);
+        $trainingLock = Cache::get(ProcessChatbotTraining::LOCK_KEY);
+
+        $blockedByTraining = false;
+        $stuckInQueue = false;
+
+        if (is_array($evalLock) && ($evalLock['status'] ?? null) === 'queued' && !empty($evalLock['queued_at'])) {
+            if ($trainingLock !== null) {
+                $blockedByTraining = true;
+            } else {
+                $queuedSeconds = Carbon::parse($evalLock['queued_at'])->diffInSeconds(now());
+                $stuckInQueue = $queuedSeconds > 20;
+            }
+        }
+
+        return response()->json([
+            'running' => $evalLock !== null,
+            'status' => $evalLock['status'] ?? null,
+            'blocked_by_training' => $blockedByTraining,
+            'stuck_in_queue' => $stuckInQueue,
+            'result' => Cache::get(ProcessChatbotEvaluation::RESULT_KEY),
+        ]);
     }
 
     /**
@@ -985,7 +925,7 @@ class ChatbotController extends Controller
      *
      * @return list<list<string>>
      */
-    private function evaluationPythonCommands(): array
+    public static function evaluationPythonCommands(): array
     {
         $commands = [];
         $seen = [];
@@ -1071,7 +1011,7 @@ class ChatbotController extends Controller
     /**
      * @return array<string, mixed>|null
      */
-    private function loadEvaluationResult(): ?array
+    public static function loadEvaluationResult(): ?array
     {
         $path = base_path('chatbot_hybrid/nlp_pipeline/evaluation_result.json');
         if (!is_readable($path)) {
