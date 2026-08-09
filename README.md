@@ -126,7 +126,7 @@ CHATBOT_DEBUG=false
 
 **Cara cepat**
 - `start_all.bat` → Flask + Laravel
-- `start_queue_chatbot.bat` → Queue Worker (wajib jika mau tes training)
+- `start_queue_chatbot.bat` → Queue Worker (wajib untuk **Sync & Retrain AI** dan **Run Evaluation**)
 
 **Cara manual (3 terminal)**
 ```bash
@@ -292,13 +292,118 @@ php artisan serve --host=127.0.0.1 --port=8000
 # Chat:    http://127.0.0.1:8000/chatbot
 ```
 
-**Terminal 3 — Queue Worker (wajib jika training dari admin)**
+**Terminal 3 — Queue Worker (WAJIB untuk Sync & Retrain AI dan Run Evaluation)**
 
 ```bash
 php artisan queue:listen --queue=chatbot-training --tries=1 --timeout=320
 ```
 
 Atau klik `start_queue_chatbot.bat`.
+
+> Sejak perbaikan arsitektur terbaru, **Run Evaluation juga jalan lewat antrian ini** — bukan cuma Sync & Retrain AI. Detail lengkap ada di bagian "3 proses yang WAJIB nyala bersamaan" dan FAQ di bawah.
+
+---
+
+## 3 proses yang WAJIB nyala bersamaan
+
+Supaya website dan chatbot berfungsi penuh (termasuk fitur admin), ada **3 proses** yang harus jalan **bersamaan**, masing-masing di jendela terminal-nya sendiri:
+
+| Proses | Untuk apa | Command | Kapan wajib |
+|--------|-----------|---------|-------------|
+| **Flask** (`chatbot_hybrid/app.py`) | Otak chatbot — semua logika AI/NLP (jawab pertanyaan, deteksi intent, dll.) jalan di sini | `python app.py` (dijalankan dari dalam folder `chatbot_hybrid`) | **SELALU wajib.** Tanpa ini, chatbot tidak bisa menjawab apa pun. |
+| **Laravel** (`php artisan serve`) | Server web utama — menyajikan halaman website dan menjadi jembatan (proxy) antara browser dan Flask | `php artisan serve --host=127.0.0.1 --port=8000` (dijalankan dari folder root project) | **SELALU wajib.** Tanpa ini, website tidak bisa dibuka sama sekali. |
+| **Queue Worker** | Menjalankan tugas berat "di belakang layar" (training model & evaluasi model) tanpa membuat halaman admin macet/timeout | `php artisan queue:listen --queue=chatbot-training --tries=1 --timeout=320` (dijalankan dari folder root project) | Wajib untuk **2 fitur di halaman admin**: **Sync & Retrain AI** dan **Run Evaluation**. |
+
+**Catatan penting soal Queue Worker (ini yang BERUBAH):**
+
+- Dulu, tombol **Run Evaluation** langsung menjalankan proses evaluasi secara langsung (synchronous) saat diklik — jadi Queue Worker **tidak** dibutuhkan untuk fitur ini.
+- **Sekarang, Run Evaluation SUDAH TIDAK begitu.** Klik "Run Evaluation" akan memasukkan tugas ke antrian yang sama dengan training (`chatbot-training`), dan **Queue Worker WAJIB sudah menyala** supaya tugas itu benar-benar diproses. Alasan perubahan ini ada di bagian FAQ di bawah (lihat: *"Kenapa Run Evaluation kadang gagal dengan error WinError 10106?"*).
+- Kalau kamu hanya browsing website atau chat biasa (tidak masuk ke halaman admin chatbot), Queue Worker **boleh** tidak dinyalakan. Tapi begitu masuk ke `/admin/chatbot-management` dan memakai **Sync & Retrain AI** atau **Run Evaluation**, Queue Worker **wajib** sudah aktif.
+
+---
+
+## Langkah-langkah nyalain dari nol
+
+Ikuti urutan ini kalau semua proses dalam keadaan mati (baru buka komputer / baru clone project).
+
+1. **Nyalakan MySQL** dulu — buka XAMPP Control Panel → klik **Start** di baris MySQL.
+2. **Buka jendela terminal baru (jendela #1)**, masuk ke folder `chatbot_hybrid`, lalu jalankan Flask:
+   ```bash
+   cd chatbot_hybrid
+   python app.py
+   ```
+   Tunggu sampai muncul tulisan semacam `Running on http://127.0.0.1:5000`. **Biarkan jendela ini tetap terbuka.**
+3. **Buka jendela terminal baru lagi (jendela #2)** — jangan pakai jendela yang sama dengan Flask. Masuk ke folder root project, lalu jalankan Laravel:
+   ```bash
+   php artisan serve --host=127.0.0.1 --port=8000
+   ```
+   **Biarkan jendela ini juga tetap terbuka.**
+4. **Buka jendela terminal baru lagi (jendela #3)**, tetap di folder root project, lalu jalankan Queue Worker:
+   ```bash
+   php artisan queue:listen --queue=chatbot-training --tries=1 --timeout=320
+   ```
+   **Biarkan jendela ini juga tetap terbuka.**
+5. Jadi minimal ada **3 jendela terminal** yang harus tetap terbuka selama aplikasi dipakai. Kalau salah satu jendela ditutup, proses di dalamnya ikut mati.
+6. Setelah ketiganya jalan, baru buka browser ke `http://127.0.0.1:8000`.
+
+**Urutan yang disarankan:** MySQL → Flask → Laravel → Queue Worker (urutannya tidak ketat-ketat amat, tapi ini yang paling aman).
+
+**Cara pintas** (menggantikan langkah 2 & 3 sekaligus): jalankan `start_all.bat` (akan membuka Flask di jendela baru lalu menjalankan Laravel), lalu jalankan `start_queue_chatbot.bat` di jendela terpisah untuk langkah 4. Tetap terhitung 3 proses/3 jendela terpisah, cuma dibantu script.
+
+---
+
+## Cara cek semuanya sudah bener
+
+Setelah menyalakan ketiga proses, verifikasi satu per satu:
+
+1. **Cek Flask** — buka `http://127.0.0.1:5000/health` di browser. Harus muncul teks JSON dengan `"status": "ok"` dan `"nb_model_loaded": true`. Kalau browser bilang "can't connect" / halaman tidak bisa dibuka, berarti Flask belum jalan.
+2. **Cek Laravel** — buka `http://127.0.0.1:8000`. Halaman depan Academy NTM harus muncul normal (bukan error "connection refused", bukan halaman putih error 500). Kalau bisa buka halaman ini, Laravel sudah jalan.
+3. **Cek Flask ⇄ Laravel nyambung** — buka `http://127.0.0.1:8000/chatbot/health`. Kalau isinya menunjukkan status sehat, berarti Laravel berhasil menghubungi Flask.
+4. **Cek Queue Worker** — ini tidak punya halaman web sendiri, jadi ceknya dengan cara:
+   - **Cara visual cepat:** lihat jendela terminal tempat `queue:listen` dijalankan — kalau masih terlihat "menggantung menunggu" (tidak kembali ke prompt biasa, tidak ada error merah), berarti worker masih hidup dan menunggu tugas.
+   - **Cara pasti (fungsional):** buka `/admin/chatbot-management`, klik **Sync & Retrain AI** atau **Run Evaluation**. Kalau statusnya berubah dari "diantrikan/queued" → "sedang diproses" → selesai dalam waktu wajar (bukan macet terus di "menunggu"), berarti Queue Worker benar-benar berjalan dan memproses tugas.
+5. **Pastikan tidak dobel Flask** — jalankan `netstat -ano | findstr :5000` di terminal. Harus cuma ada **satu** baris `LISTENING`. Kalau lebih dari satu, ada Flask dobel yang perlu dimatikan (`stop_all.bat`).
+
+---
+
+## Apa yang terjadi kalau LUPA nyalain salah satu
+
+| Kalau lupa nyalain... | Yang akan terjadi |
+|------------------------|--------------------|
+| **Flask** | Website & halaman-halaman biasa tetap bisa dibuka. Tapi begitu mencoba chat (widget atau halaman `/chatbot`), akan muncul pesan seperti "chatbot sedang offline" atau gagal terhubung. Cek `http://127.0.0.1:8000/chatbot/health` — akan menunjukkan status tidak sehat. |
+| **Laravel** | Website **tidak bisa dibuka sama sekali**. Browser akan menampilkan error semacam "This site can't be reached" / "connection refused", karena tidak ada apa pun yang mendengarkan di port 8000. |
+| **Queue Worker** | Chat biasa & website tetap normal (fitur ini tidak butuh worker). Tapi kalau masuk ke halaman admin dan klik **Sync & Retrain AI** atau **Run Evaluation**: permintaan akan tampak "diterima" (status `queued`), **tapi tidak akan pernah selesai** karena tidak ada worker yang memprosesnya. **Ini sudah dibuat aman** — sistem tidak akan macet diam-diam tanpa keterangan. Setelah kira-kira **20 detik menunggu**, admin panel akan menampilkan pesan yang jelas seperti *"masih menunggu di antrian, pastikan Queue Worker aktif"*, supaya jelas apa yang harus dilakukan (nyalakan `start_queue_chatbot.bat`). |
+
+---
+
+## Auto-reload Flask — catatan penting
+
+- Flask yang dijalankan dengan `python app.py` punya fitur **auto-reload**: kalau ada file `.py` di dalam folder `chatbot_hybrid/` yang diubah dan disimpan, Flask akan **restart sendiri secara otomatis** tanpa perlu di-stop manual. Ini normal, dan biasanya membuat **2 proses `python.exe`** muncul di Task Manager (satu proses utama + satu proses pengawas/reloader) — itu **bukan bug**.
+- **Yang perlu diperhatikan:** auto-reload ini **hanya memantau file kode (`.py`)**. File data seperti `chatbot_hybrid/data/academy_enhanced.json`, `chatbot_hybrid/data/faq.json`, atau file model (`nb_model.pkl`, `tfidf_vectorizer.pkl`) **TIDAK dipantau** oleh auto-reload. Kalau file-file itu diedit manual (bukan lewat fitur training/retrain di admin), Flask **harus di-restart manual** (stop, lalu `python app.py` lagi) supaya perubahan kebaca.
+- Kalau merasa "sudah edit kode/data, tapi chatbot jawabnya masih pakai yang lama", cek dua hal ini:
+  1. **Apakah proses Flask yang lama benar-benar sudah mati?** Buka Task Manager, cari `python.exe`. Normalnya ada 2 proses (karena reloader). Kalau ada proses `python.exe` yang "nyangkut" dari sesi lama yang seharusnya sudah ditutup, itu tandanya proses lama belum benar-benar mati dan masih menjawab dengan data/kode lama.
+  2. **Restart bersih:** tutup semua jendela terminal Flask, pastikan tidak ada `python.exe` tersisa (bisa pakai `stop_all.bat` atau matikan manual lewat Task Manager), lalu jalankan ulang `python app.py` dari awal.
+
+---
+
+## FAQ singkat — masalah yang PERNAH terjadi di project ini
+
+**Q: Kenapa Run Evaluation kadang gagal dengan error `WinError 10106`?**
+
+A: Ini masalah lama yang **sudah diperbaiki**. Dulu, saat tombol "Run Evaluation" diklik, Laravel langsung menjalankan proses Python **dari dalam proses `php artisan serve` itu sendiri** (secara langsung/synchronous). Di komputer Windows tertentu, cara menjalankan proses seperti ini bisa gagal inisialisasi jaringan (Winsock), sehingga muncul error `WinError 10106`.
+
+Sekarang caranya sudah diubah: Run Evaluation **tidak lagi dijalankan langsung**, melainkan dimasukkan ke antrian (`chatbot-training`, antrian yang sama dengan training) dan diproses oleh **Queue Worker**, persis seperti cara Sync & Retrain AI bekerja. Ini menghilangkan penyebab error tersebut. **Konsekuensinya:** sejak perbaikan ini, **Queue Worker wajib aktif** setiap kali mau memakai Run Evaluation (lihat bagian "3 proses yang WAJIB nyala bersamaan" di atas).
+
+**Q: Kenapa chatbot kadang jawab pakai data lama padahal sudah diedit?**
+
+A: Kemungkinan besar proses Flask yang lama **belum benar-benar mati** — misalnya waktu update kode/data, jendela terminal ditutup paksa, tapi proses `python.exe` di baliknya masih berjalan diam-diam di background dan masih melayani permintaan chat dengan data/model lama.
+
+Cara cek & perbaiki:
+1. Buka Task Manager, cari semua proses `python.exe`.
+2. Kalau ada yang mencurigakan/sisa dari sesi lama, matikan semua (bisa juga pakai `stop_all.bat`).
+3. Jalankan ulang Flask dari awal dengan `python app.py`.
+
+Ingat juga: perubahan pada file **data** (`academy_enhanced.json`, `faq.json`, dll.) tidak ter-auto-reload seperti perubahan kode — lihat bagian "Auto-reload Flask — catatan penting" di atas.
 
 ---
 
@@ -386,6 +491,8 @@ Digunakan saat admin menekan training di `/admin/chatbot-management` (atau `POST
 - Queue worker `chatbot-training` hidup
 
 > Retrain pada dataset yang sama hanya **menyegarkan model**. Agar chatbot “lebih pintar”, tambahkan data latih baru (FAQ/CSV via admin), lalu train lagi.
+
+> **Update:** sejak perbaikan arsitektur Run Evaluation, fitur **Run Evaluation di admin panel juga diproses lewat queue `chatbot-training` ini** — bukan cuma training. Worker yang sama menangani training dan evaluasi secara bergantian (satu per satu, tidak paralel). Lihat bagian "3 proses yang WAJIB nyala bersamaan" dan FAQ di atas untuk detailnya.
 
 ---
 
