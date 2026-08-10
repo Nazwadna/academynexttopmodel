@@ -337,6 +337,25 @@ TECHNICAL_SUPPORT_KEYWORDS = {
     "akun", "reset", "password", "lupa", "tidak bisa",
 }
 
+def _reject_if_out_of_domain(checker_fn):
+    """Decorator guard terpusat (Bug C, audit gabungan Bagian 2/3): bungkus
+    checker is_*_query() supaya otomatis return False kalau query JUGA
+    mengandung kata dari OUT_OF_DOMAIN_KEYWORDS -- mencegah pola "frasa
+    akademi generik menang duluan sebelum is_out_of_domain_query() (Layer 4c)
+    sempat dicek" (mis. "cara daftar jadi pilot" match is_registration_steps_query
+    duluan karena substring "cara daftar", padahal "pilot" jelas di luar domain).
+    is_out_of_domain_query() didefinisikan lebih bawah di file ini -- aman
+    dipanggil di sini karena baru dieksekusi saat checker benar-benar
+    dipanggil (runtime), bukan saat modul di-load."""
+    def wrapped(q, *args, **kwargs):
+        if is_out_of_domain_query(q):
+            return False
+        return checker_fn(q, *args, **kwargs)
+    wrapped.__name__ = getattr(checker_fn, "__name__", "wrapped")
+    wrapped.__doc__ = checker_fn.__doc__
+    return wrapped
+
+@_reject_if_out_of_domain
 def is_technical_support_query(text: str) -> bool:
     """Detect technical support issues (OTP/login/account access)."""
     normalized = normalize_text(text)
@@ -1734,6 +1753,7 @@ def handle_model_recommendation(query: str):
         )
     }
 
+@_reject_if_out_of_domain
 def is_model_list_query(message: str) -> bool:
     """Detect model list / filtered catalog queries"""
     msg = normalize_text(message)
@@ -1796,6 +1816,7 @@ def is_model_list_query(message: str) -> bool:
             return True
     return False
 
+@_reject_if_out_of_domain
 def is_model_count_query(message: str) -> bool:
     """Detect model count queries (termasuk berapa model remaja/anak/aktif)"""
     msg = normalize_text(message)
@@ -1890,6 +1911,7 @@ def is_bare_model_name_query(message: str):
             return name
     return None
 
+@_reject_if_out_of_domain
 def is_model_recommendation_query(message: str) -> bool:
     """Detect model recommendation queries"""
     msg = normalize_text(message)
@@ -1917,6 +1939,7 @@ def is_model_recommendation_query(message: str) -> bool:
     return any(k in msg for k in keywords)
 
 # ========================= INTENT DETECTOR FUNCTIONS =========================
+@_reject_if_out_of_domain
 def is_program_query(q: str) -> bool:
     q = normalize_text(q)
     keywords = [
@@ -1936,10 +1959,12 @@ def is_program_query(q: str) -> bool:
     ]
     return any(k in q for k in keywords)
 
+@_reject_if_out_of_domain
 def is_location_query(q: str) -> bool:
     q = normalize_text(q)
     return any(k in q for k in ["lokasi", "alamat", "di mana", "dimana", "tempat kelas"])
 
+@_reject_if_out_of_domain
 def is_registration_steps_query(q: str) -> bool:
     q = normalize_text(q)
     # "pengen jadi model mulai dari mana" = panduan jadi model, bukan tutorial register
@@ -1954,6 +1979,7 @@ def is_registration_steps_query(q: str) -> bool:
         "mau ikut academy", "mau masuk academy", "proses join", "cara bergabung",
     ])
 
+@_reject_if_out_of_domain
 def is_registration_requirements_query(text: str) -> bool:
     q = normalize_text(text)
     keywords = [
@@ -1963,6 +1989,7 @@ def is_registration_requirements_query(text: str) -> bool:
     ]
     return any(k in q for k in keywords)
 
+@_reject_if_out_of_domain
 def is_photo_upload_query(text: str) -> bool:
     q = normalize_text(text)
     keywords = [
@@ -1972,6 +1999,7 @@ def is_photo_upload_query(text: str) -> bool:
     ]
     return any(k in q for k in keywords)
 
+@_reject_if_out_of_domain
 def is_schedule_query(q: str) -> bool:
     q = normalize_text(q)
     return any(k in q for k in [
@@ -2045,10 +2073,12 @@ def get_schedule_knowledge(query: str = None, suppress_redirect_fields: bool = F
     return "Kelas Academy Next Top Model berlangsung setiap hari Sabtu, pukul 11.00 hingga 15.00 di Mall TSM Cibubur."
 
 
+@_reject_if_out_of_domain
 def is_benefit_query(q: str) -> bool:
     q = normalize_text(q)
     return any(k in q for k in ["benefit", "manfaat", "kelebihan", "keuntungan"])
 
+@_reject_if_out_of_domain
 def is_become_model_query(text: str) -> bool:
     q = normalize_text(text)
     # "syarat jadi model" = persyaratan, bukan panduan karier
@@ -2107,7 +2137,10 @@ def retrieve_academy_topic_reply(message: str):
         ("location_info", is_location_query, lambda q: _pick_academy_response("location_info", query=q)),
         ("programs_info", is_program_query, lambda q: _pick_academy_response("programs_info", query=q) or _pick_academy_response("program_info", query=q)),
         ("benefit_info", is_benefit_query, lambda q: _pick_academy_response("benefits_joining", query=q)),
-        ("contact_admin", lambda q: any(k in normalize_text(q) for k in ["hubungi admin", "kontak admin", "nomor admin", "whatsapp admin", "wa admin"]),
+        ("contact_admin",
+         lambda q: not is_out_of_domain_query(q) and any(
+             k in normalize_text(q) for k in ["hubungi admin", "kontak admin", "nomor admin", "whatsapp admin", "wa admin"]
+         ),
          lambda q: _pick_academy_response("contact_admin", query=q)),
     ]
 
@@ -2146,6 +2179,7 @@ def retrieve_academy_topic_reply(message: str):
     }
 
 
+@_reject_if_out_of_domain
 def is_sensitive_query(q: str) -> bool:
     q = normalize_text(q)
     keywords = [
