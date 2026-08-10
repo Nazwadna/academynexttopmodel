@@ -434,6 +434,20 @@ CONFIDENCE_THRESHOLDS = {
 }
 DEFAULT_THRESHOLD = 0.45
 
+# Kata kunci penanda kalimat GENUINELY soal jadwal/kelas — dipakai bersama
+# oleh refine_intent() (boosting intent) dan apply_reasoning() (override
+# teks jawaban) supaya kedua guard konsisten dan tidak drift (BUG-Hari,
+# audit gabungan Bagian 1). Entitas "hari" doang TIDAK cukup — banyak
+# kalimat menyebut nama hari tanpa maksud tanya jadwal kelas (ulang
+# tahun, tanggal insiden, deadline pendaftaran, dll).
+SCHEDULE_CONTEXT_KEYWORDS = ("kelas", "jadwal", "les", "latihan")
+
+def _has_schedule_context(msg_lower: str) -> bool:
+    """Cek kata SCHEDULE_CONTEXT_KEYWORDS sebagai KATA UTUH (word-boundary),
+    bukan substring — supaya "latihan"/"les" tidak salah ke-tangkap di
+    dalam "pelatihan"/"selesai" (temuan #2, audit gabungan Bagian 1)."""
+    return any(re.search(rf"\b{k}\b", msg_lower) for k in SCHEDULE_CONTEXT_KEYWORDS)
+
 REFINEMENT_RULES = [
     {
         "name": "registration_to_pricing",
@@ -508,7 +522,7 @@ REFINEMENT_RULES = [
     {
         "name": "general_to_schedule_info",
         "from_intents": ["homepage_info", "about_academy", "registration_info"],
-        "to_intent": "location_info",
+        "to_intent": "schedule_info",
         "keywords": ["jadwal", "jam berapa", "hari apa", "sabtu", "setiap sabtu", "buka jam berapa", "sesi kelas"],
         "exclude": [],
         "min_confidence": 0.40,
@@ -579,6 +593,17 @@ def refine_intent(predicted_intent: str, confidence: float,
                 return "registration_info", max(confidence, 0.70)
         except (ValueError, TypeError):
             pass
+
+    # Boosting: jika ada entitas hari (nama hari) DAN konteks eksplisit
+    # soal kelas/jadwal → schedule context (BUG-Hari, audit gabungan
+    # Bagian 1). Sengaja disyaratkan kata "kelas"/"jadwal" ikut disebut,
+    # BUKAN cuma menyebut nama hari saja — supaya kalimat seperti
+    # "kalau saya daftar hari senin bisa?" (maksud: registrasi, hari
+    # cuma info sampingan) tidak ikut kebajak jadi schedule_info.
+    if "hari" in entities and predicted_intent != "schedule_info":
+        msg_lower = (user_message or "").lower()
+        if _has_schedule_context(msg_lower):
+            return "schedule_info", max(confidence, 0.70)
 
     if confidence < threshold:
         return "low_confidence", confidence
@@ -770,7 +795,8 @@ def resolve_clarification_choice(user_message, candidates):
 # ============================================================
 AGE_REQUIREMENT = 25   # tahun maksimal sesuai FAQ
 
-def apply_reasoning(intent: str, entities: dict, memory: ConversationMemory) -> Optional[str]:
+def apply_reasoning(intent: str, entities: dict, memory: ConversationMemory,
+                    user_message: str = "") -> Optional[str]:
     """Hasilkan reasoning sederhana berbasis fakta pengguna + aturan FAQ."""
     if "umur" in entities:
         try:
@@ -795,8 +821,10 @@ def apply_reasoning(intent: str, entities: dict, memory: ConversationMemory) -> 
                     )
 
     if "hari" in entities:
+        msg_lower = (user_message or "").lower()
+        has_schedule_context = _has_schedule_context(msg_lower)
         hari = str(entities["hari"]).capitalize()
-        if intent in ("registration_info", "program_info", "schedule_info"):
+        if has_schedule_context and intent in ("registration_info", "program_info", "schedule_info"):
             if hari.lower() == "sabtu":
                 return (
                     f"Kelas reguler memang diadakan setiap hari Sabtu, "
@@ -1140,7 +1168,7 @@ def process_nlu(user_message: str, session_id: str,
             user_message=resolved_text)
 
     # ── STEP C: Intent Reasoning (entity-based) ─────────────────────────────
-    reasoning = apply_reasoning(refined_intent, entities, memory)
+    reasoning = apply_reasoning(refined_intent, entities, memory, resolved_text)
 
     # ── STEP D: Clarification Engine (zona ambigu) ──────────────────────────
     final_intent = refined_intent
