@@ -412,6 +412,84 @@ model_recommendation_responses = {
     "brand": [
         "Untuk kebutuhan model pada kegiatan promosi atau campaign brand, saya dapat membantu menampilkan beberapa model yang tersedia. Namun, pemilihan model terbaik tetap perlu disesuaikan dengan identitas brand, target audiens, dan kebutuhan visual campaign. Untuk rekomendasi final, admin kami dapat membantu memilih model yang paling sesuai."
     ],
+    # 24 tema tambahan (BUG-8, audit gabungan) -- reuse detect_recommendation_theme()
+    # yang sudah ada, tidak bikin mekanisme baru. Teks sengaja ditulis dengan
+    # struktur kalimat BERVARIASI (bukan template search-replace) per instruksi
+    # eksplisit, supaya (a) tidak kaku, (b) tidak gampang salah-tembak di
+    # select_best_variant() gara-gara struktur kalimat yang nyaris identik
+    # (pelajaran dari Bug A & Tahap B sesi ini).
+    "sporty": [
+        "Butuh model bertema sporty atau olahraga? Kami punya beberapa pilihan model yang bisa disesuaikan dengan gaya activewear dan konsep aktivitas yang Anda inginkan — untuk detail dan rekomendasi final, silakan hubungi admin kami."
+    ],
+    "wedding": [
+        "Tema wedding atau pernikahan biasanya butuh nuansa dan busana bridal yang pas. Kami bisa tunjukkan beberapa model yang tersedia, lalu admin kami akan bantu sesuaikan dengan konsep acara Anda."
+    ],
+    "traditional": [
+        "Ada model yang bisa dipertimbangkan untuk tema tradisional seperti batik atau kebaya, menyesuaikan daerah asal dan jenis busana adat yang dipakai. Untuk pilihan yang paling pas, tim admin siap membantu."
+    ],
+    "luxury": [
+        "Untuk konsep luxury atau glamour ala red carpet, kami dapat menampilkan beberapa model yang tersedia sebagai bahan pertimbangan. Detail gaya visual dan brief bisa didiskusikan langsung dengan admin kami."
+    ],
+    "street": [
+        "Mau model dengan gaya street style atau urban? Beberapa model kami bisa disesuaikan dengan konsep streetwear yang diinginkan — admin kami dapat membantu mencarikan yang paling cocok."
+    ],
+    "korean": [
+        "Tema korean style atau kpop ulzzang? Kami punya beberapa model yang bisa dipertimbangkan, dengan gaya visual dan makeup yang bisa disesuaikan lewat diskusi bersama admin kami."
+    ],
+    "summer": [
+        "Untuk pemotretan bertema summer atau liburan musim panas, tersedia beberapa model yang bisa dipilih sesuai konsep lokasi dan busana yang Anda rencanakan. Admin kami siap membantu lebih lanjut."
+    ],
+    "swimwear": [
+        "Kebutuhan model untuk swimwear atau baju renang bisa kami bantu tunjukkan beberapa pilihan yang tersedia. Jenis produk dan konsep visual bisa dibicarakan langsung dengan admin kami untuk hasil terbaik."
+    ],
+    "hijab": [
+        "Kalau mencari model dengan gaya hijab atau modest fashion, kami punya beberapa model yang bisa dipertimbangkan. Gaya busana dan konsep syar'i yang diinginkan bisa didiskusikan bersama admin kami."
+    ],
+    "ecommerce": [
+        "Untuk kebutuhan produk online atau katalog ecommerce, beberapa model kami tersedia sebagai pilihan. Jenis produk dan target pasar akan lebih pas kalau dibahas langsung bersama admin kami."
+    ],
+    "vintage": [
+        "Tema vintage atau retro punya daya tarik tersendiri — kami bisa tunjukkan beberapa model yang tersedia, lalu era dan gaya busana klasik yang diinginkan bisa disesuaikan lewat admin kami."
+    ],
+    "party": [
+        "Butuh model untuk acara bertema party atau pesta? Kami punya beberapa pilihan yang tersedia; soal busana dan suasana nightlife yang pas, admin kami siap membantu merancangnya bersama Anda."
+    ],
+    "maternity": [
+        "Untuk sesi foto bertema maternity atau ibu hamil, tersedia beberapa model yang bisa dipertimbangkan. Kenyamanan dan konsep sesi foto tentu jadi prioritas — admin kami akan bantu sesuaikan detailnya."
+    ],
+    "graduation": [
+        "Mau model untuk momen wisuda atau graduation? Kami punya beberapa pilihan yang tersedia, dan busana serta atribut kelulusan yang diinginkan bisa didiskusikan dengan admin kami."
+    ],
+    "corporate": [
+        "Untuk kebutuhan corporate atau office wear, beberapa model kami bisa disesuaikan dengan konsep formal kerja yang Anda butuhkan. Detail lebih lanjut bisa langsung ditanyakan ke admin kami."
+    ],
+    "editorial": [
+        "Tema editorial untuk majalah atau magazine cover? Kami dapat menampilkan beberapa model yang tersedia, dan gaya visual editorial yang diinginkan bisa dibahas lebih dalam bersama admin kami."
+    ],
+    "music_video": [
+        "Kebutuhan model untuk video klip atau music video bisa kami bantu dengan menunjukkan beberapa pilihan yang tersedia. Konsep cerita dan kebutuhan produksi sebaiknya didiskusikan langsung dengan admin kami."
+    ],
+    "minimalist": [
+        "Kalau konsepnya minimalist atau clean look, kami punya beberapa model yang bisa dipertimbangkan sesuai gaya busana sederhana yang diinginkan. Admin kami siap bantu diskusikan lebih lanjut."
+    ],
+    "school": [
+        "Untuk tema seragam sekolah atau pelajar, tersedia beberapa model yang bisa disesuaikan dengan jenjang usia dan jenis seragam yang dibutuhkan. Admin kami dapat membantu memilihkan yang paling pas."
+    ],
+    "teen_style": [
+        "Mencari model dengan gaya teen style yang remaja dan youthful? Kami punya beberapa pilihan yang tersedia — untuk gaya busana dan karakter yang pas, silakan hubungi admin kami."
+    ],
+    "casual_daily": [
+        "Untuk gaya casual harian atau daily wear ala OOTD, beberapa model kami tersedia sebagai pilihan. Detail busana sehari-hari yang diinginkan bisa dibahas bersama admin kami."
+    ],
+    "sportwear_premium": [
+        "Tema sportwear premium atau athleisure ala gym wear? Kami bisa tunjukkan beberapa model yang tersedia, lalu gaya visual produknya bisa disesuaikan lewat admin kami."
+    ],
+    "campaign_print": [
+        "Untuk campaign brand atau iklan cetak seperti billboard, tersedia beberapa model yang bisa dipertimbangkan. Identitas brand dan kebutuhan visual campaign sebaiknya didiskusikan langsung dengan admin kami."
+    ],
+    "kids_fashion": [
+        "Butuh model untuk fashion anak? Kami punya beberapa model kategori Kids yang tersedia, dan gaya busana serta konsep visual yang diinginkan bisa disesuaikan lewat diskusi dengan admin kami."
+    ],
     "shortlist": [
         "Saya dapat membantu menampilkan beberapa model yang tersedia sebagai bahan pertimbangan. Namun, untuk menentukan model yang paling sesuai dengan konsep, tema, dan kebutuhan Anda, admin kami akan membantu memberikan rekomendasi final serta shortlist terbaik."
     ]
@@ -1305,35 +1383,82 @@ def detect_intent_by_keywords(message: str) -> dict:
     
     return {"intent": None, "responses": [], "source": None}
 
+# Kata kunci tema rekomendasi model (BUG-8, audit gabungan). Tiap value =
+# list frasa pemicu tema itu. DIKECEK DENGAN PRIORITAS PANJANG FRASA di
+# detect_recommendation_theme() -- frasa 2+ kata dicek dulu (terpanjang ke
+# terpendek), baru kata tunggal -- supaya frasa spesifik (mis. "casual
+# harian") tidak kalah duluan oleh kata umum tema lain yang lebih pendek
+# (mis. "casual"). Pola ini tahan untuk tema tambahan di masa depan --
+# tidak perlu urutkan manual tiap kali ada tema baru yang mirip kata
+# kuncinya dengan tema lama.
+THEME_KEYWORDS = {
+    "sea_beach": ["laut", "pantai", "beach"],
+    "fashion_show": ["fashion show", "runway", "catwalk"],
+    "formal": ["formal", "elegan", "elegant"],
+    "catalog_kids": ["produk anak", "produk kids", "katalog", "catalog"],
+    "beauty": ["beauty", "makeup", "kosmetik", "skincare"],
+    "casual": ["casual", "lifestyle"],
+    "brand": ["campaign", "promosi", "iklan", "brand"],
+    "sporty": ["sporty", "olahraga", "sport", "atletik", "activewear"],
+    "wedding": ["wedding", "pernikahan", "bridal", "pengantin"],
+    "traditional": ["tradisional", "adat", "batik", "kebaya"],
+    "luxury": ["luxury", "glamour", "mewah", "red carpet"],
+    "street": ["street style", "urban", "streetwear"],
+    "korean": ["korean style", "kpop", "ulzzang"],
+    "summer": ["summer", "liburan", "musim panas"],
+    "swimwear": ["swimwear", "baju renang", "bikini"],
+    "hijab": ["hijab", "modest fashion", "syari"],
+    "ecommerce": ["produk online", "ecommerce", "katalog online"],
+    "vintage": ["vintage", "retro", "klasik"],
+    "party": ["party", "pesta", "nightlife"],
+    "maternity": ["maternity", "ibu hamil", "kehamilan"],
+    "graduation": ["wisuda", "graduation", "kelulusan"],
+    "corporate": ["kantor", "corporate", "office wear", "formal kerja"],
+    "editorial": ["editorial", "majalah", "magazine", "cover"],
+    "music_video": ["video klip", "music video"],
+    "minimalist": ["minimalist", "simple", "clean look"],
+    "school": ["seragam sekolah", "pelajar", "school uniform"],
+    # "remaja" SENGAJA TIDAK dijadikan trigger bare di sini -- bentrok
+    # dengan perilaku lama "model remaja" (tanpa "anak") yang harus TETAP
+    # sama (verifikasi negatif wajib, audit BUG-8). Tema ini tetap bisa
+    # dipicu lewat "teen style"/"youthful" secara eksplisit.
+    "teen_style": ["teen style", "youthful"],
+    "casual_daily": ["daily wear", "casual harian", "ootd"],
+    "sportwear_premium": ["sportwear", "gym wear", "athleisure"],
+    # "campaign brand" SENGAJA TIDAK dipakai sebagai trigger -- frasa itu
+    # ternyata terlalu generik (nyaris sama dengan cara natural bilang
+    # "campaign" untuk "brand" apapun, bukan spesifik cetak/billboard),
+    # jadi malah mencuri dari tema "brand" biasa. "iklan cetak"/"billboard"
+    # sudah cukup spesifik sendiri.
+    "campaign_print": ["iklan cetak", "billboard"],
+    "kids_fashion": ["fashion anak", "kids fashion"],
+}
+
+# Precompute urutan prioritas SEKALI saat modul di-load (bukan tiap request)
+# -- frasa 2+ kata dulu (terpanjang ke terpendek), baru kata tunggal.
+_THEME_PHRASE_PRIORITY = sorted(
+    (
+        (len(phrase.split()), len(phrase), theme, phrase)
+        for theme, phrases in THEME_KEYWORDS.items()
+        for phrase in phrases
+    ),
+    key=lambda c: (-c[0], -c[1]),
+)
+
 def detect_recommendation_theme(message: str) -> str:
-    """Detect recommendation theme from message"""
+    """Detect recommendation theme from message (BUG-8, audit gabungan)."""
     msg = message.lower()
 
+    # Kombinasi khusus anak+remaja tetap dicek PALING AWAL (perilaku lama,
+    # tidak diubah) -- baru setelah itu masuk ke prioritas frasa umum.
     if any(k in msg for k in ["anak", "anak-anak", "kids"]) and any(k in msg for k in ["remaja", "teen", "teens"]):
         if any(k in msg for k in ["laut", "pantai", "beach"]):
             return "sea_beach"
         return "kids_teens"
 
-    if any(k in msg for k in ["laut", "pantai", "beach"]):
-        return "sea_beach"
-
-    if any(k in msg for k in ["fashion show", "runway", "catwalk"]):
-        return "fashion_show"
-
-    if any(k in msg for k in ["formal", "elegan", "elegant"]):
-        return "formal"
-
-    if any(k in msg for k in ["katalog", "catalog", "produk anak", "produk kids"]):
-        return "catalog_kids"
-
-    if any(k in msg for k in ["beauty", "makeup", "kosmetik", "skincare"]):
-        return "beauty"
-
-    if any(k in msg for k in ["casual", "lifestyle"]):
-        return "casual"
-
-    if any(k in msg for k in ["brand", "campaign", "promosi", "iklan"]):
-        return "brand"
+    for _, _, theme, phrase in _THEME_PHRASE_PRIORITY:
+        if re.search(rf"\b{re.escape(phrase)}\b", msg):
+            return theme
 
     return "general"
 
@@ -1719,7 +1844,10 @@ def handle_model_status(query: str):
     }
 
 def handle_model_recommendation(query: str):
-    """Handle model recommendation query — pakai shortlist DB + filter NL."""
+    """Handle model recommendation query — pakai shortlist DB + filter NL +
+    tema (BUG-8, audit gabungan). Tema di-reuse dari detect_recommendation_theme()
+    + model_recommendation_responses yang sudah ada, GANTIKAN intro hardcoded
+    4-kondisi lama ("anak"+"laut"/"anak"+"remaja"/"anak"/"remaja")."""
     q = normalize_text(query)
     filter_result = filter_models_by_criteria(query)
     shortlist = []
@@ -1730,43 +1858,67 @@ def handle_model_recommendation(query: str):
     filter_desc = _describe_model_filters(filter_result.get("filters") or extract_model_filters(query))
     scope = f" ({filter_desc})" if filter_desc else ""
 
-    if "anak" in q and "laut" in q:
-        intro = (
-            "Untuk kebutuhan model anak-anak dengan tema laut, berikut beberapa model dari kategori Kids "
-            "yang dapat dipertimbangkan."
-        )
-    elif "anak" in q and "remaja" in q:
-        intro = (
-            "Untuk kategori anak-anak dan remaja, berikut beberapa model dari kategori Kids dan Teens "
-            "yang dapat dipertimbangkan."
-        )
-    elif "anak" in q:
-        intro = "Untuk kategori anak-anak, berikut beberapa model Kids yang dapat dipertimbangkan."
-    elif "remaja" in q:
-        intro = "Untuk kategori remaja, berikut beberapa model Teens yang dapat dipertimbangkan."
-    elif filter_desc:
-        intro = f"Berdasarkan filter{scope}, berikut beberapa model yang dapat dipertimbangkan."
-    else:
-        intro = (
-            "Saya dapat membantu memberikan rekomendasi model berdasarkan kategori, tema, dan kebutuhan Anda."
-        )
+    theme_key = detect_recommendation_theme(query)
 
-    if names:
-        reply = (
-            f"{intro} Contoh model: {', '.join(names)}. "
-            "Pemilihan final tetap disesuaikan dengan konsep, tema, dan brief. "
-            "Admin kami siap membantu rekomendasi final."
-        )
-        # BUG-9: shortlist nyata ditemukan — confidence tinggi.
-        confidence = 0.95
+    if theme_key != "general":
+        # Tema dikenali -- pakai teks tema yang sudah lengkap (bukan
+        # fragmen), jadi TIDAK digabung dengan penutup "Admin kami siap
+        # membantu rekomendasi final" lagi (teksnya sudah punya penutup
+        # sendiri) -- cuma disisipi nama model asli kalau shortlist ada.
+        themed_text = random.choice(model_recommendation_responses[theme_key])
+        if names:
+            reply = f"{themed_text} Beberapa contoh model yang bisa dipertimbangkan: {', '.join(names)}."
+            confidence = 0.95
+        else:
+            reply = f"{themed_text} Saat ini belum ada shortlist spesifik dari database untuk tema tersebut."
+            confidence = 0.6
     else:
-        reply = (
-            f"{intro} "
-            "Saat ini belum ada shortlist yang cocok dari database untuk filter tersebut. "
-            "Untuk rekomendasi final, admin kami dapat membantu memilihkan model terbaik."
-        )
-        # BUG-9: tidak ada shortlist yang cocok — confidence menengah.
-        confidence = 0.6
+        # Tema TIDAK dikenali detect_recommendation_theme() -- bedakan dulu
+        # "genuinely tidak sebut tema" vs "sebut tema tapi tidak dikenal".
+        theme_mention = re.search(r"\btema\s+([a-z][a-z0-9\-]*(?:\s+[a-z][a-z0-9\-]*)?)", q)
+        if theme_mention and is_out_of_domain_query(theme_mention.group(1)):
+            # Tema yang disebut kena blacklist OOD (Bug C Tahap A) --
+            # arahkan ke respons out-of-domain yang SUDAH ADA, BUKAN
+            # balikin semua model tanpa filter.
+            return {
+                "reply": (
+                    "Saya fokus membantu informasi seputar Academy Next Top Model. "
+                    "Jika Anda ingin mengetahui program, pendaftaran, model, atau jadwal, "
+                    "saya siap membantu."
+                ),
+                "intent": "out_of_scope_general",
+                "source": "out_of_domain_detector",
+                "confidence": 0.90,
+                "handoff": False,
+            }
+
+        # Tidak sebut tema sama sekali, ATAU sebut tema tapi tidak dikenal
+        # DAN tidak kena blacklist (tema asli yang belum kita antisipasi,
+        # mis. "tema vintage2000") -- perilaku SAMA seperti sebelumnya,
+        # TIDAK berubah (verifikasi negatif wajib).
+        if filter_desc:
+            intro = f"Berdasarkan filter{scope}, berikut beberapa model yang dapat dipertimbangkan."
+        else:
+            intro = (
+                "Saya dapat membantu memberikan rekomendasi model berdasarkan kategori, tema, dan kebutuhan Anda."
+            )
+
+        if names:
+            reply = (
+                f"{intro} Contoh model: {', '.join(names)}. "
+                "Pemilihan final tetap disesuaikan dengan konsep, tema, dan brief. "
+                "Admin kami siap membantu rekomendasi final."
+            )
+            # BUG-9: shortlist nyata ditemukan — confidence tinggi.
+            confidence = 0.95
+        else:
+            reply = (
+                f"{intro} "
+                "Saat ini belum ada shortlist yang cocok dari database untuk filter tersebut. "
+                "Untuk rekomendasi final, admin kami dapat membantu memilihkan model terbaik."
+            )
+            # BUG-9: tidak ada shortlist yang cocok — confidence menengah.
+            confidence = 0.6
 
     return {
         "reply": reply,
