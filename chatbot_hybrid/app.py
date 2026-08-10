@@ -1533,6 +1533,32 @@ def handle_model_list(query: str = ""):
         }
 
     filters = extract_model_filters(query)
+
+    # Ask-back sederhana (audit gabungan Bagian 2/3/4, Opsi 1 -- TANPA state/
+    # sesi, tidak menyentuh Clarification Engine di nlu_engine.py): query
+    # model TANPA filter apapun (mis. "ada model apa saja/aja") sebelumnya
+    # langsung dump semua model tersedia. Sekarang tanya balik kategori dulu.
+    # Kalau user SUDAH sebutkan kategori/kota/status/usia, filters tidak
+    # kosong -> tetap dump seperti biasa (tidak ikut ke-ask-back).
+    no_filter_at_all = (
+        not filters.get("categories")
+        and not filters.get("city")
+        and not filters.get("available_only")
+        and not filters.get("unavailable_only")
+        and filters.get("age_min") is None
+    )
+    if no_filter_at_all:
+        return {
+            "reply": (
+                "Model yang dimaksud kategori apa ya — anak-anak (kids), remaja (teens), "
+                "atau lainnya? Coba sebutkan kategorinya, misalnya \"model remaja\" atau \"model anak-anak\"."
+            ),
+            "intent": "model_list",
+            "source": "ask_back_category",
+            "confidence": 0.85,
+            "handoff": False,
+        }
+
     filtered = apply_model_filters(models, filters)
 
     # Tanpa filter status eksplisit: prefer yang available; jika filter sudah available_only, pakai filtered apa adanya
