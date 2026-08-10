@@ -2950,6 +2950,56 @@ def _apply_typo_correction(text: str) -> str:
     return text
 
 
+# Kamus kata informal chat sehari-hari -> bentuk formal (audit gabungan
+# Bagian 2/3/4, temuan gap "model apa aja" vs "model apa saja"). Dipakai
+# SEKALI di titik masuk pipeline (normalize_informal()) SEBELUM semua
+# checker is_*_query() dievaluasi, supaya tidak perlu ditambal manual di
+# tiap fungsi. "buat"/"bwt" SENGAJA TIDAK dimasukkan -- ambigu antara
+# "untuk" dan "membuat" (beda dengan "utk" yang murni singkatan "untuk"
+# saja); memetakannya paksa akan merusak keyword existing seperti
+# "cara buat akun" di is_registration_steps_query().
+INFORMAL_WORD_MAP = {
+    "aja": "saja",
+    "ga": "tidak", "gak": "tidak", "nggak": "tidak", "ngga": "tidak",
+    "gk": "tidak", "kaga": "tidak", "kga": "tidak", "gatau": "tidak",
+    "gimana": "bagaimana", "gmn": "bagaimana", "gmna": "bagaimana", "mna": "bagaimana",
+    "dmn": "dimana",
+    "yg": "yang",
+    "sdh": "sudah", "udah": "sudah", "udh": "sudah",
+    "blm": "belum",
+    "bs": "bisa", "bsa": "bisa",
+    "pengen": "ingin", "pingin": "ingin", "pengin": "ingin", "mw": "ingin",
+    "jd": "jadi",
+    "krn": "karena",
+    "hrs": "harus",
+    "utk": "untuk",
+    "sy": "saya", "gua": "saya", "gue": "saya", "gw": "saya",
+    "lu": "kamu", "elu": "kamu", "elo": "kamu",
+    # "km"/"kmu" -> "kamu": AMAN UNTUK SEKARANG (tidak ada fitur di codebase
+    # ini yang memakai "km" sebagai satuan jarak/kilometer), BUKAN aman
+    # selamanya -- kalau nanti ada fitur jarak/lokasi berbasis km, mapping
+    # ini WAJIB ditinjau ulang dulu. Konsisten dengan precedent SYNONYM_MAP
+    # di nlu_engine.py yang sudah lebih dulu memetakan "km":"kamu".
+    "km": "kamu", "kmu": "kamu",
+    "byr": "bayar",
+    "brp": "berapa", "brapa": "berapa",
+    "kpn": "kapan",
+}
+
+def normalize_informal(text: str) -> str:
+    """Normalisasi kata informal chat sehari-hari -> bentuk formal, dipanggil
+    SEKALI di titik masuk pipeline sebelum semua checker is_*_query().
+    WAJIB word-boundary (\\b), BUKAN substring polos -- substring polos akan
+    merusak kata seperti "remaja" (mengandung substring "aja") dan "harga"
+    (mengandung substring "ga"). Diverifikasi eksplisit kedua kata itu TIDAK
+    berubah (audit gabungan Bagian 2/3/4)."""
+    if not text:
+        return text
+    for informal, formal in INFORMAL_WORD_MAP.items():
+        text = re.sub(rf"\b{informal}\b", formal, text)
+    return text
+
+
 def _build_time_aware_greeting(session_id: str) -> str:
     """Time-Aware + Anti-Repetition greeting via Dynamic Response Generator."""
     if NLU_ENGINE_AVAILABLE and build_dynamic_response and get_memory:
@@ -3239,6 +3289,11 @@ def chat():
         # Typo correction SEBELUM Exact QA / Knowledge / Multi-intent matching
         enhanced_processed = _apply_typo_correction(enhanced_processed)
         processed_message = _apply_typo_correction(processed_message)
+
+        # Normalisasi kata informal (Bug informal-gap, audit gabungan
+        # Bagian 2/3/4) -- SEKALI di sini, sebelum semua checker is_*_query()
+        enhanced_processed = normalize_informal(enhanced_processed)
+        processed_message = normalize_informal(processed_message)
         
         # =====================================================================
         # LAYER 1.0: MULTI-INTENT (sebelum Exact/Knowledge single-answer)
