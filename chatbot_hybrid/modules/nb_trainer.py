@@ -74,7 +74,7 @@ def train_naive_bayes_from_csv() -> dict[str, Any]:
     )
 
     vectorizer = TfidfVectorizer(
-        max_features=500, ngram_range=(1, 1), min_df=1, sublinear_tf=True
+        max_features=1500, ngram_range=(1, 1), min_df=1, sublinear_tf=True
     )
     X_train_tfidf = vectorizer.fit_transform(X_train)
     X_test_tfidf = vectorizer.transform(X_test)

@@ -308,7 +308,7 @@ for i, (tr_idx, val_idx) in enumerate(cv.split(X_prep, y_prep), 1):
     Xtr, ytr = X_prep[tr_idx], y_prep[tr_idx]
     Xval, yval = X_prep[val_idx], y_prep[val_idx]
     
-    fv = TfidfVectorizer(max_features=500, ngram_range=(1,1), min_df=1, sublinear_tf=True)
+    fv = TfidfVectorizer(max_features=1500, ngram_range=(1,1), min_df=1, sublinear_tf=True)
     fm = MultinomialNB(alpha=0.01)
     fm.fit(fv.fit_transform(Xtr), ytr)
     

@@ -200,7 +200,7 @@ konfigurasi = [
     ("Pembagian data : test_size",   "20%",            "Data uji murni tanpa augmentasi"),
     ("Pembagian data : random_state","337",             "Seed untuk reprodusibilitas"),
     ("Pembagian data : stratify",    "kelas intent",   "Proporsional setiap kelas"),
-    ("TF-IDF : max_features",        "500 fitur",      "Maks kata unik yang dipakai"),
+    ("TF-IDF : max_features",        "1500 fitur",     "Maks kata unik yang dipakai"),
     ("TF-IDF : ngram_range",         "(1,1) unigram",  "Satu kata per token"),
     ("TF-IDF : sublinear_tf",        "True",           "Pakai skala log: 1+log(TF)"),
     ("TF-IDF : min_df",              "1 dokumen",      "Kata minimal muncul 1 kali"),
@@ -251,7 +251,7 @@ print(f"  Data uji   (murni, tidak diaugmentasi) : {len(X_test)} baris")
 print()
 
 print("  Langkah 1  Fit TF-IDF Vectorizer pada data latih ...")
-vectorizer = TfidfVectorizer(max_features=500, ngram_range=(1,1), min_df=1, sublinear_tf=True)
+vectorizer = TfidfVectorizer(max_features=1500, ngram_range=(1,1), min_df=1, sublinear_tf=True)
 X_train_tfidf = vectorizer.fit_transform(X_train)
 X_test_tfidf  = vectorizer.transform(X_test)
 feat_names    = vectorizer.get_feature_names_out()
