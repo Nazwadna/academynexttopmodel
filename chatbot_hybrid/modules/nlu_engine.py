@@ -759,14 +759,27 @@ def _default_clarification_candidates():
 
 
 def _ensure_clarification_candidates(ranked):
-    # Audit Bagian 5 A5 (izin terbatas: HANYA threshold count, TIDAK
-    # menyentuh candidate_gap): sebelumnya fallback broad-default cuma aktif
-    # kalau ranking KOSONG TOTAL. Query ambigu tanpa sinyal kata kunci sama
-    # sekali sering lolos gap-filter dengan cuma 1 kandidat (bukan 0), jadi
-    # user cuma ditawari 1 opsi sempit, bukan gambaran topik yang luas.
-    if len(ranked) >= CLARIFICATION_POLICY['max_candidates']:
+    """Selalu tampilkan gambaran topik yang cukup luas (idealnya max_candidates
+    opsi), TANPA membuang kandidat ASLI yang sudah ditemukan ranking (fix atas
+    bug A5: sebelumnya bila ranked < 3 item, SELURUH hasil ranking -- termasuk
+    kandidat berskor tinggi dan tepat seperti model_info/schedule_info -- ikut
+    dibuang, diganti default generik yang tidak pernah menyertakan keduanya.
+    Sekarang: kandidat asli dipertahankan sebagai opsi utama, hanya SLOT SISA
+    yang diisi dari default topik luas -- supaya query benar-benar tanpa
+    sinyal (ranked kosong) tetap dapat gambaran luas seperti niat A5 semula.
+    """
+    max_n = CLARIFICATION_POLICY['max_candidates']
+    if len(ranked) >= max_n:
         return ranked
-    return _default_clarification_candidates()
+    result = list(ranked)
+    have = {c['intent'] for c in result}
+    for cand in _default_clarification_candidates():
+        if len(result) >= max_n:
+            break
+        if cand['intent'] not in have:
+            result.append(cand)
+            have.add(cand['intent'])
+    return result
 
 
 # Alias kompatibilitas mundur (app.py / import lama)
