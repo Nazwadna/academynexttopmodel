@@ -127,6 +127,15 @@ ENTITY_PATTERNS = {
     "jam": re.compile(
         r'\bjam\s*(\d{1,2})(?:[:.]\s*(\d{1,2}))?\s*(pagi|siang|sore|malam|wib|wita|wit)?\b',
         re.IGNORECASE),
+    # #32 (audit gabungan sebelum hosting): kata waktu relatif ("besok",
+    # "lusa", dst) sebelumnya OOV total di TF-IDF vocab -- NB tidak
+    # pernah belajar asosiasinya ke schedule_info, jadi klasifikasi
+    # ditentukan murni oleh kata lain di kalimat (kadang salah ke
+    # program_info gara-gara kepadatan kata "kelas" pasca Tahap 1).
+    # Entity pattern + boost di bawah (mirip persis pola "hari"/"jam")
+    # memberi sinyal eksplisit tanpa perlu retrain data training.
+    "waktu_relatif": re.compile(
+        r'\b(besok|lusa|nanti|minggu depan|bulan depan)\b', re.IGNORECASE),
     "lokasi": re.compile(
         r'\b(tsm|cibubur|trans studio|mall|jakarta|bandung|bogor|depok|tangerang)\b',
         re.IGNORECASE),
@@ -614,6 +623,17 @@ def refine_intent(predicted_intent: str, confidence: float,
     # dipilih perlu diarahkan ke logic jadwal (apply_reasoning), bukan
     # dibiarkan pilih varian lokasi murni.
     if "jam" in entities and predicted_intent != "schedule_info":
+        msg_lower = (user_message or "").lower()
+        if _has_schedule_context(msg_lower):
+            return "schedule_info", max(confidence, 0.70)
+
+    # Boosting: jika ada entitas waktu relatif ("besok"/"lusa"/dst) DAN
+    # konteks eksplisit soal kelas/jadwal → schedule context (#32, audit
+    # gabungan sesi ini). Pola SAMA PERSIS seperti boosting "hari"/"jam"
+    # di atas -- kata waktu relatif sebelumnya OOV total di TF-IDF vocab
+    # (0 sinyal ke NB), diverifikasi via predict_proba identik antara
+    # "besok"/"lusa" untuk kalimat yang sama.
+    if "waktu_relatif" in entities and predicted_intent != "schedule_info":
         msg_lower = (user_message or "").lower()
         if _has_schedule_context(msg_lower):
             return "schedule_info", max(confidence, 0.70)
