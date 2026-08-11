@@ -3816,56 +3816,73 @@ def chat():
             if ranked_candidates:
                 ranked_candidates.sort(key=lambda x: x[0], reverse=True)
                 combined, similarity_score, token_overlap, matched_key, reply = ranked_candidates[0]
-                print(
-                    f"RAPIDFUZZ RANKED: '{enhanced_processed}' -> '{matched_key}' "
-                    f"(sim={similarity_score:.1f}%, overlap={token_overlap:.2f}, combined={combined:.3f}, candidates={len(ranked_candidates)})"
-                )
-                qa_intent = _exact_qa_memory_intent(matched_key)
-                if qa_intent == "greeting" and NLU_ENGINE_AVAILABLE and build_dynamic_response:
-                    reply = _build_time_aware_greeting(session_id)
+
+                # Guard OOD (#38, audit gabungan sebelum hosting): key EXACT_QA
+                # pendek generik (mis. "cara daftar") bisa fuzzy-match SEMBARANG
+                # kalimat "cara daftar jadi X" tak peduli X apa (termasuk topik
+                # OOD jelas seperti "cara daftar jadi dokter") karena WRatio
+                # didominasi prefix yang sama, tak peduli kata di ujung kalimat.
+                # is_out_of_domain_query() sendiri baru jalan SETELAH layer ini
+                # (lihat docstring-nya) -- jadi guard eksplisit di sini supaya
+                # RapidFuzz tidak keburu "mencuri" query yang jelas OOD sebelum
+                # sempat ditolak oleh layer OOD standalone. Dikonfirmasi sempit:
+                # cuma pola "cara daftar jadi X" yang kena, bukan pola OOD lain.
+                if is_out_of_domain_query(enhanced_processed):
+                    print(
+                        f"RAPIDFUZZ SKIPPED (OOD guard): '{enhanced_processed}' would match "
+                        f"'{matched_key}' but query is out-of-domain -> lanjut layer berikutnya"
+                    )
+                else:
+                    print(
+                        f"RAPIDFUZZ RANKED: '{enhanced_processed}' -> '{matched_key}' "
+                        f"(sim={similarity_score:.1f}%, overlap={token_overlap:.2f}, combined={combined:.3f}, candidates={len(ranked_candidates)})"
+                    )
+                    qa_intent = _exact_qa_memory_intent(matched_key)
+                    if qa_intent == "greeting" and NLU_ENGINE_AVAILABLE and build_dynamic_response:
+                        reply = _build_time_aware_greeting(session_id)
+                        response_data = {
+                            "success": True,
+                            "reply": reply,
+                            "confidence": round(similarity_score / 100.0, 2),
+                            "handoff": False,
+                            "intent": "greeting",
+                            "source": "nlu_dynamic_greeting",
+                        }
+                        _safe_update_memory(session_id, user_message, reply, "greeting", {}, response_data["confidence"])
+                        return jsonify(response_data)
+
+                    handoff_needed = matched_key in [
+                        "berapa biaya pendaftaran",
+                        "biaya pendaftaran berapa",
+                        "apakah diskon masih ada",
+                        "pembayaran dilakukan ke siapa",
+                        "bayarnya per bulan atau mingguan",
+                        "berapa fee model",
+                        "berapa biaya kontrak model",
+                        "hubungi admin",
+                        "kontak admin",
+                        "nomor admin berapa",
+                        "saya ingin tanya admin langsung",
+                        "adminnya bisa dihubungi lewat wa kan",
+                        "admin bisa dihubungi lewat wa kan",
+                        "admin bisa dihubungi lewat whatsapp kan"
+                    ]
                     response_data = {
                         "success": True,
                         "reply": reply,
                         "confidence": round(similarity_score / 100.0, 2),
-                        "handoff": False,
-                        "intent": "greeting",
-                        "source": "nlu_dynamic_greeting",
+                        "handoff": handoff_needed,
+                        "intent": qa_intent if qa_intent != "exact_qa" else "exact_qa_rapidfuzz",
+                        "source": "rapidfuzz_matching",
+                        "whatsapp_url": build_whatsapp_url(
+                            "Halo Admin Academy Next Top Model, saya ingin bertanya lebih lanjut."
+                        ) if handoff_needed else None
                     }
-                    _safe_update_memory(session_id, user_message, reply, "greeting", {}, response_data["confidence"])
+                    _safe_update_memory(
+                        session_id, user_message, reply,
+                        response_data["intent"], {}, response_data["confidence"],
+                    )
                     return jsonify(response_data)
-
-                handoff_needed = matched_key in [
-                    "berapa biaya pendaftaran",
-                    "biaya pendaftaran berapa",
-                    "apakah diskon masih ada",
-                    "pembayaran dilakukan ke siapa",
-                    "bayarnya per bulan atau mingguan",
-                    "berapa fee model",
-                    "berapa biaya kontrak model",
-                    "hubungi admin",
-                    "kontak admin",
-                    "nomor admin berapa",
-                    "saya ingin tanya admin langsung",
-                    "adminnya bisa dihubungi lewat wa kan",
-                    "admin bisa dihubungi lewat wa kan",
-                    "admin bisa dihubungi lewat whatsapp kan"
-                ]
-                response_data = {
-                    "success": True,
-                    "reply": reply,
-                    "confidence": round(similarity_score / 100.0, 2),
-                    "handoff": handoff_needed,
-                    "intent": qa_intent if qa_intent != "exact_qa" else "exact_qa_rapidfuzz",
-                    "source": "rapidfuzz_matching",
-                    "whatsapp_url": build_whatsapp_url(
-                        "Halo Admin Academy Next Top Model, saya ingin bertanya lebih lanjut."
-                    ) if handoff_needed else None
-                }
-                _safe_update_memory(
-                    session_id, user_message, reply,
-                    response_data["intent"], {}, response_data["confidence"],
-                )
-                return jsonify(response_data)
             else:
                 print(f"RAPIDFUZZ REJECT ALL for '{enhanced_processed}' -> lanjut layer berikutnya")
 
