@@ -2470,8 +2470,7 @@ OUT_OF_DOMAIN_KEYWORDS = [
     "toko kue", "rumah sakit", "klinik", "puskesmas", "laboratorium kesehatan",
     "praktik dokter", "rumah bersalin", "panti jompo", "panti asuhan", "klinik hewan", "bank",
     "atm", "koperasi", "pegadaian", "kantor pajak", "kantor asuransi", "money changer",
-    "leasing", "kantor notaris", "kantor pengacara", "sd", "smp", "sma", "universitas",
-    "kampus", "tk", "paud", "bimbel", "tempat les", "kantor polisi", "kantor kelurahan",
+    "leasing", "kantor notaris", "kantor pengacara", "kantor polisi", "kantor kelurahan",
     "kantor kecamatan", "kantor imigrasi", "kantor samsat", "kua", "kantor pos", "kantor pln",
     "kantor pdam", "kejaksaan", "pengadilan", "lapas", "kantor bea cukai", "kedutaan",
     "konsulat", "masjid", "gereja", "vihara", "pura", "klenteng", "pesantren",
@@ -2571,6 +2570,30 @@ _OUT_OF_DOMAIN_PATTERN = re.compile(
     re.IGNORECASE,
 )
 
+# Backlog #37 (audit gabungan sebelum hosting): jenjang pendidikan DIPISAH
+# dari OUT_OF_DOMAIN_KEYWORDS utama dan dapat guard sendiri. Academy ini
+# menerima usia 4-25 tahun (rentang lebar anak-anak s/d dewasa muda) --
+# TERBUKTI lewat 6+ kalimat realistis ("saya masih kuliah di universitas,
+# bisa daftar academy ini juga ga", "anak saya masih tk, ada kelas ga buat
+# usia segitu") bahwa calon peserta/orang tua WAJAR menyebut jenjang
+# pendidikan mereka SAAT INI sebagai konteks pertanyaan eligibilitas/
+# jadwal -- BUKAN edge case langka seperti kata OOD lain. Guard sempit:
+# kalau kalimat JUGA menyebut konteks academy eksplisit (daftar/kelas/
+# academy ini/disini), JANGAN tolak -- tapi kata OOD LAIN (di luar 9 ini)
+# yang muncul bersamaan tetap menolak seperti biasa (dicek terpisah,
+# lihat is_out_of_domain_query()).
+EDUCATION_LEVEL_KEYWORDS = [
+    "sd", "smp", "sma", "universitas", "kampus", "tk", "paud", "bimbel", "tempat les",
+]
+_EDUCATION_LEVEL_PATTERN = re.compile(
+    r"\b(?:" + "|".join(re.escape(k) for k in EDUCATION_LEVEL_KEYWORDS) + r")\b",
+    re.IGNORECASE,
+)
+_ACADEMY_CONTEXT_GUARD_PATTERN = re.compile(
+    r"\b(?:daftar|kelas|academy ini|akademi ini|disini|di sini)\b",
+    re.IGNORECASE,
+)
+
 
 def is_out_of_domain_query(q: str) -> bool:
     """Deteksi topik yang jelas di luar domain academy modeling (Temuan 3).
@@ -2583,6 +2606,8 @@ def is_out_of_domain_query(q: str) -> bool:
     """
     normalized = normalize_text(q)
     if _OUT_OF_DOMAIN_PATTERN.search(normalized):
+        return True
+    if _EDUCATION_LEVEL_PATTERN.search(normalized) and not _ACADEMY_CONTEXT_GUARD_PATTERN.search(normalized):
         return True
     if OUT_OF_DOMAIN_MATH_PATTERN.search(normalized):
         return True
