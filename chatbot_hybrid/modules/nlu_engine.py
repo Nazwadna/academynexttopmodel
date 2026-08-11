@@ -578,6 +578,48 @@ def apply_post_classification_refinement(user_message: str, predicted_intent: st
 
     return predicted_intent, confidence
 
+
+def _resolve_become_model_vs_homepage(predicted_intent: str, confidence: float,
+                                       msg_lower: str) -> tuple[str, float]:
+    """Scan tambahan (audit gabungan sebelum hosting): NB kadang tertukar
+    become_model_info<->homepage_info untuk kalimat yang framing-nya mirip
+    tapi maksudnya beda -- institusional (pencapaian ACADEMY itu sendiri)
+    vs personal (karier calon model / proses jadi model). Terbukti genuine
+    semantic overlap lewat confusion matrix nyata (bukan bug lain), guard
+    sempit berbasis pola konkret dari 4 contoh yang ditemukan -- BUKAN
+    retrain (dipilih supaya tidak berisiko menggeser hal lain yang sudah
+    benar hari ini, seperti yang berulang kali terjadi tiap kali retrain).
+
+    Kata pemicu SENGAJA dijaga sempit + ada guard negatif (framing personal
+    eksplisit) supaya tidak menangkap kalimat legitimate lain yang kebetulan
+    pakai kata serupa dengan maksud berbeda. Confidence WAJIB ikut di-boost
+    (bukan cuma label) -- ditemukan saat verifikasi: tanpa ini, label sudah
+    benar tapi confidence asli (bisa serendah 0.46) tetap jatuh ke zona
+    ambigu/clarification, sama seperti pola boosting hari/jam/waktu_relatif.
+    """
+    if predicted_intent == "become_model_info":
+        # "pencapaian/prestasi karier academy" ATAU "portfolio karier academy"
+        # (institusional) -> homepage_info, KECUALI ada framing personal
+        # eksplisit (berarti menanyakan karier PRIBADI calon model, tetap
+        # become_model_info).
+        institutional = (
+            ("karier" in msg_lower and re.search(r"\b(pencapaian|prestasi)\b", msg_lower))
+            or ("portfolio" in msg_lower and "karier" in msg_lower)
+        )
+        if institutional and not re.search(r"\b(saya|aku|jadi model|cara)\b", msg_lower):
+            return "homepage_info", max(confidence, 0.70)
+    elif predicted_intent == "homepage_info":
+        # Proses kirim foto portofolio -> become_model_info meski salah
+        # kena homepage_info (kata "academy" di kalimat lain sering menarik
+        # NB ke homepage_info).
+        if re.search(r"\bfoto\b", msg_lower) and re.search(r"\bdikirim\b", msg_lower):
+            return "become_model_info", max(confidence, 0.70)
+        # "why choose academy" -- sumber aslinya benefits_joining (become_model_info)
+        if "why choose" in msg_lower and "academy" in msg_lower:
+            return "become_model_info", max(confidence, 0.70)
+    return predicted_intent, confidence
+
+
 def refine_intent(predicted_intent: str, confidence: float,
                   memory: ConversationMemory, entities: dict,
                   user_message: str = "") -> tuple[str, float]:
@@ -586,6 +628,12 @@ def refine_intent(predicted_intent: str, confidence: float,
     # Jalankan Post-Classification Refinement Layer terlebih dahulu
     predicted_intent, confidence = apply_post_classification_refinement(
         user_message, predicted_intent, confidence
+    )
+
+    # Scan tambahan (audit gabungan sebelum hosting): resolusi become_model_info
+    # <-> homepage_info berbasis pola konkret dari confusion matrix nyata.
+    predicted_intent, confidence = _resolve_become_model_vs_homepage(
+        predicted_intent, confidence, (user_message or "").lower()
     )
 
     threshold = CONFIDENCE_THRESHOLDS.get(predicted_intent, DEFAULT_THRESHOLD)
