@@ -206,6 +206,21 @@ def _score_field(query: str, field: dict) -> float:
             # Longer keyword phrases = more specific
             weighted += 0.15 + 0.08 * max(0, len(k.split()) - 1)
 
+    # keyword_regex (opt-in, Temuan 3): untuk field yang butuh toleransi
+    # kata sisipan di tengah frasa (mis. "apakah ANTM bisa membantu" --
+    # keyword literal "apakah bisa membantu" gagal karena "ANTM" memutus
+    # keberdekatan). Default kosong -- 0 dampak ke field yang tidak
+    # mendefinisikannya.
+    regex_patterns = field.get("keyword_regex") or []
+    if isinstance(regex_patterns, list):
+        for pattern in regex_patterns:
+            try:
+                if re.search(pattern, q, re.IGNORECASE):
+                    hits += 1
+                    weighted += 0.15
+            except re.error:
+                continue
+
     if hits == 0:
         # Soft match: hanya jika field mengizinkan dan ada overlap token bermakna (>=4 huruf)
         # Hindari false positive (mis. "syarat" menembak field "biaya syarat" → pricing).

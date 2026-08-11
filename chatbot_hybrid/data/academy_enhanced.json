@@ -1169,6 +1169,11 @@
             "bisakah membantu", "bisakah bantu",
             "apa bisa membantu", "apa bisa bantu"
           ],
+          "keyword_regex": [
+            "\\bapakah\\b(?:\\s+\\S+){0,3}\\s+bisa\\s+(?:membantu|bantu)\\b",
+            "\\bapa\\b(?:\\s+\\S+){0,3}\\s+bisa\\s+(?:membantu|bantu)\\b",
+            "\\bbisakah\\b(?:\\s+\\S+){0,3}\\s+(?:membantu|bantu)\\b"
+          ],
           "response_key": "become_model_info",
           "variant_filter_keywords": ["ya, academy next top model dapat membantu"]
         },
