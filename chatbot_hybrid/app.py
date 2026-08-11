@@ -2193,6 +2193,7 @@ def is_registration_steps_query(q: str) -> bool:
         "cara registrasi", "ingin daftar", "saya mau daftar", "tutorial daftar",
         "cara register", "cara buat akun", "join academy", "gabung academy",
         "mau ikut academy", "mau masuk academy", "proses join", "cara bergabung",
+        "mau gabung", "ingin gabung",
     ])
 
 @_reject_if_out_of_domain
