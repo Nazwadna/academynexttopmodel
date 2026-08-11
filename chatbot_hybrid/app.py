@@ -553,6 +553,7 @@ KNOWLEDGE_QUERY_ALIASES = {
     "hai": "greeting",
     "hi": "greeting",
     "hello": "greeting",
+    "apa kabar": "greeting",
 
     # Location Aliases
     "lokasinya di mana": "location_info",
@@ -718,7 +719,12 @@ KNOWLEDGE_QUERY_ALIASES = {
     "keuntungan ikut academy ini apa": "benefits_joining",
 
     # Out of scope Aliases
-    "apa kabar": "out_of_scope_greeting",
+    # "apa kabar" DIPINDAH ke greeting (Temuan 6, audit testing manual) --
+    # sebelumnya dipetakan ke out_of_scope_greeting (teks dingin, terasa
+    # seperti fallback), padahal "apa kabar" adalah sapaan Indonesia yang
+    # genuinely umum. Tidak ditemukan alasan desain sengaja di git history/
+    # AUDIT_PROGRESS.md untuk pemetaan lama -- technical debt dari tahap
+    # awal, bukan keputusan sengaja.
     "cuaca hari ini bagaimana": "out_of_scope_weather",
     "siapa presiden indonesia": "out_of_scope_general",
 
@@ -836,8 +842,11 @@ static_intents = {
         ]
     },
     "out_of_scope": {
+        # "apa kabar" DIHAPUS dari sini (Temuan 6, audit testing manual) --
+        # konsisten dengan pemindahan ke greeting di KNOWLEDGE_QUERY_ALIASES,
+        # supaya variasi kalimat yang lewat jalur fallback ini juga tidak
+        # ikut dianggap out-of-scope.
         "keywords": [
-            "apa kabar",
             "cuaca hari ini bagaimana",
             "siapa presiden indonesia",
             "tolong bikin puisi",
@@ -847,7 +856,6 @@ static_intents = {
             "tolong kerjakan matematika saya",
             "berita hari ini apa",
             "kamu suka musik",
-            "apa kabar",
             "cuaca hari ini bagaimana",
             "siapa presiden indonesia"
         ],
