@@ -2417,11 +2417,159 @@ OUT_OF_DOMAIN_KEYWORDS = [
     "presiden", "menteri", "gubernur", "ketua", "direktur",
     "pilot", "suster", "dokter", "guru", "polisi", "tentara",
     "cuaca", "resep",
+    # ── Tahap 2 (perluasan besar, ~700 kandidat diaudit -> 605 lolos) ──
+    # Setiap entri di bawah sudah dicek word-boundary terhadap: seluruh
+    # kosakata academy legitimate (faq.json, academy_enhanced.json, semua
+    # keyword is_*_query(), EXACT_QA, dataset_prepared.csv), 94 query
+    # regression suite, 33 tema BUG-8, dan kategori/kota/nama model dari
+    # database live. 8 kandidat GAGAL cek dan DIBUANG (bukan ditulis di
+    # sini): "kontrak kerja" (tabrakan faq.json pricing_info), "gym"
+    # (tabrakan tema sportwear_premium "gym wear"), "bandara" (tabrakan
+    # academy_enhanced.json location_info), "renang" (tabrakan tema
+    # swimwear), "laptop" (tabrakan academy_enhanced.json technical),
+    # "pantai" (tabrakan tema sea_beach), "wisuda" (tabrakan tema
+    # graduation), "atletik" (tabrakan tema sporty).
+    # Profesi entertainment/modeling-adjacent (fotografer, penjahit,
+    # desainer, aktor, dst) SENGAJA DIKECUALIKAN dari seluruh daftar --
+    # terlalu dekat domain academy sendiri. "sekolah" bare & "mall" bare
+    # juga SENGAJA DIKECUALIKAN (academy sendiri berkonteks sekolah model
+    # + berlokasi di mall) -- jenjang spesifik (sd/smp/sma/dst) tetap masuk.
+    #
+    # Kategori 1: Profesi/pekerjaan
+    "perawat", "bidan", "apoteker", "psikolog", "psikiater", "dokter gigi", "dokter hewan",
+    "mantri", "tabib", "dukun", "fisioterapis", "terapis", "radiolog", "ahli gizi",
+    "paramedis", "pengacara", "hakim", "jaksa", "notaris", "wali kota", "bupati", "camat",
+    "lurah", "kepala desa", "anggota dpr", "anggota dprd", "senator", "diplomat",
+    "duta besar", "hansip", "satpol pp", "pejabat negara", "insinyur", "arsitek",
+    "programmer", "developer", "data analyst", "data scientist", "ilmuwan", "peneliti",
+    "ahli kimia", "fisikawan", "matematikawan", "astronom", "geolog", "teknisi", "mekanik",
+    "tukang listrik", "tukang ledeng", "tukang las", "operator mesin", "ahli statistik",
+    "dosen", "kepala sekolah", "rektor", "guru besar", "profesor", "tutor les",
+    "pengajar privat", "instruktur mengemudi", "pelatih olahraga", "wali kelas", "akuntan",
+    "auditor", "teller bank", "analis keuangan", "pialang saham", "banker", "kasir",
+    "wiraniaga", "pengusaha", "karyawan kantoran", "manajer perusahaan", "staff hrd",
+    "staff administrasi", "sekretaris perusahaan", "sopir", "supir", "driver ojek", "kurir",
+    "masinis", "kondektur", "nahkoda", "pelaut", "pramugari pesawat", "pramugara pesawat",
+    "tukang parkir", "tukang ojek", "tukang becak", "kernet", "juru mudi", "marinir",
+    "angkatan laut", "angkatan udara", "angkatan darat", "paskibra", "satpam", "security",
+    "pemadam kebakaran", "damkar", "prajurit", "koki", "chef", "juru masak", "barista",
+    "bartender", "tukang warteg", "penjual gorengan", "pedagang kaki lima",
+    "pengusaha kuliner", "ahli boga", "petani", "peternak", "nelayan", "tukang kebun",
+    "penyuluh pertanian", "pekebun", "pemilik sawah", "pembudidaya ikan", "buruh pabrik",
+    "kuli bangunan", "tukang bangunan", "office boy", "cleaning service", "tukang cukur",
+    "tukang pijat", "tukang sol sepatu", "tukang service", "loper koran", "penjaga toko",
+    "satpam mall", "pemulung", "juru parkir",
+    # Kategori 2: Tempat/bisnis/usaha
+    "bengkel", "bengkel motor", "bengkel mobil", "cuci mobil", "cuci motor", "tambal ban",
+    "showroom mobil", "dealer motor", "rental mobil", "rental motor", "spbu", "pom bensin",
+    "bengkel las", "bengkel elektronik", "service ac", "salon", "salon kecantikan",
+    "barbershop", "spa", "klinik kecantikan", "tempat pijat", "tempat refleksi", "warung",
+    "warung makan", "restoran", "rumah makan", "kafe", "coffee shop", "toko kelontong",
+    "minimarket", "supermarket", "pasar tradisional", "toko baju", "toko sepatu",
+    "toko elektronik", "toko bangunan", "apotek", "toko obat", "warnet", "laundry",
+    "toko kue", "rumah sakit", "klinik", "puskesmas", "laboratorium kesehatan",
+    "praktik dokter", "rumah bersalin", "panti jompo", "panti asuhan", "klinik hewan", "bank",
+    "atm", "koperasi", "pegadaian", "kantor pajak", "kantor asuransi", "money changer",
+    "leasing", "kantor notaris", "kantor pengacara", "sd", "smp", "sma", "universitas",
+    "kampus", "tk", "paud", "bimbel", "tempat les", "kantor polisi", "kantor kelurahan",
+    "kantor kecamatan", "kantor imigrasi", "kantor samsat", "kua", "kantor pos", "kantor pln",
+    "kantor pdam", "kejaksaan", "pengadilan", "lapas", "kantor bea cukai", "kedutaan",
+    "konsulat", "masjid", "gereja", "vihara", "pura", "klenteng", "pesantren",
+    "majelis taklim", "tempat ibadah", "gereja katolik", "gereja kristen", "bioskop",
+    "taman hiburan", "kebun binatang", "waterpark", "karaoke", "lapangan futsal", "stadion",
+    "arena bowling", "tempat billiard", "terminal bus", "stasiun kereta", "pelabuhan",
+    "agen travel", "ekspedisi", "gudang logistik", "jasa pindahan", "rental alat berat",
+    "bengkel kapal", "pabrik", "gedung dpr", "toko hewan peliharaan", "petshop",
+    "kandang ternak", "peternakan ayam", "kebun sawit", "tambang", "pelabuhan ikan", "gudang",
+    "pergudangan", "toko material", "toko cat", "toko furniture", "toko mainan", "toko buku",
+    "percetakan", "toko fotokopi", "bengkel sepeda", "toko olahraga", "toko musik",
+    "studio musik", "studio rekaman", "kantor radio", "stasiun tv", "percetakan koran",
+    "kantor redaksi",
+    # Kategori 3: Topik umum di luar academy
+    "hujan", "banjir", "gempa bumi", "tsunami", "gunung meletus", "badai", "angin topan",
+    "kekeringan", "suhu udara", "ramalan cuaca", "musim hujan", "musim kemarau",
+    "polusi udara", "kualitas udara", "rumus matematika", "pelajaran fisika",
+    "pelajaran kimia", "pelajaran biologi", "tabel periodik", "hukum newton", "rumus luas",
+    "rumus volume", "integral", "turunan", "aljabar", "geometri", "trigonometri",
+    "akar kuadrat", "pecahan matematika", "persamaan kuadrat", "logaritma",
+    "teori relativitas", "hukum termodinamika", "resep masakan", "cara memasak",
+    "bumbu masakan", "resep kue", "resep rendang", "resep nasi goreng", "resep soto",
+    "cara bikin sambal", "resep martabak", "resep mie goreng", "resep ayam goreng",
+    "resep sup", "resep bakso", "resep cilok", "cara masak rendang", "sepak bola",
+    "bola basket", "badminton", "bulu tangkis", "tenis", "voli", "lari maraton",
+    "angkat beban", "tinju", "pencak silat", "karate", "taekwondo", "bela diri",
+    "piala dunia", "liga inggris", "timnas indonesia", "pemain bola", "klub sepak bola",
+    "olimpiade", "asian games", "sea games", "formula 1", "motogp", "balap motor", "e-sport",
+    "mobile legends", "pubg", "valorant", "pemilu", "pilpres", "pilkada", "partai politik",
+    "capres", "cawapres", "koalisi partai", "kampanye politik", "demo politik",
+    "kebijakan pemerintah", "rancangan undang undang", "korupsi", "kpk", "kabinet menteri",
+    "reshuffle kabinet", "oposisi", "parlemen", "sholat", "puasa ramadhan", "zakat",
+    "ibadah haji", "umroh", "alkitab", "al quran", "doa harian", "ceramah agama", "khotbah",
+    "hari natal", "idul fitri", "idul adha", "hari raya nyepi", "hari waisak",
+    "tahun baru imlek", "kebaktian gereja", "misa katolik", "pengajian rutin", "dakwah islam",
+    "hp android", "iphone", "komputer", "software aplikasi", "update sistem", "jaringan wifi",
+    "provider seluler", "kartu sim", "charger hp", "baterai laptop", "virus komputer",
+    "hacking", "cyber security", "blockchain", "cryptocurrency", "bitcoin", "nft",
+    "metaverse", "kecerdasan buatan", "chatgpt", "robot", "drone", "mobil bekas",
+    "motor bekas", "harga mobil", "spesifikasi motor", "ban mobil", "oli motor",
+    "service mobil", "kredit motor", "sim a", "sim c", "surat tilang", "pajak kendaraan",
+    "plat nomor", "bbm pertalite", "pertamax", "mesin diesel", "motor matic", "mobil listrik",
+    "aki motor", "knalpot racing", "flu", "batuk", "demam", "sakit kepala", "obat warung",
+    "vitamin", "vaksin", "covid", "virus corona", "diabetes", "hipertensi", "kolesterol",
+    "penyakit jantung", "kanker", "diet sehat", "gizi seimbang", "mental health", "depresi",
+    "kecemasan", "terapi psikologi", "checkup kesehatan", "donor darah", "golongan darah",
+    "imunisasi", "saham", "reksadana", "investasi properti", "trading forex", "deposito",
+    "kredit bank", "pinjaman online", "asuransi jiwa", "asuransi kesehatan",
+    "pajak penghasilan", "npwp", "gaji umr", "bunga bank", "inflasi", "resesi ekonomi",
+    "kurs dollar", "harga emas", "cicilan rumah", "kpr", "film bioskop", "series netflix",
+    "drama korea", "k-pop", "boyband", "girlband", "konser musik", "lagu terbaru",
+    "chart musik", "sinetron", "gosip artis", "selebriti hollywood", "oscar award",
+    "grammy award", "festival film", "berita terkini", "breaking news", "bencana alam",
+    "kecelakaan lalu lintas", "kriminalitas", "pencurian", "perampokan", "tawuran",
+    "unjuk rasa", "isu sosial", "viral media sosial", "trending twitter", "berita hoax",
+    "berita palsu", "netizen", "hewan peliharaan", "kucing", "anjing", "burung", "ikan hias",
+    "tanaman hias", "cara merawat kucing", "jenis anjing", "satwa liar", "tumbuhan langka",
+    "pupuk tanaman", "hama tanaman", "budidaya tanaman", "makanan kucing",
+    "sejarah indonesia", "perang dunia", "kemerdekaan indonesia", "letak geografis", "benua",
+    "samudra", "negara asean", "ibu kota negara", "gunung tertinggi", "sungai terpanjang",
+    "peta dunia", "zona waktu", "garis khatulistiwa", "suku bangsa", "budaya daerah",
+    "tempat wisata", "destinasi liburan", "tiket pesawat", "hotel murah", "paket wisata",
+    "wisata alam", "air terjun", "danau", "backpacker", "itinerary liburan", "visa turis",
+    "paspor", "imigrasi bandara",
+    # Kategori 4: rumah tangga/karir umum non-modeling/pendidikan lanjutan/
+    # elektronik rumah tangga/layanan darurat non-academy
+    "sewa rumah", "jual beli rumah", "harga tanah", "kontrakan", "kos-kosan",
+    "renovasi rumah", "desain interior", "listrik rumah", "air pdam", "sampah rumah tangga",
+    "pembantu rumah tangga", "asisten rumah tangga", "security perumahan", "lowongan kerja",
+    "cara melamar kerja", "cv lamaran", "interview kerja", "gaji fresh graduate",
+    "magang kerja", "resign kerja", "phk kerja", "bpjs ketenagakerjaan", "serikat pekerja",
+    "jam kerja kantor", "cuti kerja", "lembur kerja", "tunjangan karyawan", "kuliah jurusan",
+    "beasiswa kuliah", "skripsi", "tugas akhir", "ujian nasional", "snbt", "snmptn",
+    "ospek kampus", "ukt kuliah", "dosen pembimbing", "sidang skripsi", "ijazah",
+    "transkrip nilai", "akreditasi kampus", "kulkas", "mesin cuci", "ac rumah", "tv led",
+    "rice cooker", "kompor gas", "dispenser air", "water heater", "vacuum cleaner", "blender",
+    "ambulans", "sar nasional", "basarnas", "nomor darurat 112", "evakuasi bencana",
+    "posko bencana", "relawan bencana", "korban bencana", "pertolongan pertama",
+    "bantuan sosial", "dapur umum", "tenda pengungsian",
 ]
 # Pola matematika sederhana ("1+1 berapa?") -- TIDAK termasuk "-" karena
 # normalize_text() sudah menghapus tanda hubung (dipakai rentang usia,
 # mis. "usia 10-15", BUG-10) sebelum sampai ke sini.
 OUT_OF_DOMAIN_MATH_PATTERN = re.compile(r"\d+\s*[+*/×÷]\s*\d+")
+
+# Precompute SEKALI saat modul di-load (bukan tiap request) -- 1 regex
+# gabungan word-boundary untuk SEMUA entry OUT_OF_DOMAIN_KEYWORDS, pola
+# sama seperti _THEME_PHRASE_PRIORITY (BUG-8) dan SCHEDULE_CONTEXT_KEYWORDS
+# (Bagian 1). WAJIB word-boundary (\bkata\b), BUKAN substring polos --
+# sebelumnya (`k in normalized`) berisiko SAMA seperti insiden "remaja"
+# mengandung "aja"/"harga" mengandung "ga" (Bagian 2/3/4 pagi tadi),
+# cuma belum pernah kena karena listnya masih pendek. Diperbaiki SEBELUM
+# perluasan besar Tahap 2 (13 -> 618 kata) supaya listnya besar tidak
+# mewarisi bug yang sama.
+_OUT_OF_DOMAIN_PATTERN = re.compile(
+    r"\b(?:" + "|".join(re.escape(k) for k in OUT_OF_DOMAIN_KEYWORDS) + r")\b",
+    re.IGNORECASE,
+)
 
 
 def is_out_of_domain_query(q: str) -> bool:
@@ -2434,7 +2582,7 @@ def is_out_of_domain_query(q: str) -> bool:
     10 kelasnya (yang tidak punya kelas "none of the above").
     """
     normalized = normalize_text(q)
-    if any(k in normalized for k in OUT_OF_DOMAIN_KEYWORDS):
+    if _OUT_OF_DOMAIN_PATTERN.search(normalized):
         return True
     if OUT_OF_DOMAIN_MATH_PATTERN.search(normalized):
         return True
