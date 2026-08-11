@@ -25,6 +25,7 @@ CSV_PATH     = os.path.join(BASE, "dataset_prepared.csv")
 
 sys.path.append(os.path.join(BASE, ".."))
 from modules.data_augmentation import EasyDataAugmented
+from modules.informal_word_map import INFORMAL_WORD_MAP
 augmenter = EasyDataAugmented(augmentation_prob=0.8)
 
 INTENT_MAP = {
@@ -43,12 +44,9 @@ INTENT_MAP = {
     "login_help": "technical_support", "otp_help": "technical_support",
     "emergency": "technical_support",
 }
-SLANG_MAP = {
-    "gmn": "bagaimana", "gimana": "bagaimana", "brp": "berapa",
-    "min": "admin", "dftr": "daftar", "byaya": "biaya",
-    "jdwl": "jadwal", "gak": "tidak", "ga": "tidak",
-    "yg": "yang", "utk": "untuk",
-}
+# SATU sumber kebenaran dipakai bersama training (data_preparation.py)
+# dan live inference (app.py) -- lihat modules/informal_word_map.py.
+SLANG_MAP = INFORMAL_WORD_MAP
 
 INTENT_RESPONSES = {
     "greeting": "Halo! Selamat datang di Chatbot Academy Next Top Model. Ada yang bisa saya bantu?",

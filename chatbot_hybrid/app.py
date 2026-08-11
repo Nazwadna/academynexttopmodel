@@ -3170,37 +3170,11 @@ def _apply_typo_correction(text: str) -> str:
 # Bagian 2/3/4, temuan gap "model apa aja" vs "model apa saja"). Dipakai
 # SEKALI di titik masuk pipeline (normalize_informal()) SEBELUM semua
 # checker is_*_query() dievaluasi, supaya tidak perlu ditambal manual di
-# tiap fungsi. "buat"/"bwt" SENGAJA TIDAK dimasukkan -- ambigu antara
-# "untuk" dan "membuat" (beda dengan "utk" yang murni singkatan "untuk"
-# saja); memetakannya paksa akan merusak keyword existing seperti
-# "cara buat akun" di is_registration_steps_query().
-INFORMAL_WORD_MAP = {
-    "aja": "saja",
-    "ga": "tidak", "gak": "tidak", "nggak": "tidak", "ngga": "tidak",
-    "gk": "tidak", "kaga": "tidak", "kga": "tidak", "gatau": "tidak",
-    "gimana": "bagaimana", "gmn": "bagaimana", "gmna": "bagaimana", "mna": "bagaimana",
-    "dmn": "dimana",
-    "yg": "yang",
-    "sdh": "sudah", "udah": "sudah", "udh": "sudah",
-    "blm": "belum",
-    "bs": "bisa", "bsa": "bisa",
-    "pengen": "ingin", "pingin": "ingin", "pengin": "ingin", "mw": "ingin",
-    "jd": "jadi",
-    "krn": "karena",
-    "hrs": "harus",
-    "utk": "untuk",
-    "sy": "saya", "gua": "saya", "gue": "saya", "gw": "saya",
-    "lu": "kamu", "elu": "kamu", "elo": "kamu",
-    # "km"/"kmu" -> "kamu": AMAN UNTUK SEKARANG (tidak ada fitur di codebase
-    # ini yang memakai "km" sebagai satuan jarak/kilometer), BUKAN aman
-    # selamanya -- kalau nanti ada fitur jarak/lokasi berbasis km, mapping
-    # ini WAJIB ditinjau ulang dulu. Konsisten dengan precedent SYNONYM_MAP
-    # di nlu_engine.py yang sudah lebih dulu memetakan "km":"kamu".
-    "km": "kamu", "kmu": "kamu",
-    "byr": "bayar",
-    "brp": "berapa", "brapa": "berapa",
-    "kpn": "kapan",
-}
+# tiap fungsi. SATU sumber kebenaran dipakai BERSAMA dengan training
+# (nlp_pipeline/data_preparation.py, nlp_pipeline/evaluation.py) --
+# lihat modules/informal_word_map.py untuk detail lengkap & alasan
+# eksklusi "buat"/"bwt".
+from modules.informal_word_map import INFORMAL_WORD_MAP
 
 def normalize_informal(text: str) -> str:
     """Normalisasi kata informal chat sehari-hari -> bentuk formal, dipanggil

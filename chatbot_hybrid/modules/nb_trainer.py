@@ -69,6 +69,21 @@ def train_naive_bayes_from_csv() -> dict[str, Any]:
     X = df["question"].astype(str).values
     y = df["kelas"].astype(str).values
 
+    # CATATAN PENTING (ditemukan saat verifikasi fix data_preparation.py):
+    # dataset_prepared.csv sekarang berisi 100% data asli (tidak lagi
+    # dibuang 20% secara permanen) dari SUMBER YANG SAMA PERSIS dengan
+    # evaluation.py punya load_original(). Akibatnya, memperkecil
+    # test_size di sini (sempat dicoba 0.05) membuat overlap verbatim
+    # antara "train" di sini dan "test" di evaluation.py melonjak ke
+    # ~68% -- metrik Run Evaluation jadi TIDAK VALID (leakage, bukan
+    # generalisasi asli; dibuktikan lewat pengecekan subset baris yang
+    # BENAR-BENAR tidak overlap: akurasi jujur ~87%, bukan ~95% yang
+    # dilaporkan). Dikembalikan ke 0.2 (nilai asli) untuk membatasi
+    # overlap sedekat mungkin ke fraksi holdout evaluation.py sendiri
+    # (20%) -- TIDAK menghilangkan risiko sepenuhnya (populasi sumber
+    # kedua script tetap nyaris identik), tapi paling defensif tanpa
+    # rework arsitektur lebih dalam (mengoordinasikan split antar
+    # script, di luar scope perbaikan mekanisme kali ini).
     X_train, X_test, y_train, y_test = train_test_split(
         X, y, test_size=0.2, random_state=337, stratify=y
     )

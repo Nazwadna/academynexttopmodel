@@ -20,52 +20,51 @@ ACAD_JSON = os.path.join(BASE, "..", "data", "academy_enhanced.json")
 
 sys.path.append(os.path.join(BASE, ".."))
 from modules.data_augmentation import EasyDataAugmented
+from modules.informal_word_map import INFORMAL_WORD_MAP
 augmenter      = EasyDataAugmented(augmentation_prob=0.3)  # untuk proses augmentasi data
 augmenter_demo = EasyDataAugmented(augmentation_prob=1.0)  # khusus demo visual (prob=100%)
 
-# ── Kamus normalisasi slang & sinonim bahasa Indonesia ─────────────────────────
-SLANG_MAP = {
-    # Singkatan & Slang Umum Indonesia
-    "gmn": "bagaimana", "gimana": "bagaimana", "gmna": "bagaimana", "mna": "bagaimana", "gimene": "bagaimana",
-    "brp": "berapa",   "brapa": "berapa", "berapaan": "berapa",
-    "min": "admin",    "admn": "admin",  "mimin": "admin",
-    "dftr": "daftar",  "daftr": "daftar", "daftaar": "daftar", "dftar": "daftar", "daftarr": "daftar",
-    "byaya": "biaya",  "bya": "biaya",    "biayanya": "biaya",
-    "lok": "lokasi",   "lksi": "lokasi",  "lokasiny": "lokasi",
-    "jdwl": "jadwal",  "jdwal": "jadwal", "jadwalnnya": "jadwal",
-    "pgm": "program",  "prgrm": "program", "progrm": "program",
-    "kpn": "kapan",
-    "blm": "belum",    "belom": "belum",
-    "sdh": "sudah",    "udh": "sudah",    "udah": "sudah", "udha": "sudah",
-    "gak": "tidak",    "ga": "tidak",     "nggak": "tidak", "ngga": "tidak", "gk": "tidak", "gatau": "tidak", "kagak": "tidak", "kga": "tidak",
-    "mw": "ingin",     "pengen": "ingin", "pengan": "ingin", "pingin": "ingin", "pengin": "ingin", "berniat": "ingin",
-    "mohon": "tolong", "mhon": "tolong",  "tlg": "tolong", "tlgong": "tolong", "plis": "tolong", "pls": "tolong", "please": "tolong",
-    "bs": "bisa",      "bsa": "bisa",     "bisaa": "bisa",
-    "sy": "saya",      "ak": "aku",       "gua": "saya", "gue": "saya", "gw": "saya",
-    "lu": "kamu",      "elo": "kamu",     "elu": "kamu", "km": "kamu", "kmu": "kamu",
-    "yg": "yang",      "utk": "untuk",    "bwt": "untuk", "buat": "untuk",
-    "krn": "karena",   "karnaa": "karena",
-    "bgt": "sangat",   "banget": "sangat", "bnget": "sangat",
-    "skrg": "sekarang",
-    "fastres": "cepat", "fastresp": "cepat",
-    "thx": "terima kasih", "thanks": "terima kasih", "makasih": "terima kasih", "makasi": "terima kasih", "mksih": "terima kasih",
-    "thankyou": "terima kasih", "tq": "terima kasih",
-    "nuhun": "terima kasih", "suwun": "terima kasih", "maturnuwun": "terima kasih", "trims": "terima kasih", "tengkyu": "terima kasih",
-    
+# ── Normalisasi ejaan informal -> baku: SATU sumber kebenaran dipakai
+# BERSAMA dengan live inference (app.py normalize_informal()), lihat
+# modules/informal_word_map.py. Sebelumnya file ini punya salinan
+# terpisah (SLANG_MAP) yang tidak sinkron dengan app.py -- menyebabkan
+# kata seperti "trims"/"tq"/"mksh" "dikenal" saat training (dicollapse
+# ke "terima kasih") tapi "asing" saat live (app.py tidak melakukan
+# collapse yang sama, TF-IDF vectorizer tidak pernah melihat token
+# aslinya) -- diperbaiki dengan unifikasi ini.
+#
+# CONTENT_SYNONYM_MAP di bawah TETAP training-only (SENGAJA TIDAK
+# dipindah ke modules/informal_word_map.py) -- ini collapsing sinonim
+# lintas-topik (mis. "alamat"->"lokasi", "gabung"->"daftar"), BUKAN
+# normalisasi ejaan informal. Banyak checker is_*_query() di app.py
+# bergantung pada kata asli ini sebagai keyword-nya sendiri; audit
+# dampak menyamakan ini ke live pipeline di luar scope unifikasi ini.
+CONTENT_SYNONYM_MAP = {
+    # "buat"/"bwt" -> "untuk": SENGAJA TIDAK di modules/informal_word_map.py
+    # (ambigu "untuk" vs "membuat", lihat app.py untuk detail) -- tetap
+    # training-only di sini seperti sebelumnya.
+    "bwt": "untuk", "buat": "untuk",
+
     # Sinonim Pendaftaran & Bergabung (Alami)
     "gabung": "daftar", "bergabung": "daftar", "join": "daftar", "ikut": "daftar", "masuk": "daftar",
     "ikutan": "daftar", "registrasi": "daftar", "pendaftaran": "daftar", "register": "daftar", "apply": "daftar", "ikutserta": "daftar",
-    
+
     # Sinonim Lokasi & Tempat
     "alamat": "lokasi", "tempat": "lokasi", "gedung": "lokasi", "kantor": "lokasi", "studio": "lokasi",
-    
+
     # Sinonim Foto & Portofolio
     "gambar": "foto", "photo": "foto", "photoshoot": "foto", "image": "foto", "portofolio": "foto", "portfolio": "foto",
-    
+
     # Rekomendasi & Kontak
     "rekomen": "rekomendasi", "rekomendasiin": "rekomendasi", "saranin": "rekomendasi",
     "hub": "hubungi", "kontak": "hubungi", "wa": "whatsapp", "ig": "instagram",
 }
+
+# Gabungan untuk normalize_text() -- perilaku IDENTIK dengan SLANG_MAP lama
+# (union informal-spelling + content-synonym), hanya sumbernya sekarang
+# terpecah 2 (shared + training-only) supaya bagian yang seharusnya sama
+# dengan live tidak lagi drift diam-diam.
+SLANG_MAP = {**INFORMAL_WORD_MAP, **CONTENT_SYNONYM_MAP}
 
 # ── Mapping 27 intent → 10 kelas utama ───────────────────────────────
 INTENT_MAP = {
@@ -230,20 +229,25 @@ for sample, kelas in samples_demo:
     print(f"  {'':5} {'RD':<40} {augmenter_demo.random_deletion(sample)}")
     print()
 
-# ── Hanya augmentasi data latih setelah split 80:20 ──────────────────
-from sklearn.model_selection import train_test_split
-
+# ── Augmentasi memakai SELURUH data (bukan split 80:20 internal) ─────
+# Sebelumnya file ini men-split 80:20 di sini KHUSUS untuk klaim "data
+# uji murni untuk referensi modeling" -- tapi nilai X_test_text/y_test
+# hasil split itu TIDAK PERNAH disimpan ke file apa pun maupun dipakai
+# downstream (nb_trainer.py dan evaluation.py masing-masing membangun
+# ulang & mensplit data secara independen dari sumber asli, tidak
+# pernah membaca split ini). Akibatnya ~20% kalimat asli (termasuk
+# entri seperti "wassup"/"hoi"/"yo"/"haaii") dibuang permanen tanpa
+# manfaat evaluasi apa pun. Diperbaiki: pakai 100% data untuk
+# augmentasi/training -- evaluasi jujur & independen tetap terjaga
+# lewat evaluation.py (rebuild dari sumber asli, split sendiri).
 X_text = df["question_clean"].values
 y = df["kelas"].values
-X_train_text, X_test_text, y_train, y_test = train_test_split(
-    X_text, y, test_size=0.2, random_state=337, stratify=y
-)
 
 TARGET = 80
 X_aug, y_aug = [], []
-for cls in np.unique(y_train):
-    idx = np.where(y_train == cls)[0]
-    texts = X_train_text[idx].tolist()
+for cls in np.unique(y):
+    idx = np.where(y == cls)[0]
+    texts = X_text[idx].tolist()
     X_aug.extend(texts); y_aug.extend([cls] * len(texts))
     if len(texts) < TARGET:
         needed = TARGET - len(texts)
@@ -259,19 +263,19 @@ for cls in np.unique(y_train):
 
 X_aug = np.array(X_aug); y_aug = np.array(y_aug)
 
-print(f"\n  Distribusi kelas sebelum dan sesudah augmentasi pada data latih:")
+print(f"\n  Distribusi kelas sebelum dan sesudah augmentasi:")
 print(f"  {'Kelas':<25} {'Sebelum':>8} {'Sesudah':>8}  {'Keterangan'}")
-before = Counter(y_train); after = Counter(y_aug)
+before = Counter(y); after = Counter(y_aug)
 for k in sorted(after):
     b = before.get(k, 0)
     note = "ditambah" if b < TARGET else "tidak diubah"
     print(f"  {k:<25} {b:>8} {after[k]:>8}  {note}")
-print(f"  {'TOTAL':<25} {len(X_train_text):>8} {len(X_aug):>8}")
+print(f"  {'TOTAL':<25} {len(X_text):>8} {len(X_aug):>8}")
 
-print(f"\n  Split data (untuk referensi modeling) :")
-print(f"    Data latih asli   : {len(X_train_text)} baris")
-print(f"    Data latih augmented : {len(X_aug)} baris (target @{TARGET} per kelas)")
-print(f"    Data uji (murni)  : {len(X_test_text)} baris  ← tidak diaugmentasi")
+print(f"\n  Catatan: seluruh data asli ({len(X_text)} baris) dipakai untuk")
+print(f"  training/augmentasi -- tidak ada lagi porsi yang dibuang. Evaluasi")
+print(f"  jujur & independen tetap dari evaluation.py (split terpisah dari")
+print(f"  sumber asli, tidak bersentuhan dengan file ini).")
 
 # ── Simpan hasil ke CSV ───────────────────────────────────────────────
 out_csv = os.path.join(BASE, "dataset_prepared.csv")
