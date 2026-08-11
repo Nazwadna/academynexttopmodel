@@ -1672,11 +1672,19 @@ def handle_model_list(query: str = ""):
         and not filters.get("unavailable_only")
         and filters.get("age_min") is None
     )
-    if no_filter_at_all:
+
+    # Temuan 5 (audit testing manual, sesi ini): perintah EKSPLISIT
+    # "semua"/"keseluruhan" model -- user sudah jelas maunya SEMUA, skip
+    # ask-back, langsung dump seperti sebelum ask-back ada. Word-boundary
+    # (\b), konsisten prinsip normalize_informal() hari ini.
+    explicit_all_request = bool(re.search(r"\b(semua|keseluruhan)\b", normalize_text(query)))
+
+    if no_filter_at_all and not explicit_all_request:
         return {
             "reply": (
                 "Model yang dimaksud kategori apa ya: anak-anak (kids), remaja (teens), "
-                "atau lainnya? Coba sebutkan kategorinya, misalnya \"model remaja\" atau \"model anak-anak\"."
+                "atau keseluruhan model? Coba sebutkan, misalnya \"model remaja\", "
+                "\"model anak-anak\", atau \"semua model\"."
             ),
             "intent": "model_list",
             "source": "ask_back_category",
@@ -1931,6 +1939,10 @@ def handle_model_recommendation(query: str):
         )
     }
 
+# Kata kerja/filler generik yang sering menyertai permintaan "tampilkan
+# model" tanpa kategori spesifik (Temuan 2/3/5, audit testing manual).
+_MODEL_LIST_GENERIC_VERBS = r"(tampilkan|lihat|liat|kasih|kasi|coba|mau|bisa|tolong|minta|kirim(kan)?)"
+
 @_reject_if_out_of_domain
 def is_model_list_query(message: str) -> bool:
     """Detect model list / filtered catalog queries"""
@@ -1992,6 +2004,24 @@ def is_model_list_query(message: str) -> bool:
             if m and m.group(1) not in _MODEL_NON_NAME_TOKENS:
                 return False
             return True
+
+    # Temuan 2/3/5 (audit testing manual, sesi ini): "model" sendirian,
+    # atau "model" + kata kerja/filler generik TANPA kategori/kota/dll
+    # spesifik (mis. "tampilkan model", "semua model", "keseluruhan
+    # model", "lihat model") -- sebelumnya tidak match keyword list di
+    # atas (butuh frasa lebih spesifik) dan tidak ada filter yang bisa
+    # diekstrak, jadi jatuh ke NB low-confidence -> clarification
+    # generik yang tidak menyebut model sama sekali. Ditangkap eksplisit
+    # di sini supaya tetap masuk handle_model_list() (yang sudah punya
+    # ask-back/dump logic sendiri untuk membedakan "semua"/"keseluruhan"
+    # vs ambigu -- lihat handle_model_list()).
+    if "model" in msg and not name_lookup_exclusion:
+        stripped = re.sub(rf"\b{_MODEL_LIST_GENERIC_VERBS}\b", "", msg)
+        stripped = re.sub(r"\b(semua|keseluruhan|daftar|dong|ya|deh|nih)\b", "", stripped)
+        stripped = re.sub(r"\s+", " ", stripped).strip()
+        if stripped == "model":
+            return True
+
     return False
 
 @_reject_if_out_of_domain
