@@ -125,7 +125,8 @@ ENTITY_PATTERNS = {
     "hari": re.compile(
         r'\b(senin|selasa|rabu|kamis|jumat|sabtu|minggu)\b', re.IGNORECASE),
     "jam": re.compile(
-        r'\b(\d{1,2})[:.h](\d{0,2})\s*(?:wib|wita|wit)?\b', re.IGNORECASE),
+        r'\bjam\s*(\d{1,2})(?:[:.]\s*(\d{1,2}))?\s*(pagi|siang|sore|malam|wib|wita|wit)?\b',
+        re.IGNORECASE),
     "lokasi": re.compile(
         r'\b(tsm|cibubur|trans studio|mall|jakarta|bandung|bogor|depok|tangerang)\b',
         re.IGNORECASE),
@@ -605,6 +606,18 @@ def refine_intent(predicted_intent: str, confidence: float,
         if _has_schedule_context(msg_lower):
             return "schedule_info", max(confidence, 0.70)
 
+    # Boosting: jika ada entitas jam DAN konteks eksplisit soal kelas/
+    # jadwal → schedule context (Temuan 2, audit gabungan sesi ini).
+    # Pola SAMA PERSIS seperti boosting "hari" di atas -- location_info
+    # adalah kelas gabungan (schedule_info dilebur ke situ di
+    # INTENT_MAP), jadi NB benar secara arsitektur tapi jawaban yang
+    # dipilih perlu diarahkan ke logic jadwal (apply_reasoning), bukan
+    # dibiarkan pilih varian lokasi murni.
+    if "jam" in entities and predicted_intent != "schedule_info":
+        msg_lower = (user_message or "").lower()
+        if _has_schedule_context(msg_lower):
+            return "schedule_info", max(confidence, 0.70)
+
     if confidence < threshold:
         return "low_confidence", confidence
 
@@ -807,6 +820,29 @@ def resolve_clarification_choice(user_message, candidates):
 # 8. INTENT REASONING (rule-based)
 # ============================================================
 AGE_REQUIREMENT = 25   # tahun maksimal sesuai FAQ
+CLASS_START_HOUR = 11  # jam mulai kelas reguler (Sabtu, sesuai FAQ)
+CLASS_END_HOUR = 15    # jam selesai kelas reguler (Sabtu, sesuai FAQ)
+
+
+def _extract_jam_hour(user_message: str) -> Optional[int]:
+    """Ekstrak jam (format 24 jam) dari kalimat, mis. "jam 11" -> 11,
+    "jam 2 siang" -> 14, "jam 10.00" -> 10, "jam 16.00" -> 16. Return
+    None kalau tidak ada penyebutan jam yang bisa diparse. Reuse pattern
+    ENTITY_PATTERNS["jam"] supaya tidak drift dari definisi entity."""
+    m = ENTITY_PATTERNS["jam"].search(user_message or "")
+    if not m:
+        return None
+    try:
+        hour = int(m.group(1))
+    except (TypeError, ValueError):
+        return None
+    tod = (m.group(3) or "").lower()
+    if tod in ("siang", "sore", "malam") and hour < 12:
+        hour += 12
+    if not (0 <= hour <= 23):
+        return None
+    return hour
+
 
 def apply_reasoning(intent: str, entities: dict, memory: ConversationMemory,
                     user_message: str = "") -> Optional[str]:
@@ -849,6 +885,31 @@ def apply_reasoning(intent: str, entities: dict, memory: ConversationMemory,
                     f"Jika Anda hanya tersedia di hari {hari}, "
                     f"silakan hubungi admin untuk informasi jadwal alternatif."
                 )
+
+    # Temuan 2 (audit gabungan sesi ini): bandingkan jam yang ditanya
+    # terhadap rentang kelas asli (11.00-15.00). location_info adalah
+    # kelas gabungan (schedule_info dilebur ke situ di INTENT_MAP) --
+    # dicek intent yang mungkin muncul di titik ini (sebelum ATAU
+    # sesudah boosting refine_intent()).
+    if "jam" in entities and intent in ("location_info", "schedule_info", "program_info"):
+        msg_lower = (user_message or "").lower()
+        if _has_schedule_context(msg_lower):
+            jam = _extract_jam_hour(user_message)
+            if jam is not None:
+                if CLASS_START_HOUR <= jam <= CLASS_END_HOUR:
+                    return (
+                        f"Ya, kelas Academy Next Top Model pada pukul {jam:02d}.00 termasuk "
+                        f"dalam jadwal kelas reguler kami (Sabtu, pukul {CLASS_START_HOUR}.00–"
+                        f"{CLASS_END_HOUR}.00 WIB)."
+                    )
+                else:
+                    # KEPUTUSAN USER (Temuan 2): fallback minimal, TIDAK
+                    # menyebut jadwal alternatif/detail seperti pola hari
+                    # di atas -- level fallback out-of-scope/butuh admin.
+                    return (
+                        "Silakan hubungi admin Academy Next Top Model untuk "
+                        "informasi lebih lanjut."
+                    )
     return None
 
 # ============================================================
