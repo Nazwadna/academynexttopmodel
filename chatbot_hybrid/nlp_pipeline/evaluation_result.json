@@ -1,86 +1,93 @@
 {
   "chatbot_name": "Academy Next Top Model Hybrid Chatbot",
-  "generated_at": "2026-08-02 23:12:00",
+  "generated_at": "2026-08-11 11:24:37",
   "algorithm": "Multinomial Naive Bayes + TF-IDF",
   "metrics": {
-    "accuracy": 93.97,
-    "precision": 93.2,
-    "recall": 93.01,
-    "f1": 93.07,
-    "cv_mean": 88.13,
-    "cv_std": 0.78
+    "accuracy": 83.21,
+    "precision": 85.98,
+    "recall": 82.35,
+    "f1": 83.26,
+    "cv_mean": 85.87,
+    "cv_std": 4.05
   },
   "dataset": {
-    "original_samples": 577,
-    "prepared_samples": 851,
-    "test_samples": 116
+    "original_samples": 1336,
+    "prepared_samples": 1068,
+    "test_samples": 268
   },
   "per_class": [
     {
       "intent": "become_model_info",
-      "precision": 75.0,
-      "recall": 75.0,
-      "f1": 75.0,
-      "support": 4
+      "precision": 80.77,
+      "recall": 77.78,
+      "f1": 79.25,
+      "support": 27
+    },
+    {
+      "intent": "gratitude",
+      "precision": 100.0,
+      "recall": 73.91,
+      "f1": 85.0,
+      "support": 23
     },
     {
       "intent": "greeting",
-      "precision": 100.0,
-      "recall": 100.0,
-      "f1": 100.0,
-      "support": 8
+      "precision": 94.44,
+      "recall": 68.0,
+      "f1": 79.07,
+      "support": 25
     },
     {
       "intent": "homepage_info",
-      "precision": 93.75,
-      "recall": 100.0,
-      "f1": 96.77,
-      "support": 15
+      "precision": 78.79,
+      "recall": 83.87,
+      "f1": 81.25,
+      "support": 31
     },
     {
       "intent": "location_info",
-      "precision": 100.0,
-      "recall": 100.0,
-      "f1": 100.0,
-      "support": 12
-    },
-    {
-      "intent": "model_info",
-      "precision": 91.67,
-      "recall": 84.62,
-      "f1": 88.0,
-      "support": 13
-    },
-    {
-      "intent": "program_info",
-      "precision": 100.0,
-      "recall": 100.0,
-      "f1": 100.0,
-      "support": 8
-    },
-    {
-      "intent": "registration_info",
-      "precision": 94.74,
-      "recall": 90.0,
-      "f1": 92.31,
+      "precision": 83.33,
+      "recall": 75.0,
+      "f1": 78.95,
       "support": 20
     },
     {
-      "intent": "sensitive_intent",
-      "precision": 92.0,
-      "recall": 95.83,
-      "f1": 93.88,
+      "intent": "model_info",
+      "precision": 85.71,
+      "recall": 100.0,
+      "f1": 92.31,
+      "support": 30
+    },
+    {
+      "intent": "program_info",
+      "precision": 90.91,
+      "recall": 83.33,
+      "f1": 86.96,
       "support": 24
     },
     {
+      "intent": "registration_info",
+      "precision": 86.96,
+      "recall": 71.43,
+      "f1": 78.43,
+      "support": 28
+    },
+    {
+      "intent": "sensitive_intent",
+      "precision": 62.5,
+      "recall": 93.75,
+      "f1": 75.0,
+      "support": 32
+    },
+    {
       "intent": "technical_support",
-      "precision": 91.67,
-      "recall": 91.67,
-      "f1": 91.67,
-      "support": 12
+      "precision": 96.43,
+      "recall": 96.43,
+      "f1": 96.43,
+      "support": 28
     }
   ],
-  "summary": "Model dievaluasi pada 116 sampel uji murni (20% data asli, tanpa augmentasi). Akurasi uji 93.97% dengan rata-rata 5-Fold CV 88.13% (±0.78%).",
+  "summary": "Model dievaluasi pada 268 sampel uji murni (20% data asli, tanpa augmentasi). Akurasi uji 83.21% dengan rata-rata 5-Fold CV 85.87% (±4.05%).",
   "recommendations": [
     "Tambahkan contoh kalimat baru pada intent dengan F1 terendah sebelum retrain.",
     "Pastikan augmentasi hanya diterapkan pada data latih agar tidak terjadi data leakage.",

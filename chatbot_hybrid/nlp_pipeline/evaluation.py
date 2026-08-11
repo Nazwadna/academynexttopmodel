@@ -28,12 +28,13 @@ from modules.data_augmentation import EasyDataAugmented
 augmenter = EasyDataAugmented(augmentation_prob=0.8)
 
 INTENT_MAP = {
-    "greeting": "greeting", "about_academy": "homepage_info",
+    "greeting": "greeting", "gratitude": "gratitude", "about_academy": "homepage_info",
     "homepage_info": "homepage_info", "career_highlights_info": "homepage_info",
     "programs_info": "program_info", "training_programs": "program_info",
     "join_registration_info": "registration_info", "registration_steps": "registration_info",
     "registration_requirements": "registration_info", "register_help": "registration_info",
     "benefits_joining": "become_model_info", "portfolio_info": "become_model_info",
+    "become_model_info": "become_model_info", "photo_upload": "become_model_info",
     "location_info": "location_info", "schedule_info": "location_info",
     "model_info": "model_info", "model_categories": "model_info",
     "client_search_model": "model_info", "pricing_info": "sensitive_intent",
@@ -199,17 +200,17 @@ print("  Baris = Kelas Aktual | Kolom = Kelas Prediksi Model")
 print()
 
 cm = confusion_matrix(y_test, y_pred, labels=labels)
-singkatan = ["C1", "C2", "C3", "C4", "C5", "C6", "C7", "C8", "C9"]
+singkatan = [f"C{i}" for i in range(1, len(labels) + 1)]
 
 header = "  " + f"{'Kelas':<22}" + "".join([f"{s:>5}" for s in singkatan])
 print(header)
-print("  " + "=" * (22 + 5 * 9))
+print("  " + "=" * (22 + 5 * len(labels)))
 
 for idx, (label, row) in enumerate(zip(labels, cm), 1):
     row_str = "".join([f"{val:>5}" for val in row])
     print(f"  {singkatan[idx-1]} {label:<19} {row_str}")
 
-print("  " + "=" * (22 + 5 * 9))
+print("  " + "=" * (22 + 5 * len(labels)))
 print()
 print("  Keterangan Kode Kelas:")
 for s, l in zip(singkatan, labels):
