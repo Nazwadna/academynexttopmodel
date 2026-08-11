@@ -290,6 +290,18 @@
         "Welcome to Academy NTM! How can I help you with modeling training or other information?"
       ]
     },
+    "gratitude": {
+      "id": [
+        "Sama-sama! Senang bisa membantu. Jika ada pertanyaan lain seputar Academy Next Top Model, jangan ragu bertanya ya. 😊",
+        "Dengan senang hati! Terima kasih sudah menghubungi kami. Semoga harimu menyenangkan!",
+        "Sama-sama! Ada hal lain yang ingin Anda ketahui tentang Academy Next Top Model?"
+      ],
+      "en": [
+        "You're welcome! Happy to help. If you have other questions about Academy Next Top Model, feel free to ask. 😊",
+        "My pleasure! Thanks for reaching out. Have a great day!",
+        "You're welcome! Anything else you'd like to know about Academy Next Top Model?"
+      ]
+    },
     "technical_support": {
       "id": [
         "Masalah teknis? Coba refresh halaman atau clear cache browser. Masih bermasalah? Hubungi admin via WhatsApp untuk bantuan segera.",
