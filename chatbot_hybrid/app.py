@@ -1675,7 +1675,7 @@ def handle_model_list(query: str = ""):
     if no_filter_at_all:
         return {
             "reply": (
-                "Model yang dimaksud kategori apa ya — anak-anak (kids), remaja (teens), "
+                "Model yang dimaksud kategori apa ya: anak-anak (kids), remaja (teens), "
                 "atau lainnya? Coba sebutkan kategorinya, misalnya \"model remaja\" atau \"model anak-anak\"."
             ),
             "intent": "model_list",
