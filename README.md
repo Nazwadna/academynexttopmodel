@@ -74,7 +74,7 @@ Ikuti urutan di bawah supaya testing aman dan tidak bentrok (double Flask, DB ko
 3. Copy file environment:
    - Pastikan ada file `.env` di root Laravel (minta ke pemilik project jika tidak ikut terkirim).
    - Jangan commit / jangan share sembarangan isi secret (`APP_KEY`, password DB, `OPENAI_API_KEY`).
-4. Buat database MySQL: `academyntm`, lalu import `academyntm.sql` (jika ada).
+4. Buat database MySQL: `academyntm`, lalu import `academyntm.sql` (berisi struktur tabel saja, tanpa data pengguna).
 5. Di folder project:
    ```bash
    php artisan key:generate
@@ -223,7 +223,7 @@ academyntm2-finale/
 ├── start_all.bat                          ← Flask + Laravel sekaligus
 ├── start_queue_chatbot.bat                ← Queue worker chatbot-training
 ├── stop_all.bat                           ← Matikan proses di port 5000/8000
-├── academyntm.sql                         ← Dump DB utama (nama DB: academyntm)
+├── academyntm.sql                         ← Struktur tabel DB utama (nama DB: academyntm)
 └── README.md
 ```
 
