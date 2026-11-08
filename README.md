@@ -1,8 +1,38 @@
-# Academy Next Top Model (Academy NTM) — Website & Hybrid Chatbot
+# Academy Next Top Model: Website & Hybrid Chatbot
+
+![Laravel](https://img.shields.io/badge/Laravel-FF2D20?style=flat&logo=laravel&logoColor=white)
+![PHP](https://img.shields.io/badge/PHP-777BB4?style=flat&logo=php&logoColor=white)
+![MySQL](https://img.shields.io/badge/MySQL-4479A1?style=flat&logo=mysql&logoColor=white)
+![Python](https://img.shields.io/badge/Python-3776AB?style=flat&logo=python&logoColor=white)
+![Flask](https://img.shields.io/badge/Flask-000000?style=flat&logo=flask&logoColor=white)
+
+## Overview
+
+A website for **Academy Next Top Model**, a modeling academy in Indonesia, built with **Laravel** and **MySQL**,
+with a hybrid **NLP chatbot** running as a separate **Python Flask** service.
+This project is my undergraduate thesis at Gunadarma University (**Grade A**).
+
+**Highlights**
+
+- **88.89%** intent accuracy on test data (87.50% average in stratified 5-fold cross-validation)
+- **88.64/100** on the Bot Usability Scale and **92%** acceptance in UAT with 20 respondents
+- **3-service architecture**: Laravel web server, Flask NLP service, and a Laravel queue worker,
+  so the model can be retrained in the background without slowing down the website
+- **Admin dashboard** to manage chatbot questions and answers and trigger retraining
+- Chatbot handles static FAQ, dynamic data from MySQL, multi-intent questions, follow-up context,
+  and hands sensitive topics over to the admin via WhatsApp
+
+**Tech stack:** Laravel, PHP, MySQL, Blade, Tailwind CSS, Python, Flask, scikit-learn (TF-IDF + Multinomial Naive Bayes)
+
+**Author:** [Nazwa Audina](https://nazwadnaportfolio.vercel.app/)
+
+> Detailed documentation below is written in Indonesian.
+
+---
+
+## Ringkasan (Bahasa Indonesia)
 
 Sistem website resmi **Academy Next Top Model** berbasis **Laravel (PHP)** yang terintegrasi dengan **AI Chatbot Hybrid Multi-Layer** berbasis **Python Flask**. Chatbot menangani pertanyaan statis, dinamis (data model dari MySQL), multi-intent, kontekstual (memory/anaphora), dan topik sensitif (handoff WhatsApp).
-
-> **Catatan sidang:** file utama chatbot `chatbot_hybrid/app.py` sengaja **tidak dipecah** agar perilaku runtime stabil untuk demonstrasi skripsi.
 
 ---
 
